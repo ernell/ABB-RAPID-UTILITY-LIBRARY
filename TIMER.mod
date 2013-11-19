@@ -11,6 +11,7 @@ MODULE TIMER(VIEWONLY)
   ! Description: A simple timer with basic functionality
   ! Date:        2013-11-18
   ! Author:      <rob@ernell.se>
+  ! License:     Apache License V2.0
   !*****************************************************
 
   LOCAL VAR clock clTimer;
