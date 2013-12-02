@@ -1,6 +1,6 @@
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.1                                               *
+; * Version:     0.11                                              *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
@@ -10,9 +10,11 @@
 ; ******************************************************************
 
 /L1"RAPID" Line Comment = ! String Chars = " File Extensions = PRG MOD SYS
-/Function String 1 =  " PROC*(*"
-/Function String 2 =  " FUNC*(*"
-/Function String 3 =  "  TRAP*"
+/Function String 1 =  "PROC *(*)"
+/Function String 2 =  "LOCAL PROC *(*)"
+/Function String 3 =  "FUNC * *(*)"
+/Function String 4 =  "LOCAL FUNC * *(*)"
+/Function String 5 =  "  TRAP*"
 /TGBegin "Function"
 /TGFindStr = "  PROC *(*"
 /TGEnd
