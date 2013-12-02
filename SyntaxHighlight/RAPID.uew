@@ -1,6 +1,6 @@
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.11                                              *
+; * Version:     0.12                                              *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
@@ -10,25 +10,27 @@
 ; ******************************************************************
 
 /L1"RAPID" Line Comment = ! String Chars = " File Extensions = PRG MOD SYS
-/Function String 1 =  "PROC *(*)"
-/Function String 2 =  "LOCAL PROC *(*)"
-/Function String 3 =  "FUNC * *(*)"
-/Function String 4 =  "LOCAL FUNC * *(*)"
-/Function String 5 =  "  TRAP*"
+
+/Function String 1 =  "[ ^t][ ^t]PROC *(*)"
+/Function String 2 =  "[ ^t][ ^t]LOCAL PROC *(*)"
+/Function String 3 =  "[ ^t][ ^t]FUNC * *(*)"
+/Function String 4 =  "[ ^t][ ^t]LOCAL FUNC * *(*)"
+/Function String 5 =  "[ ^t][ ^t]TRAP *"
+
 /TGBegin "Function"
-/TGFindStr = "  PROC *(*"
+/TGFindStr = "%[ ^t]+PROC[ ^t]*(*)$"
 /TGEnd
 /TGBegin "Function"
-/TGFindStr = "  LOCAL PROC *(*"
+/TGFindStr = "%[ ^t]+LOCAL[ ^t]PROC[ ^t]*(*)$"
 /TGEnd
 /TGBegin "Function"
-/TGFindStr = "  FUNC *(*"
+/TGFindStr = "%[~\!]+[ ^t]+FUNC[ ^t]*[ ^t]*(*)$"
 /TGEnd
 /TGBegin "Function"
-/TGFindStr = "  LOCAL FUNC *(*"
+/TGFindStr = "%[~\!]+[ ^t]+LOCAL[ ^t]FUNC[ ^t]*[ ^t]*(*)$"
 /TGEnd
 /TGBegin "Function"
-/TGFindStr = "  TRAP *"
+/TGFindStr = "%[~\!]+[ ^t]+TRAP[ ^t]*$"
 /TGEnd
 /Colors = 0,8421376,8421376,8421504,255,
 /Colors Back = 16777215,16777215,16777215,16777215,16777215,
