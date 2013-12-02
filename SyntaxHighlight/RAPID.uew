@@ -1,33 +1,48 @@
 ; ******************************************************************
+; * Copyright (C) 2013 Robert Andersson <rob@ernell.se>
+; *
+; * Licensed under the Apache License, Version 2.0 (the "License");
+; * you may not use this file except in compliance with the License.
+; * You may obtain a copy of the License at
+; *
+; *      http://www.apache.org/licenses/LICENSE-2.0
+; *
+; * Unless required by applicable law or agreed to in writing, software
+; * distributed under the License is distributed on an "AS IS" BASIS,
+; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+; * See the License for the specific language governing permissions and
+; * limitations under the License.
+; ******************************************************************
+
+; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.12                                              *
+; * Version:     0.13                                              *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
 ; * Date:        2013-12-02                                        *
 ; * Author:      <rob@ernell.se>                                   *
-; * License:     Apache License V2.0                               *
 ; ******************************************************************
 
 /L1"RAPID" Line Comment = ! String Chars = " File Extensions = PRG MOD SYS
 
-/Function String 1 =  "[ ^t][ ^t]PROC *(*)"
-/Function String 2 =  "[ ^t][ ^t]LOCAL PROC *(*)"
-/Function String 3 =  "[ ^t][ ^t]FUNC * *(*)"
-/Function String 4 =  "[ ^t][ ^t]LOCAL FUNC * *(*)"
+/Function String 1 =  "[ ^t][ ^t]PROC *(*"
+/Function String 2 =  "[ ^t][ ^t]LOCAL PROC *(*"
+/Function String 3 =  "[ ^t][ ^t]FUNC * *(*"
+/Function String 4 =  "[ ^t][ ^t]LOCAL FUNC * *(*"
 /Function String 5 =  "[ ^t][ ^t]TRAP *"
 
 /TGBegin "Function"
-/TGFindStr = "%[ ^t]+PROC[ ^t]*(*)$"
+/TGFindStr = "%[ ^t]+PROC[ ^t]*(*$"
 /TGEnd
 /TGBegin "Function"
-/TGFindStr = "%[ ^t]+LOCAL[ ^t]PROC[ ^t]*(*)$"
+/TGFindStr = "%[ ^t]+LOCAL[ ^t]PROC[ ^t]*(*$"
 /TGEnd
 /TGBegin "Function"
-/TGFindStr = "%[~\!]+[ ^t]+FUNC[ ^t]*[ ^t]*(*)$"
+/TGFindStr = "%[~\!]+[ ^t]+FUNC[ ^t]*[ ^t]*(*$"
 /TGEnd
 /TGBegin "Function"
-/TGFindStr = "%[~\!]+[ ^t]+LOCAL[ ^t]FUNC[ ^t]*[ ^t]*(*)$"
+/TGFindStr = "%[~\!]+[ ^t]+LOCAL[ ^t]FUNC[ ^t]*[ ^t]*(*$"
 /TGEnd
 /TGBegin "Function"
 /TGFindStr = "%[~\!]+[ ^t]+TRAP[ ^t]*$"
