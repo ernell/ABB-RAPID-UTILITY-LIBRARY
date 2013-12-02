@@ -1,0 +1,183 @@
+; ******************************************************************
+; * Name:        ABB RAPID IRC5 syntax highlight definition        *
+; * Version:     0.1                                               *
+; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
+; *              When using older UE, change [.uew] to [.txt].     *
+; *                                                                *
+; * Date:        2013-12-02                                        *
+; * Author:      <rob@ernell.se>                                   *
+; * License:     Apache License V2.0                               *
+; ******************************************************************
+
+/L1"RAPID" Line Comment = ! String Chars = " File Extensions = PRG MOD SYS
+/Function String 1 =  " PROC*(*"
+/Function String 2 =  " FUNC*(*"
+/Function String 3 =  "  TRAP*"
+/TGBegin "Function"
+/TGFindStr = "  PROC *(*"
+/TGEnd
+/TGBegin "Function"
+/TGFindStr = "  LOCAL PROC *(*"
+/TGEnd
+/TGBegin "Function"
+/TGFindStr = "  FUNC *(*"
+/TGEnd
+/TGBegin "Function"
+/TGFindStr = "  LOCAL FUNC *(*"
+/TGEnd
+/TGBegin "Function"
+/TGFindStr = "  TRAP *"
+/TGEnd
+/Colors = 0,8421376,8421376,8421504,255,
+/Colors Back = 16777215,16777215,16777215,16777215,16777215,
+/Colors Auto Back = 1,1,1,1,1,
+/Font Style = 0,1,0,0,0,
+/Delimiters = { } ( ) [ ] , . = < > + - * / : ; ! \ ? := <> >= <=
+/Open Brace Strings  = "PROC"     "FUNC"    "TRAP"    "IF"    "FOR"    "TEST"
+/Close Brace Strings = "ENDPROC"  "ENDFUNC" "ENDTRAP" "ENDIF" "ENDFOR" "ENDTEST"
+/Open Fold Strings  = "IF"     "ELSEIF"
+/Close Fold Strings = "ELSEIF" "ENDIF"
+
+/Indent Strings =   "DO" "THEN" "PROC" "FUNC" "TRAP"
+/Unindent Strings = "ENDPROC" "ENDFUNC" "ENDTRAP"
+
+/C1"Reserved words" STYLE_KEYWORD Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+ALIAS
+BACKWARD
+CASE CONNECT CONST
+DEFAULT DO
+ELSE ELSEIF ENDFOR ENDFUNC ENDIF ENDMODULE ENDPROC ENDRECORD ENDTEST ENDTRAP ENDWHILE ERRNO ERROR EXIT
+FALSE FOR FROM FUNC
+GOTO
+IF INOUT INTNO
+LOCAL
+MODULE
+NOSTEPIN NOVIEW
+PERS PROC
+RAISE READONLY RECORD RETRY RETURN
+STEP SYSMODULE
+TEST THEN TO TRAP TRUE TRYNEXT
+UNDO
+VAR VIEWONLY
+WHILE WITH
+
+/C2"Operators" STYLE_OPERATOR Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/
+*
++
+-
+<
+<=
+<>
+=>
+>
+=
+DIV
+MOD
+AND
+OR
+XOR
+NOT
+
+/C3"Instructions" STYLE_METHOD Colors = 33023 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+AccSet ActUnit Add AliasIO
+BitClear BitSet BookErrNo Break
+CallByVar CancelLoad CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir Compact ConfJ ConfL CONNECT CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrWrite
+DeactUnit Decr DitherAct DitherDeact DropSensor DropWObj
+EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrRaise ErrWrite EXIT ExitCycle
+FOR
+GetDataVal GetSysData GetTrapData GOTO GripLoad
+HollowWristReset
+IDelete IDisable IEnable IError IF Incr IndAMove IndCMove IndDMove IndReset IndRMove InvertDO IODisable IOEnable IPers ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep IsPers ITimer IVarValue IWatch
+label Load LoadId
+MakeDir ManLoadIdProc MechUnitLoad MotionSup MoveAbsJ MoveC MoveCDO MoveCSync MoveExtJ MoveJ MoveJDO MoveJSync MoveL MoveLDO MoveLSync MToolRotCalib MToolTCPCalib
+Open OpenDir
+PackDNHeader PackRawBytes PathAccLim PathRecMoveBwd PathRecMoveFwd PathRecStart PathRecStop PathResol PDispOff PDispOn PDispSet ProcerrRecovery ProcCall PulseDO
+RAISE RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile Reset RestoPath RETURN RETRY RETURN Rewind RaiseToUser ReadAnyBin ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile
+SearchC SearchL Set SetAllDataVal SetAO SetDataSearch SetDataVal SetDO SetGO SingArea SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact StartMove StartMoveRetry StorePath Stop StopMove STEP SpcCon SpcDiscon SpcDump SpcRead SpcStat SpotJ SpotL SpotML SpyStart SpyStop SToolRotCalib SToolTCPCalib SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor
+TO THEN TEST TPErase TPReadFK TPReadNum
+TPShow TPWrite TriggC TriggL TriggJ TriggInt TriggIO
+TriggEquip TRYNEXT TuneReset TuneServo TestSignDefine TestSignReset TextTabInstall TriggCheckIO TriggSpeed TriggStopProc
+UnLoad UnpackRawBytes UIMsgBox
+VelSet
+WITH WHILE WarmStart WorldAccLim WriteAnyBin WriteCfgData WriteRawBytes WaitSensor WaitWObj WaitSyncTask WaitTime WaitDI WaitDO WaitUntil Write WriteBin WriteStrBin WZHomeJointDef WZLimJointDef WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZLimSup WZSphDef
+
+/C4"Functions" STYLE_FUNCTION Colors = 32768 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+Abs ACos AInput AOutput ArgName ASin ATan ATan2 AbsDnum
+BitAnd BitCheck BitNeg BitLSh BitRSh BitOr BitXOr ByteToStr
+CDate CJoint CJointT ClkRead CorrRead Cos Cpos CRobT CTime CTool CWobj CalcJointT CalcRobT CalcRotAxisFrame CalcRotAxFrameZ CSpeedOverride DefDFrame
+DefFrame Dim DOutput DInput DecToHex DefAccFrame Distance
+DotProd DnumToStr
+EulerZYX Exp
+FileSize FileTime FSSize
+GetNextMechUnit GetSysInfo GetTaskName GOutput GetTime GetNextSym
+HexToDec
+IndInpos IndSpeed IsPers IsVar IOUnitState IsFile IsMechUnitActive IsStopStateEvent IsSyncMoveOn IsSysId
+MaxRobSpeed MirPos ModTime
+NumToStr NonMotionMode NOrient
+Offs OpMode OrientZXY ORobT
+PoseInv PoseMult PoseVect Pow Present ParIdPosValid PathRecValidBwd PFRestart ProgMemFree PowDnum
+ReadBin ReadMotor ReadNum ReadStr RelTool Round RunMode RawBytesLen ReadStrBin RobOS RoundDnum
+Sin Sqrt StrFind StrLen StrMap StrMatch StrMemb  StrOrder StrPart StrToByte StrToVal SocketGetStatus SqrtDnum Tan
+TestDI Trunc TaskRunMec TaskRunRob TestAndSet TestDI TestSignRead TextGet TextTabFreeToUse TextTabGet TruncDnum
+UIAlphaEntry UIClientExist UIListView UIMessageBox UINumEntry UINumTune
+ValToStr VectMagn
+
+/C5"Datatypes" STYLE_KEYWORD Colors = 4210816 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+bool byte
+clock confdata corrdescr
+datapos dionum Dnum
+errnum extjoint errtype errdomain
+intnum iodev
+jointtarget
+loaddata loadsession
+mecunit motsetdata
+num
+orient o_jointtarget o_robtarget opnum
+pos pose progdisp
+robjoint robtarget
+shapedata symnum seamdata string speeddata switch signaldi signaldo signalai signalao signalgi signalgo socketdev syncident
+taskid tasks tooldata tpnum triggdata tunetype trapdata testsignal
+weavedata welddata wobjdata wzstationary wztemporary
+zonedata
+
+/C6"Placeholders" STYLE_KEYWORD Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+<ALT>
+<ARG>
+<CSE>
+<DDN>
+<DIM>
+<EIT>
+<EXP>
+<ID>
+<PAR>
+<RDN>
+<SMT>
+<TDN>
+<VAR>
+/C7"Variables" STYLE_VARIABLE Colors = 2519712 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+clock1
+fine
+load0
+reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8 reg9
+tool0
+v0 v1 v2 v3 v4 v5 v10 v20 v25 v30 v35 v40 v45 v50 v60 v70 v80 v90 v100 v150 v200 v250 v300 v350 v400 v450 v500 v600 v700 v800 v900 v1000 v1500 v2000 v2500 v3000 v3500 v4000 v4500 v5000 v5500 v6000 v6500 v7000 vmax v_max
+wobj0
+z1 z5 z10 z15 z20 z30 z40 z50 z60 z80 z100 z200
+
+/C8"System constants" STYLE_VARIABLE Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+ERR_ACC_TOO_LOW ERR_ALIASIO_DEF ERR_ALIASIO_TYPE ERR_ALRDYCNT ERR_ALRDY_MOVING ERR_AO_LIM ERR_ARGDUPCND ERR_ARGNAME ERR_ARGNOTPER ERR_ARGNOTVAR ERR_ARGVALERR ERR_AXIS_ACT ERR_AXIS_IND ERR_AXIS_MOVING ERR_AXIS_PAR ERR_BUSSTATE ERR_BWDLIMIT ERR_CALC_NEG ERR_CALC_OVERFLOW ERR_CALC_DIVZERO ERR_CALLPROC ERR_CFG_INTERNAL ERR_CFG_ILLTYPE ERR_CFG_LIMIT ERR_CFG_NOTFND ERR_CFG_OUTOFBOUNDS ERR_CNTNOTVAR ERR_CNV_NOT_ACT ERR_CNV_CONNECT ERR_CNV_DROPPED ERR_COMM_EXT ERR_COMM_INIT_FAILED ERR_DATA_RECV ERR_DEV_MAXTIME ERR_DIPLAG_LIM ERR_DIVZERO ERR_EXECPHR ERR_FILEACC ERR_FILEEXIST ERR_FILEOPEN ERR_FILNOTFND ERR_FNCNORET ERR_FRAME ERR_GO_LIM ERR_ILLDIM ERR_ILLQUAT ERR_ILLRAISE ERR_INDCNV_ORDER ERR_INOISSAFE ERR_INOMAX ERR_INT_NOTVAL ERR_INT_MAXVAL ERR_INVDIM ERR_IODISABLE ERR_IOENABLE ERR_IOERROR ERR_LINKREF ERR_LOADED ERR_LOADID_FATAL ERR_LOADID_RETRY ERR_LOADNO_INUSE ERR_LOADNO_NOUSE ERR_MAXINTVAL ERR_MODULE ERR_MOD_NOTLOADED ERR_NAME_INVALID ERR_NORUNUNIT ERR_NOTARR ERR_NOTEQDIM ERR_NOTINTVAL ERR_NOTPRES ERR_NOTSAVED ERR_NOT_MOVETASK ERR_NUM_LIMIT ERR_OUTOFBND ERR_OVERFLOW ERR_PATH ERR_PATHDIST ERR_PATH_STOP ERR_PID_MOVESTOP ERR_PID_RAISE_PP ERR_PRGMEMFULL ERR_PROCSIGNAL_OFF ERR_PROGSTOP ERR_RANYBIN_CHK ERR_RANYBIN_EOF ERR_RCVDATA ERR_REFUNKDAT ERR_REFUNKFUN ERR_REFUNKPRC ERR_REFUNKTRP ERR_RMQ_DIM ERR_RMQ_FULL ERR_RMQ_INVALID ERR_RMQ_INVMSG ERR_RMQ_MSGSIZE ERR_RMQ_NAME ERR_RMQ_NOMSG ERR_RMQ_TIMEOUT ERR_RMQ_VALUE ERR_ROBLIMIT ERR_SC_WRITE ERR_SIGSUPSEARCH ERR_STARTMOVE ERR_ADDR_INUSE ERR_SOCK_CLOSED ERR_SOCK_TIMEOUT ERR_SPEED_REFRESH_LIM ERR_STRTOOLNG ERR_SYM_ACCESS ERR_SYNCMOVEOFF ERR_SYNCMOVEON ERR_SYNTAX ERR_TASKNAME ERR_TP_DIBREAK ERR_TP_DOBREAK ERR_TP_MAXTIME ERR_TP_NO_CLIENT ERR_TRUSTLEVEL ERR_TXTNOEXIST ERR_UI_INITVALUE ERR_UI_MAXMIN ERR_UI_NOTINT ERR_UISHOW_FATAL ERR_UISHOW_FULL ERR_UNIT_PAR ERR_UNKINO ERR_UNKPROC ERR_UNLOAD ERR_WAITSYNCTASK ERR_WAIT_MAXTIME ERR_WHLSEARCH ERR_WOBJ_MOVING
+
+/C9"not in use" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+
+/C10"Word List 10" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C11"Word List 11" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C12"Word List 12" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C13"Word List 13" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C14"Word List 14" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C15"Word List 15" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C16"Word List 16" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C17"Word List 17" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C18"Word List 18" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C19"Word List 19" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C20"Word List 20" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
