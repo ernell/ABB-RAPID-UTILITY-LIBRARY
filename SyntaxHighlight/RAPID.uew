@@ -16,7 +16,7 @@
 
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.13                                              *
+; * Version:     0.14                                              *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
@@ -176,8 +176,10 @@ zonedata
 <VAR>
 /C7"Variables" STYLE_VARIABLE Colors = 2519712 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 clock1
+edge
 fine
-load0
+high
+load0 low
 reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8 reg9
 tool0
 v0 v1 v2 v3 v4 v5 v10 v20 v25 v30 v35 v40 v45 v50 v60 v70 v80 v90 v100 v150 v200 v250 v300 v350 v400 v450 v500 v600 v700 v800 v900 v1000 v1500 v2000 v2500 v3000 v3500 v4000 v4500 v5000 v5500 v6000 v6500 v7000 vmax v_max
