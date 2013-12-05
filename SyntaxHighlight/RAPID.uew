@@ -117,8 +117,7 @@ WITH WHILE WaitSensor WarmStart WorldAccLim WriteAnyBin WriteCfgData WriteRawByt
 Abs ACos AInput AOutput ArgName ASin ATan ATan2 AbsDnum
 BitAnd BitCheck BitNeg BitLSh BitRSh BitOr BitXOr ByteToStr
 CDate CJoint CJointT ClkRead CorrRead Cos Cpos CRobT CTime CTool CWobj CalcJointT CalcRobT CalcRotAxisFrame CalcRotAxFrameZ CSpeedOverride DefDFrame
-DefFrame Dim DOutput DInput DecToHex DefAccFrame Distance
-DotProd DnumToStr
+DefFrame Dim DOutput DInput DecToHex DefAccFrame Distance DotProd DnumToStr
 EulerZYX Exp
 FileSize FileTime FSSize
 GetNextMechUnit GetSysInfo GetTaskName GOutput GetTime GetNextSym
