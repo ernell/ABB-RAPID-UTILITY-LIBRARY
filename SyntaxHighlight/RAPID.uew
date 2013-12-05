@@ -16,7 +16,7 @@
 
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.17                                              *
+; * Version:     0.18                                              *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
@@ -26,10 +26,6 @@
 
 /L1"RAPID" Line Comment = ! String Chars = " File Extensions = PRG MOD SYS
 
-/Colors = 0,8421376,8421376,8421504,255,
-/Colors Back = 16777215,16777215,16777215,16777215,16777215,
-/Colors Auto Back = 1,1,1,1,1,
-/Font Style = 0,1,0,0,0,
 /Function String 1 =  "[ ^t][ ^t]PROC *(*"
 /Function String 2 =  "[ ^t][ ^t]LOCAL PROC *(*"
 /Function String 3 =  "[ ^t][ ^t]FUNC * *(*"
@@ -38,19 +34,17 @@
 
 /TGBegin "Function"
 /TGFindStr = "%[ ^t]+PROC[ ^t]*(*$"
-/TGEnd
-/TGBegin "Function"
 /TGFindStr = "%[ ^t]+LOCAL[ ^t]PROC[ ^t]*(*$"
-/TGEnd
-/TGBegin "Function"
 /TGFindStr = "%[~\!]+[ ^t]+FUNC[ ^t]*[ ^t]*(*$"
-/TGEnd
-/TGBegin "Function"
 /TGFindStr = "%[~\!]+[ ^t]+LOCAL[ ^t]FUNC[ ^t]*[ ^t]*(*$"
-/TGEnd
-/TGBegin "Function"
 /TGFindStr = "%[~\!]+[ ^t]+TRAP[ ^t]*$"
 /TGEnd
+
+/Colors = 0,8421376,8421376,8421504,255,
+/Colors Back = 16777215,16777215,16777215,16777215,16777215,
+/Colors Auto Back = 1,1,1,1,1,
+/Font Style = 0,1,0,0,0,
+
 /Delimiters = { } ( ) [ ] , . = < > + - * / : ; ! \ ? := <> >= <=
 /Open Brace Strings  = "PROC"     "FUNC"    "TRAP"    "IF"    "FOR"    "TEST"
 /Close Brace Strings = "ENDPROC"  "ENDFUNC" "ENDTRAP" "ENDIF" "ENDFOR" "ENDTEST"
@@ -109,7 +103,7 @@ GetDataVal GetSysData GetTrapData GlueC GlueJ GlueL GOTO GripLoad
 HollowWristReset
 IDelete IDisable IEnable IError IF Incr IndAMove IndCMove IndDMove IndReset IndRMove InvertDO IODisable IOEnable IPers ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep IsPers ITimer IVarValue IWatch
 label Load LoadId
-MakeDir ManLoadIdProc MechUnitLoad MotionSup MoveAbsJ MoveC MoveCDO MoveCSync MoveExtJ MoveJ MoveJDO MoveJSync MoveL MoveLDO MoveLSync MToolRotCalib MToolTCPCalib
+MakeDir ManLoadIdProc MechUnitLoad MotionSup MoveAbsJ MoveC MoveCDO MoveCSync MoveExtJ MoveJ MoveJDO MoveJSync MoveL MoveLDO MoveLSync MotionSup MToolRotCalib MToolTCPCalib
 Open OpenDir
 PackDNHeader PackRawBytes PathAccLim PathRecMoveBwd PathRecMoveFwd PathRecStart PathRecStop PathResol PDispOff PDispOn PDispSet ProcerrRecovery ProcCall PulseDO
 RAISE RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile Reset RestoPath RETURN RETRY RETURN Rewind RaiseToUser ReadAnyBin ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile
@@ -117,7 +111,7 @@ SearchC SearchL Set SetAllDataVal SetAO SetDataSearch SetDataVal SetDO SetGO Sin
 TO THEN TEST TPErase TPReadFK TPReadNum TPShow TPWrite TriggC TriggL TriggJ TriggInt TriggIO TriggEquip TRYNEXT TuneReset TuneServo TestSignDefine TestSignReset TextTabInstall TriggCheckIO TriggSpeed TriggStopProc
 UnLoad UnpackRawBytes UIMsgBox
 VelSet
-WITH WHILE WarmStart WorldAccLim WriteAnyBin WriteCfgData WriteRawBytes WaitSensor WaitWObj WaitSyncTask WaitTime WaitDI WaitDO WaitUntil Write WriteBin WriteStrBin WZHomeJointDef WZLimJointDef WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZLimSup WZSphDef
+WITH WHILE WaitSensor WarmStart WorldAccLim WriteAnyBin WriteCfgData WriteRawBytes WaitSensor WaitWObj WaitSyncTask WaitTime WaitDI WaitDO WaitUntil Write WriteBin WriteStrBin WZHomeJointDef WZLimJointDef WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZLimSup WZSphDef
 
 /C4"Functions" STYLE_FUNCTION Colors = 32768 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 Abs ACos AInput AOutput ArgName ASin ATan ATan2 AbsDnum
