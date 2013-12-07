@@ -52,7 +52,7 @@
 /Close Fold Strings = "ELSEIF"  "ENDIF"
 
 /Indent Strings =   "DO" "THEN" "PROC" "FUNC" "TRAP"
-/Unindent Strings = "ENDWHILE" "ENDIF" "ENDPROC" "ENDFUNC" "ENDTRAP"
+/Unindent Strings = "ENDWHILE" "ENDIF" "ENDPROC" "ENDFUNC" "ENDTRAP" "ELSE"
 
 /C1"Reserved words" STYLE_KEYWORD Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 ALIAS
