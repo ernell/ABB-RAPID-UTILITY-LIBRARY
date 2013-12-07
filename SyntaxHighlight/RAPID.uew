@@ -16,11 +16,11 @@
 
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.18                                              *
+; * Version:     0.19                                              *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
-; * Date:        2013-12-05                                        *
+; * Date:        2013-12-06                                        *
 ; * Author:      <rob@ernell.se>                                   *
 ; ******************************************************************
 
@@ -108,7 +108,7 @@ Open OpenDir
 PackDNHeader PackRawBytes PathAccLim PathRecMoveBwd PathRecMoveFwd PathRecStart PathRecStop PathResol PDispOff PDispOn PDispSet ProcerrRecovery ProcCall PulseDO
 RAISE RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile Reset RestoPath RETURN RETRY RETURN Rewind RaiseToUser ReadAnyBin ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile
 SearchC SearchL Set SetAllDataVal SetAO SetDataSearch SetDataVal SetDO SetGO SingArea SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact StartMove StartMoveRetry StorePath Stop StopMove STEP SpcCon SpcDiscon SpcDump SpcRead SpcStat SpotJ SpotL SpotML SpyStart SpyStop SToolRotCalib SToolTCPCalib SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor
-TO THEN TEST TPErase TPReadFK TPReadNum TPShow TPWrite TriggC TriggL TriggJ TriggInt TriggIO TriggEquip TRYNEXT TuneReset TuneServo TestSignDefine TestSignReset TextTabInstall TriggCheckIO TriggSpeed TriggStopProc
+TO THEN TEST TestDI TPErase TPReadFK TPReadNum TPShow TPWrite TriggC TriggL TriggJ TriggInt TriggIO TriggEquip TRYNEXT TuneReset TuneServo TestSignDefine TestSignReset TextTabInstall TriggCheckIO TriggSpeed TriggStopProc
 UnLoad UnpackRawBytes UIMsgBox
 VelSet
 WITH WHILE WaitSensor WarmStart WorldAccLim WriteAnyBin WriteCfgData WriteRawBytes WaitSensor WaitWObj WaitSyncTask WaitTime WaitDI WaitDO WaitUntil Write WriteBin WriteStrBin WZHomeJointDef WZLimJointDef WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZLimSup WZSphDef
@@ -126,7 +126,7 @@ IndInpos IndSpeed IsPers IsVar IOUnitState IsFile IsMechUnitActive IsStopStateEv
 MaxRobSpeed MirPos ModTime
 NumToStr NonMotionMode NOrient
 Offs OpMode OrientZXY ORobT
-PoseInv PoseMult PoseVect Pow Present ParIdPosValid PathRecValidBwd PFRestart ProgMemFree PowDnum
+PoseInv PoseMult PoseVect Pow Present ParIdPosValid ParIdRobValid PathRecValidBwd PFRestart ProgMemFree PowDnum
 ReadBin ReadMotor ReadNum ReadStr RelTool Round RunMode RawBytesLen ReadStrBin RobOS RoundDnum
 Sin Sqrt StrFind StrLen StrMap StrMatch StrMemb  StrOrder StrPart StrToByte StrToVal SocketGetStatus SqrtDnum Tan
 TestDI Trunc TaskRunMec TaskRunRob TestAndSet TestDI TestSignRead TextGet TextTabFreeToUse TextTabGet TruncDnum
@@ -157,12 +157,15 @@ zonedata
 
 /C7"Variables" STYLE_VARIABLE Colors = 2519712 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 clock1
+dig_input1 dig_input2 diskhome disktemp
 edge
-fine
+fine flp1
 high
 load0 low
-reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8 reg9
-tool0
+pi
+ram1disk reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8 reg9 resolver_angle
+speed speed_ref stEmpty
+tool0 torque_ref
 v0 v1 v2 v3 v4 v5 v10 v20 v25 v30 v35 v40 v45 v50 v60 v70 v80 v90 v100 v150 v200 v250 v300 v350 v400 v450 v500 v600 v700 v800 v900 v1000 v1500 v2000 v2500 v3000 v3500 v4000 v4500 v5000 v5500 v6000 v6500 v7000 vmax v_max
 wobj0
 z1 z5 z10 z15 z20 z30 z40 z50 z60 z80 z100 z200
@@ -181,7 +184,7 @@ TOOL_LOAD_ID
 \Bin
 \Conc \ConfAngle \Corr
 \D \DipLag \DO \DO1 \DOp
-\ErrDO
+\ErrDO \ExeP
 \F1 \F2 \File
 \GO1 \GO2 \GO3 \GO4
 \High
@@ -191,7 +194,7 @@ TOOL_LOAD_ID
 \NoEOffs \NoNewLine \Num \num
 \Off \On
 \ParIdType \PayLoad \PLength
-\Read
+\Read \RL2 \RL3 \RL4
 \Save \SlowTest \Start \switch
 \T \TimeFlag \Tool
 \V
