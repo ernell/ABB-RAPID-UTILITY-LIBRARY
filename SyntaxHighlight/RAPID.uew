@@ -87,8 +87,7 @@ Load LoadId
 MToolRotCalib MToolTCPCalib MakeDir ManLoadIdProc MechUnitLoad MotionSup MoveAbsJ MoveC MoveCDO MoveCSync MoveExtJ MoveJ MoveJDO MoveJSync MoveL MoveLDO MoveLSync
 Open OpenDir
 PDispOff PDispOn PDispSet PackDNHeader PackRawBytes PathAccLim PathRecMoveBwd PathRecMoveFwd PathRecStart PathRecStop PathResol ProcCall ProcerrRecovery PulseDO
-RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes ReadVar RemoveDir RemoveFile
-RenameFile Reset RestoPath Rewind
+RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes ReadVar RemoveDir RemoveFile RenameFile Reset RestoPath Rewind
 SCWrite STCalcForce STCalcTorgue STCalib STClose STIsClosed STIsOpen STOpen STTune STTuneReset SToolRotCalib SToolTCPCalib SearchC SearchL Set SetAO SetAllDataVal SetDO SetDataSearch SetDataVal SetForce SetGO SingArea SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact SpcCon SpcDiscon SpcDump SpcRead SpcStat SpcWrite SpotJ SpotL SpotMJ SpotML SpyStart SpyStop StartMove StartMoveRetry StepBwdPath Stop StopMove StorePath SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor
 TPErase TPReadFK TPReadNum TPShow TPWrite TestSignDefine TestSignReset TextTabInstall TriggC TriggCheckIO TriggEquip TriggIO TriggInt TriggJ TriggL TriggSpeed TriggStopProc TuneReset TuneServo
 UIMsgBox UnLoad UnpackRawBytes
