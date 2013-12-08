@@ -16,7 +16,7 @@
 
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.19                                              *
+; * Version:     0.20                                              *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
@@ -95,10 +95,9 @@ NOT
 /C3"Instructions" STYLE_METHOD Colors = 33023 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 AccSet ActUnit Add AliasIO ArcL
 BitClear BitSet BookErrNo Break
-CallByVar CancelLoad CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir Compact ConfJ ConfL CONNECT CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrWrite
+CallByVar CancelLoad CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir Compact ConfJ ConfL CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrRead CorrWrite
 DeactUnit Decr DitherAct DitherDeact DropSensor DropWObj
-EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrRaise ErrWrite EXIT ExitCycle
-FOR
+EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrRaise ErrWrite ExitCycle
 GetDataVal GetSysData GetTrapData GlueC GlueJ GlueL GOTO GripLoad
 HollowWristReset
 IDelete IDisable IEnable IError IF Incr IndAMove IndCMove IndDMove IndReset IndRMove InvertDO IODisable IOEnable IPers ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep IsPers ITimer IVarValue IWatch
@@ -106,12 +105,12 @@ label Load LoadId
 MakeDir ManLoadIdProc MechUnitLoad MotionSup MoveAbsJ MoveC MoveCDO MoveCSync MoveExtJ MoveJ MoveJDO MoveJSync MoveL MoveLDO MoveLSync MotionSup MToolRotCalib MToolTCPCalib
 Open OpenDir
 PackDNHeader PackRawBytes PathAccLim PathRecMoveBwd PathRecMoveFwd PathRecStart PathRecStop PathResol PDispOff PDispOn PDispSet ProcerrRecovery ProcCall PulseDO
-RAISE RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile Reset RestoPath RETURN RETRY RETURN Rewind RaiseToUser ReadAnyBin ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile
-SearchC SearchL Set SetAllDataVal SetAO SetDataSearch SetDataVal SetDO SetGO SingArea SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact StartMove StartMoveRetry StorePath Stop StopMove STEP SpcCon SpcDiscon SpcDump SpcRead SpcStat SpotJ SpotL SpotML SpyStart SpyStop SToolRotCalib SToolTCPCalib SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor
-TO THEN TEST TestDI TPErase TPReadFK TPReadNum TPShow TPWrite TriggC TriggL TriggJ TriggInt TriggIO TriggEquip TRYNEXT TuneReset TuneServo TestSignDefine TestSignReset TextTabInstall TriggCheckIO TriggSpeed TriggStopProc
+RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes ReadVar RemoveDir RemoveFile RenameFile Reset RestoPath RETURN RETRY RETURN Rewind ReadAnyBin ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile
+SearchC SearchL Set SetAllDataVal SetAO SetDataSearch SetDataVal SetDO SetGO SingArea SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact SpcCon SpcDiscon SpcDump SpcWrite SpotMJ SpotML StartMove StartMoveRetry StorePath Stop StopMove STEP SpcCon SpcDiscon SpcDump SpcRead SpcStat SpotJ SpotL SpotML SpyStart SpyStop SToolRotCalib SToolTCPCalib SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor
+TestDI TPErase TPReadFK TPReadNum TPShow TPWrite TriggC TriggL TriggJ TriggInt TriggIO TriggEquip TuneReset TuneServo TestSignDefine TestSignReset TextTabInstall TriggCheckIO TriggSpeed TriggStopProc
 UnLoad UnpackRawBytes UIMsgBox
 VelSet
-WITH WHILE WaitSensor WarmStart WorldAccLim WriteAnyBin WriteCfgData WriteRawBytes WaitSensor WaitWObj WaitSyncTask WaitTime WaitDI WaitDO WaitUntil Write WriteBin WriteStrBin WZHomeJointDef WZLimJointDef WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZLimSup WZSphDef
+WaitSensor WarmStart WorldAccLim WriteAnyBin WriteCfgData WriteRawBytes WaitSensor WaitWObj WaitSyncTask WaitTime WaitDI WaitDO WaitUntil Write WriteBin WriteStrBin WZHomeJointDef WZLimJointDef WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZLimSup WZSphDef
 
 /C4"Functions" STYLE_FUNCTION Colors = 32768 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 Abs ACos AInput AOutput ArgName ASin ATan ATan2 AbsDnum
@@ -138,7 +137,7 @@ bool byte
 clock confdata corrdescr
 datapos dionum Dnum
 errnum extjoint errtype errdomain
-ggundata
+ggundata gunmdata
 intnum iodev
 jointtarget
 loaddata loadsession
@@ -147,7 +146,7 @@ num
 orient o_jointtarget o_robtarget opnum
 pos pose progdisp
 robjoint robtarget
-shapedata symnum seamdata string speeddata switch signaldi signaldo signalai signalao signalgi signalgo socketdev syncident
+shapedata symnum seamdata string speeddata switch signaldi signaldo signalai signalao signalgi signalgo spotmdata socketdev syncident
 taskid tasks tooldata tpnum triggdata tunetype trapdata testsignal
 weavedata welddata wobjdata wzstationary wztemporary
 zonedata
