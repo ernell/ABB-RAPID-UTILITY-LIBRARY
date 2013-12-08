@@ -93,24 +93,24 @@ XOR
 NOT
 
 /C3"Instructions" STYLE_METHOD Colors = 33023 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
-AccSet ActUnit Add AliasIO ArcL
+AccSet ActUnit Add AliasIO ArcL ArcC ArcKill ArcRefresh
 BitClear BitSet BookErrNo Break
-CallByVar CancelLoad CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir Compact ConfJ ConfL CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrRead CorrWrite
+CalibJ CalibL Calibrate CallByVar CancelLoad CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir Compact ConfJ ConfL CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrRead CorrWrite
 DeactUnit Decr DitherAct DitherDeact DropSensor DropWObj
 EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrRaise ErrWrite ExitCycle
-GetDataVal GetSysData GetTrapData GlueC GlueJ GlueL GOTO GripLoad
+GetDataVal GetSysData GetTrapData GlueC GlueJ GlueL GripLoad
 HollowWristReset
-IDelete IDisable IEnable IError IF Incr IndAMove IndCMove IndDMove IndReset IndRMove InvertDO IODisable IOEnable IPers ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep IsPers ITimer IVarValue IWatch
+IDelete IDisable IEnable IError Incr IndAMove IndCMove IndDMove IndReset IndRMove InvertDO IODisable IOEnable IPers ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep IsPers ITimer IVarValue IWatch
 label Load LoadId
 MakeDir ManLoadIdProc MechUnitLoad MotionSup MoveAbsJ MoveC MoveCDO MoveCSync MoveExtJ MoveJ MoveJDO MoveJSync MoveL MoveLDO MoveLSync MotionSup MToolRotCalib MToolTCPCalib
 Open OpenDir
 PackDNHeader PackRawBytes PathAccLim PathRecMoveBwd PathRecMoveFwd PathRecStart PathRecStop PathResol PDispOff PDispOn PDispSet ProcerrRecovery ProcCall PulseDO
-RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes ReadVar RemoveDir RemoveFile RenameFile Reset RestoPath RETURN RETRY RETURN Rewind ReadAnyBin ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile
-SearchC SearchL Set SetAllDataVal SetAO SetDataSearch SetDataVal SetDO SetGO SingArea SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact SpcCon SpcDiscon SpcDump SpcWrite SpotMJ SpotML StartMove StartMoveRetry StorePath Stop StopMove STEP SpcCon SpcDiscon SpcDump SpcRead SpcStat SpotJ SpotL SpotML SpyStart SpyStop SToolRotCalib SToolTCPCalib SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor
+RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes ReadVar RemoveDir RemoveFile RenameFile Reset RestoPath Rewind ReadAnyBin ReadErrData ReadRawBytes RemoveDir RemoveFile RenameFile
+SCWrite SearchC SearchL Set SetAllDataVal SetAO SetDataSearch SetDataVal SetDO SetForce SetGO SingArea SocketAccept SocketBind SocketClose SocketConnect StepBwdPath SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact SpcCon SpcDiscon SpcDump SpcWrite SpotL SpotJ SpotMJ SpotML StartMove StartMoveRetry StorePath Stop StopMove STClose STOpen STCalib STIsClosed STIsOpen STCalcTorgue STCalcForce STTune STTuneReset SpcCon SpcDiscon SpcDump SpcRead SpcStat SpotJ SpotL SpotML SpyStart SpyStop SToolRotCalib SToolTCPCalib SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor
 TestDI TPErase TPReadFK TPReadNum TPShow TPWrite TriggC TriggL TriggJ TriggInt TriggIO TriggEquip TuneReset TuneServo TestSignDefine TestSignReset TextTabInstall TriggCheckIO TriggSpeed TriggStopProc
 UnLoad UnpackRawBytes UIMsgBox
 VelSet
-WaitSensor WarmStart WorldAccLim WriteAnyBin WriteCfgData WriteRawBytes WaitSensor WaitWObj WaitSyncTask WaitTime WaitDI WaitDO WaitUntil Write WriteBin WriteStrBin WZHomeJointDef WZLimJointDef WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZLimSup WZSphDef
+WaitSensor WarmStart WorldAccLim Write WriteAnyBin WriteBin WriteCfgData WriteRawBytes WriteStrBin WaitSensor WaitWObj WaitSyncTask WaitTime WaitDI WaitDO WaitUntil WZHomeJointDef WZLimJointDef WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZLimSup WZSphDef
 
 /C4"Functions" STYLE_FUNCTION Colors = 32768 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 Abs ACos AInput AOutput ArgName ASin ATan ATan2 AbsDnum
@@ -133,11 +133,12 @@ UIAlphaEntry UIClientExist UIListView UIMessageBox UINumEntry UINumTune
 ValToStr VectMagn
 
 /C5"Datatypes" STYLE_KEYWORD Colors = 4210816 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
-bool byte
+beaddata bool byte
 clock confdata corrdescr
-datapos dionum Dnum
-errnum extjoint errtype errdomain
-ggundata gunmdata
+datapos dionum dir Dnum
+equipdata errnum extjoint errtype errdomain
+forcedata
+ggundata gundata gunmdata
 intnum iodev
 jointtarget
 loaddata loadsession
@@ -146,7 +147,7 @@ num
 orient o_jointtarget o_robtarget opnum
 pos pose progdisp
 robjoint robtarget
-shapedata symnum seamdata string speeddata switch signaldi signaldo signalai signalao signalgi signalgo spotmdata socketdev syncident
+shapedata symnum seamdata simdata string speeddata switch signaldi signaldo signalai signalao signalgi signalgo spotdata spotmdata socketdev syncident
 taskid tasks tooldata tpnum triggdata tunetype trapdata testsignal
 weavedata welddata wobjdata wzstationary wztemporary
 zonedata
