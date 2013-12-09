@@ -16,11 +16,11 @@
 
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.21                                              *
+; * Version:     0.22                                              *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
-; * Date:        2013-12-08                                        *
+; * Date:        2013-12-09                                        *
 ; * Author:      <rob@ernell.se>                                   *
 ; ******************************************************************
 
@@ -46,7 +46,7 @@
 /Open Fold Strings  = "IF"     "ELSEIF"
 /Close Fold Strings = "ELSEIF"  "ENDIF"
 /Indent Strings =   "DO" "THEN" "PROC" "FUNC" "TRAP"
-/Unindent Strings = "ENDWHILE" "ENDIF" "ENDPROC" "ENDFUNC" "ENDTRAP" "ELSE"
+/Unindent Strings = "ENDWHILE" "ENDIF" "ENDPROC" "ENDFUNC" "ENDTRAP" "ELSE" "ENDTEST" "DEFAULT"
 /Delimiters = { } ( ) [ ] , . = + - * / : ; ! \ ? := <> >= <=
 /C1"Reserved words" STYLE_KEYWORD Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 ALIAS
@@ -70,8 +70,11 @@ WHILE WITH
 /C2"Operators" STYLE_OPERATOR Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 AND
 DIV
+EQ
+GT GTEQ
+LT LTEQ
 MOD
-NOT
+NOT NOTEQ
 OR
 XOR
 /C3"Instructions" STYLE_METHOD Colors = 33023 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
@@ -146,8 +149,7 @@ pi
 ram1disk reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8 reg9 resolver_angle
 speed speed_ref stEmpty
 tool0 torque_ref
-v0 v1 v10 v100 v1000 v150 v1500 v2 v20 v200 v2000 v25 v250 v2500 v3 v30 v300 v3000 v35 v350 v3500 v4 v40 v400 v4000 v45 v450 v4500 v5 v50 v500 v5000 v5500 v60 v600 v6000 v6500 v70 v700 v7000 v80 v800 v90 v900
-v_max vmax
+v0 v1 v10 v100 v1000 v150 v1500 v2 v20 v200 v2000 v25 v250 v2500 v3 v30 v300 v3000 v35 v350 v3500 v4 v40 v400 v4000 v45 v450 v4500 v5 v50 v500 v5000 v5500 v60 v600 v6000 v6500 v70 v700 v7000 v80 v800 v90 v900 v_max vmax
 wobj0
 z1 z10 z100 z15 z20 z200 z30 z40 z5 z50 z60 z80
 /C8"System constants and vars" STYLE_VARIABLE Colors = 255 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
@@ -160,8 +162,7 @@ PAY_LOAD_ID
 ROB_LM1_LOAD_VAL ROB_LOAD_VAL ROB_NOT_LOAD_VAL
 TOOL_LOAD_ID TRUE
 /C9"Common arguments/switches" STYLE_FUNCTION Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
-\Accuracy \Append \Bin \Conc \ConfAngle \Corr \D \DO \DO1 \DOp \DipLag \ErrDO \ExeP \F1 \F2 \File \GO1 \GO2 \GO3 \GO4 \High \ID \InPos \Inpos \LoadIdType \MaxTime \NoEOffs \NoNewLine \Num \Off \On \PLength \ParIdType \PayLoad \RL2 \RL3 \RL4 \Read \Save \SlowTest \Start \T \TimeFlag \Tool \V \WObj \Write \Z \num
-\switch
+\Accuracy \Append \Bin \Conc \ConfAngle \Corr \D \DO \DO1 \DOp \DipLag \ErrDO \ExeP \F1 \F2 \File \GO1 \GO2 \GO3 \GO4 \High \ID \InPos \Inpos \LoadIdType \MaxTime \NoEOffs \NoNewLine \Num \Off \On \PLength \ParIdType \PayLoad \RL2 \RL3 \RL4 \Read \Save \SlowTest \Start \T \TimeFlag \Tool \V \WObj \Write \Z \num \switch
 /C10"Word List 10" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C11"Word List 11" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C12"Word List 12" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
