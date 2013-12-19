@@ -23,7 +23,7 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! Module Name: ZYXTOOLS
-  ! Version:     0.1b
+  ! Version:     0.1beta
   ! Description: 
   !              Chapter 1: misc. functions
   !              Chapter 2: tooldata functions
