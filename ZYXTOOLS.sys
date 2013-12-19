@@ -32,7 +32,8 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !              Chapter 5: zonedata functions
   !              
   ! Date:        2013-12-18
-  ! Author:      <rob@ernell.se>
+  ! Author:      Robert Andersson <rob@ernell.se>
+  ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
 
   !*****************************************************
