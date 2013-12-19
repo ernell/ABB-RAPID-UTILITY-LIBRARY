@@ -26,7 +26,8 @@ MODULE TIMER(SYSMODULE,NOSTEPIN)
   ! Version:     0.1
   ! Description: A simple timer with basic functionality
   ! Date:        2013-11-18
-  ! Author:      <rob@ernell.se>
+  ! Author:      Robert Andersson <rob@ernell.se>
+  ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
 
   LOCAL VAR clock clTimer;
