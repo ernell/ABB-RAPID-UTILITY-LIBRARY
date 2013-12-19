@@ -23,7 +23,7 @@ MODULE SORT(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! Module Name: SORT
-  ! Version:     0.1b
+  ! Version:     0.1beta
   ! Description: Sorting lib.
   !              - Vector type
   !              - Various data swap functions
