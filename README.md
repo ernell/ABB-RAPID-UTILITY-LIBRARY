@@ -9,8 +9,8 @@ Added a new definitionfile for ABB Rapid IRC5 to use with UltraEdit & UEStudio. 
 
 <h3>Files</h3>
 TIMER.sys - An easy to use timer with start, stop, resume and printfunction.<br>
-ZYXTOOLS.sys - Manipulation of tool, workobjects, zones and moore.
-SORT.sys - Sort your pos-arrays, num-arrays, and use the Vector type.
+ZYXTOOLS.sys - Manipulation of tool, workobjects, zones and moore.<br>
+SORT.sys - Sort your pos-arrays, num-arrays, and use the Vector type.<br>
 
 <h3>Help</h3>
 If you like to contribute to this library, please send what you got to my email, and I will add it to the collection. Dont forget to write a module header like the one in TIMER.mod. Use the LICENSE-TEMPLATE.txt. The code should be readable, nice and tidy.
