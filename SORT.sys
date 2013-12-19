@@ -1,0 +1,180 @@
+%%%
+  VERSION:1
+  LANGUAGE:ENGLISH
+%%%
+
+MODULE SORT(SYSMODULE,NOSTEPIN)
+
+  !*****************************************************
+  ! * Copyright (C) 2013 Robert Andersson <rob@ernell.se>
+  ! *
+  ! * Licensed under the Apache License, Version 2.0 (the "License");
+  ! * you may not use this file except in compliance with the License.
+  ! * You may obtain a copy of the License at
+  ! *
+  ! *      http://www.apache.org/licenses/LICENSE-2.0
+  ! *
+  ! * Unless required by applicable law or agreed to in writing, software
+  ! * distributed under the License is distributed on an "AS IS" BASIS,
+  ! * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ! * See the License for the specific language governing permissions and
+  ! * limitations under the License.
+  !*****************************************************
+
+  !*****************************************************
+  ! Module Name: SORT
+  ! Version:     0.1b
+  ! Description: Sorting lib.
+  !              - Vector type
+  !              - Various data swap functions
+  !              -
+  !              -
+  ! Date:        2013-12-19
+  ! Author:      Robert Andersson <rob@ernell.se>
+  ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
+  !*****************************************************
+
+  !*****************************************************
+  ! Vector type with x and y components
+  !*****************************************************
+  RECORD Vector
+      num x;
+      num y;
+  ENDRECORD
+  
+  !*****************************************************
+  ! Swap the values of two num objects
+  !*****************************************************
+  PROC swap_num(INOUT num value1,INOUT num value2)
+    VAR num tmp;
+    
+    tmp:=value1;
+    value1:=value2;
+    value2:=tmp;
+  ENDPROC
+
+  !*****************************************************
+  ! Swap the values of two Vector objects
+  !*****************************************************
+  PROC swap_vector(INOUT Vector value1,INOUT Vector value2)
+    VAR Vector tmp;
+
+    tmp:=value1;
+    value1:=value2;
+    value2:=tmp;
+  ENDPROC
+
+  !*****************************************************
+  ! Swap the values of two pos ojects
+  !*****************************************************
+  PROC swap_pos(INOUT pos value1,INOUT pos value2)
+    VAR pos tmp;
+    
+    tmp:=value1;
+    value1:=value2;
+    value2:=tmp;
+  ENDPROC
+
+  !*****************************************************
+  ! Sort array of Vectors
+  ! Switches: 
+  !           X|Y  - Vector variable used for sorting, default is X
+  !           A|D  - Ascending(default)|Descending
+  !          SA|SD - Sort by second variable, Ascending(default)|Descending
+  !*****************************************************
+  PROC sort_vector(INOUT Vector array{*},\switch X|switch Y,\switch A|switch D,\switch SA|switch SD)
+    VAR num size;
+    VAR Vector tmp;
+    
+    size:=Dim(array,1);
+    FOR i FROM 1 TO (size-1) DO
+      FOR j FROM 1 TO (size-1) DO
+        IF Present(Y) THEN
+          IF Present(D) THEN
+            ! Y/D
+            IF array{j}.y<array{j+1}.y swap_vector array{j},array{j+1}; ! descending Y
+          ELSE
+            ! Y/A
+            IF array{j}.y>array{j+1}.y swap_vector array{j},array{j+1}; ! ascending Y
+          ENDIF
+          IF array{j}.y=array{j+1}.y THEN
+            IF Present(SD) THEN
+              ! SD
+              IF array{j}.x>array{j+1}.x swap_vector array{j},array{j+1};
+            ELSE
+              ! SA
+              IF array{j}.x<array{j+1}.x swap_vector array{j},array{j+1};
+            ENDIF
+          ENDIF
+        ELSE
+          IF Present(D) THEN
+            ! X/D
+            IF array{j}.x<array{j+1}.x swap_vector array{j},array{j+1}; ! descending Y
+          ELSE
+            ! X/A
+            ! default (if no switches are used)
+            IF array{j}.x>array{j+1}.x swap_vector array{j},array{j+1}; ! ascending X
+          ENDIF
+          ! SA/SD
+          IF array{j}.x=array{j+1}.x THEN
+            IF Present(SD) THEN
+              ! SD
+              IF array{j}.y>array{j+1}.y swap_vector array{j},array{j+1};
+            ELSE
+              ! SA
+              IF array{j}.y<array{j+1}.y swap_vector array{j},array{j+1};
+            ENDIF
+          ENDIF
+        ENDIF
+      ENDFOR
+    ENDFOR
+  ENDPROC
+  
+  !*****************************************************
+  ! Reverse the elements of an array of num (first=last)
+  !*****************************************************
+  PROC rev_num_array(INOUT num array{*})
+    VAR num tmp;
+    VAR num size;
+    VAR num count:=0;
+    
+    size:=Dim(array,1);
+    WHILE count<size DO
+        swap_num array{count},array{size};
+        Incr count;
+        Decr size;
+    ENDWHILE
+  ENDPROC
+
+  !*****************************************************
+  ! Reverse the elements of an array of Vectors (first=last)
+  !*****************************************************
+  PROC rev_vector_array(INOUT Vector array{*})
+    VAR Vector tmp;
+    VAR num size;
+    VAR num count:=0;
+    
+    size:=Dim(array,1);
+    WHILE count<size DO
+        swap_vector array{count},array{size};
+        Incr count;
+        Decr size;
+    ENDWHILE
+  ENDPROC
+
+  !*****************************************************
+  ! Reverse the elements of an array of pos (first=last)
+  !*****************************************************
+  PROC rev_pos_array(INOUT pos array{*})
+    VAR pos tmp;
+    VAR num size;
+    VAR num count:=0;
+    
+    size:=Dim(array,1);
+    WHILE count<size DO
+        swap_pos array{count},array{size};
+        Incr count;
+        Decr size;
+    ENDWHILE
+  ENDPROC
+ENDMODULE
