@@ -22,19 +22,12 @@ MODULE LOG(SYSMODULE,NOSTEPIN)
   !*****************************************************
 
   !*****************************************************
-  ! Module Name: SORT
+  ! Module Name: LOG
   ! Version:     0.1b (not yet tested)
   ! Description: Log utility
   ! Date:        2013-12-27
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
-  !*****************************************************
-
-  !*****************************************************
-  ! Module Name: LOG
-  ! Description: RAPID Log utility
-  ! Version:     2014-01-02
-  ! Author:      <rob@ernell.se>
   !*****************************************************
 
   ! Log filename
