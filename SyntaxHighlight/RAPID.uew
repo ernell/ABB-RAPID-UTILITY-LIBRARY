@@ -16,11 +16,11 @@
 
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.23                                              *
+; * Version:     0.24                                              *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
-; * Date:        2013-12-11                                        *
+; * Date:        2013-12-28                                        *
 ; * Author:      <rob@ernell.se>                                   *
 ; ******************************************************************
 
@@ -91,7 +91,7 @@ MToolRotCalib MToolTCPCalib MakeDir ManLoadIdProc MechUnitLoad MotionSup MoveAbs
 Open OpenDir
 PDispOff PDispOn PDispSet PackDNHeader PackRawBytes PathAccLim PathRecMoveBwd PathRecMoveFwd PathRecStart PathRecStop PathResol ProcCall ProcerrRecovery PulseDO
 RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes ReadVar RemoveDir RemoveFile RenameFile Reset RestoPath Rewind
-SCWrite STCalcForce STCalcTorgue STCalib STClose STIsClosed STIsOpen STOpen STTune STTuneReset SToolRotCalib SToolTCPCalib SearchC SearchL Set SetAO SetAllDataVal SetDO SetDataSearch SetDataVal SetForce SetGO SingArea SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact SpcCon SpcDiscon SpcDump SpcRead SpcStat SpcWrite SpotJ SpotL SpotMJ SpotML SpyStart SpyStop StartMove StartMoveRetry StepBwdPath Stop StopMove StorePath SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor
+SCWrite STCalcForce STCalcTorgue STCalib STClose STIsClosed STIsOpen STOpen STTune STTuneReset SToolRotCalib SToolTCPCalib SearchC SearchL Set SetAO SetAllDataVal SetDO SetDataSearch SetDataVal SetForce SetGO ShadowDO SingArea SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact SpcCon SpcDiscon SpcDump SpcRead SpcStat SpcWrite SpotJ SpotL SpotMJ SpotML SpyStart SpyStop StartMove StartMoveRetry StepBwdPath Stop StopMove StorePath SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor
 TPErase TPReadFK TPReadNum TPShow TPWrite TestSignDefine TestSignReset TextTabInstall TriggC TriggCheckIO TriggEquip TriggIO TriggInt TriggJ TriggL TriggSpeed TriggStopProc TuneReset TuneServo
 UIMsgBox UnLoad UnpackRawBytes
 VelSet
@@ -163,7 +163,7 @@ PAY_LOAD_ID
 ROB_LM1_LOAD_VAL ROB_LOAD_VAL ROB_NOT_LOAD_VAL
 TOOL_LOAD_ID TRUE
 /C9"Common arguments/switches" STYLE_FUNCTION Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
-\Accuracy \Append \Bin \Conc \ConfAngle \Corr \D \DO \DO1 \DOp \DipLag \ErrDO \ExeP \F1 \F2 \File \GO1 \GO2 \GO3 \GO4 \High \ID \InPos \Inpos \LoadIdType \MaxTime \NoEOffs \NoNewLine \Num \Off \On \PLength \ParIdType \PayLoad \RL2 \RL3 \RL4 \Read \Save \SlowTest \Start \T \TimeFlag \Tool \V \WObj \Write \Z \num \switch
+\AORamp \AOp \ASCII \Accuracy \AllMotionTasks \AllMoveTasks \AlreadyActive \Append \Arm \AxisNumber \BackupFile \Bin \Block \BreakFlag \BreakOff \Buttons \Bwd \CirPointOri \Clear \ClientAddress \Conc \ConfAngle \ConfigAngle \ConstSym \Continue \Corr \D \DIBreak \DNeg \DO \DO1 \DOBreak \DODelay \DOp \DPos \Data \DeactAll \DefinedFlag \DipLag \Dynamic \ErrDO \ErrIfChanged \ErrorId \ErrorNumber \ExeP \F1 \F2 \File \FilePath \Float4 \FromIndex \Fwd \GO1 \GO2 \GO3 \GO4 \GOp \GlobalSym \GrpSize \Halt \Header \Hex1 \High \ID \Icon \Image \Inhib \InitCmd \InMod \InPos \InRout \Inside \InstanceId \InTask \IntX \KeepSync \Level \ListNo \LoadIdType \LocalSym \Logic \MaxTime \MechUnit \MechUnitName \MsgLine2 \MsgLine3 \MsgLine4 \MsgLine5 \Network \NoCloseBtn \NoConc \NoEOffs \NoNewLine \NoOfBytes \NoRecBytes \NoRegain \Num \Object \ObjectFrame \ObjectName \Off \Old \On \Outside \PLength \PStop \ParIdType \PathFrame \PayLoad \PersSym \Phys \PollRate \PredTime \Quick \Ramp \Read \RefNum \RefPos \RelDist \Result \Retract \RL2 \RL3 \RL4 \RawData \Read \Result \Rot \SDelay \Save \Short \Single \SlowTest \Speed \Start \Stat \Status \Stop \StopBlock \StopMove \Str \Str1 \Str2 \Str3 \Str4 \Str5 \Strict \Sup \SyncLastMoveInst \SyncOrgMoveInst \T \T2 \T3 \T4 \T5 \T6 \T7 \T8 \TaskRef \Teach \Temp \Time \TimeFlag \TimeOut \ToAbsNum \ToAbsPos \ToRelNum \ToRelPos \Tool \ToolOffs \TuneValue \TypeMod \UnloadFile \UnloadPath \V \VarSym \W \WObj \Wrap \Wrist \Write \XPos \Z \num \switch
 /C10"Word List 10" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C11"Word List 11" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C12"Word List 12" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
