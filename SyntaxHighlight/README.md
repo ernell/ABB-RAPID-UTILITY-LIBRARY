@@ -1,6 +1,6 @@
 <h1>Syntax highlighter for UEStudio/UltraEdit</h1>
 
-Features:
+<h3>Features</h3>
 - IRC5
 - Supports UEStudio/UEdit function list
 - Highlights RAPID instructions and functions
