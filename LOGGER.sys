@@ -3,7 +3,7 @@
   LANGUAGE:ENGLISH
 %%%
 
-MODULE LOG(SYSMODULE,NOSTEPIN)
+MODULE LOGGER(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! * Copyright (C) 2013 Robert Andersson <rob@ernell.se>
@@ -22,10 +22,10 @@ MODULE LOG(SYSMODULE,NOSTEPIN)
   !*****************************************************
 
   !*****************************************************
-  ! Module Name: LOG
-  ! Version:     0.1b (not yet tested)
+  ! Module Name: LOGGER
+  ! Version:     0.12b (syntax checked and partly tested)
   ! Description: Log utility
-  ! Date:        2013-12-27
+  ! Date:        2014-01-10
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
@@ -35,14 +35,14 @@ MODULE LOG(SYSMODULE,NOSTEPIN)
   ! Log folder
   LOCAL PERS string LOG_FOLDER:="HOME:";
 
-  ! Loglevels
+  ! Loglevels (dont change)
   CONST num LOG_OFF:=0;   ! No info or logging
-  CONST num LOG_ERR:=1;   ! Show only errors on screen
-  CONST num LOG_INFO:=2;  ! Normal runtime Information
-  CONST num LOG_DEBUG:=3; ! Detailed information
+  CONST num LOG_ERROR:=1; ! Show only errors on screen
+  CONST num LOG_INFO:=2;  ! Normal runtime Information (default)
+  CONST num LOG_DEBUG:=3; ! Detailed information on screen
   CONST num LOG_TRACE:=4; ! Detailed information on screen + logfile
 
-  ! Current loglevel
+  ! Hold current loglevel
   PERS num LOG_LEVEL:=2;
   
   ! Decimal precision
@@ -51,31 +51,53 @@ MODULE LOG(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Log
   ! Example:
-  !          LogNum "My message",LOG_DEBUG;
+  !   Log to screen only : Log "My message",LOG_DEBUG;
+  !   Log to file only   : Log "My message",LOG_DEBUG\FILE;
+  !   Log to screeen+file: Log "My message",LOG_DEBUG\BOTH;
   !*****************************************************
-  PROC Log(string message,num level)
-    IF level>=LOG_LEVEL THEN
+  
+  LOCAL CONST num TYPE_FILE:=1;
+  LOCAL CONST num TYPE_BOTH:=2;
+  
+  PROC Log(string message,num level,\switch FILE|switch BOTH)
+    VAR num type:=0;
+    VAR string prefix;
+    
+    IF Present(FILE) type:=TYPE_FILE;
+    IF Present(BOTH) type:=TYPE_BOTH;
+
+    IF level<=LOG_LEVEL THEN
+
       TEST level
       CASE LOG_ERROR:
-        TPWrite "E:"+message;
+        prefix:="E:";
       CASE LOG_INFO:
-        TPWrite "I:"+message;
+        prefix:="I:";
       CASE LOG_DEBUG:
-        TPWrite "D:"+message;
+        prefix:="D:";
       CASE LOG_TRACE:
-        TPWrite "T:"+message;
-        Log2File message;
+        prefix:="T:";
       ENDTEST
+
+      IF type=TYPE_FILE THEN
+        Log2File message;
+      ELSEIF type=TYPE_BOTH THEN
+        Log2File message;
+        TPWrite prefix+message;
+      ELSE
+        TPWrite prefix+message;
+      ENDIF
+
     ENDIF
   ENDPROC
 
   !*****************************************************
   ! Log together with a numeric value
   ! Example:
-  !          LogNum "My message",nValue,LOG_DEBUG;
+  !   LogNum "The value=",nValue,LOG_DEBUG;
   !*****************************************************
   PROC LogNum(string message,num value,num level)
-    IF level>=LOG_LEVEL THEN
+    IF level<=LOG_LEVEL THEN
       TEST level
       CASE LOG_ERROR:
         TPWrite "E:"+message\Num:=value;
@@ -93,31 +115,47 @@ MODULE LOG(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Set filename
   !*****************************************************
-  PROC LogFilename(string filename)
+  PROC SetLogFilename(string filename)
     LOG_FILENAME:=filename;
   ENDPROC
   
   !*****************************************************
   ! Set folder
   !*****************************************************
-  PROC LogFolder(string folder)
+  PROC SetLogFolder(string folder)
     LOG_FOLDER:=folder;
   ENDPROC
 
   !*****************************************************
   ! Set precision of numerical values
   !*****************************************************
-  PROC LogNumPrec(num value)
+  PROC SetLogNumPrec(num value)
     LOG_NUMPREC:=value;
     IF LOG_NUMPREC<0 LOG_NUMPREC:=0;
     IF LOG_NUMPREC>7 LOG_NUMPREC:=7;
   ENDPROC
 
   !*****************************************************
-  ! Save message in a logfile
+  ! Save message in the logfile (+date & timestamp)
   !*****************************************************
-  LOCAL PROC Log2File(string message)
-    ! To be continued
-    TPErase;
+  PROC Log2File(string message)
+    VAR iodev iodev1;
+
+    Open LOG_FOLDER\File:=LOG_FILENAME,iodev1\Append;
+    Write iodev1,message\NoNewLine;
+    Write iodev1,"  "\NoNewLine;
+    Write iodev1,CDate()\NoNewLine;
+    Write iodev1,"  "\NoNewLine;
+    Write iodev1,CTime();
+    Close iodev1;
+  ENDPROC
+
+  !*****************************************************
+  ! Log a simple warning in robot message log.
+  ! Header:  max 24 characters
+  ! Message: max 40 characters
+  !*****************************************************
+  PROC LogWarn(string header,string reason)
+    ErrWrite \ W, header,reason;
   ENDPROC
 ENDMODULE
