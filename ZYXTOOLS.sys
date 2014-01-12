@@ -23,7 +23,7 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! Module Name: ZYXTOOLS
-  ! Version:     0.1beta
+  ! Version:     0.1b
   ! Description: 
   !              Chapter 1: misc. functions
   !              Chapter 2: tooldata functions
@@ -45,7 +45,7 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Get the normalization error from an orientation
   !*****************************************************
-  FUNC num get_rot_err(orient rot)
+  LOCAL FUNC num get_rot_err(orient rot)
     RETURN Abs(Sqrt(Pow(rot.q1,2)+Pow(rot.q2,2)+Pow(rot.q3,2)+Pow(rot.q4,2)));
   ENDFUNC
 
@@ -53,7 +53,7 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   ! Normalize orientation if needed, switch for perfect orientations
   ! "NoTol" stands for "No Tolerance"
   !*****************************************************
-  PROC fix_rot(INOUT orient rot,\switch NoTol)
+  PROC FixOrient(INOUT orient rot,\switch NoTol)
     VAR num err;
     
     err:=get_rot_err(rot);
@@ -77,70 +77,70 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Set orientation angle on tooldata from euler angles
   !*****************************************************
-  PROC set_tool_rot_zyx(INOUT tooldata object,num z,num y,num x)
+  PROC SetToolZYX(INOUT tooldata object,num z,num y,num x)
     object.tframe.rot:=OrientZYX(z,y,x);
   ENDPROC
 
   !*****************************************************
   ! Set orientation angle on tooldata with quaternion (orient object)
   !*****************************************************
-  PROC set_tool_rot(INOUT tooldata object,orient value)
+  PROC SetToolOrient(INOUT tooldata object,orient value)
     object.tframe.rot:=value;
   ENDPROC
 
   !*****************************************************
   ! Get orientation from tooldata as an orient object
   !*****************************************************
-  FUNC orient get_tool_rot(tooldata object)
+  FUNC orient GetToolOrient(tooldata object)
     RETURN object.tframe.rot;
   ENDFUNC
 
   !*****************************************************
   ! Set mass on tooldata
   !*****************************************************
-  PROC set_tool_mass(INOUT tooldata object,num value)
+  PROC SetToolMass(INOUT tooldata object,num value)
     object.tload.mass:=value;
   ENDPROC
 
   !*****************************************************
   ! Get tool mass from tooldata
   !*****************************************************
-  FUNC num get_tool_mass(tooldata object)
+  FUNC num GetToolMass(tooldata object)
     RETURN object.tload.mass;
   ENDFUNC
 
   !*****************************************************
   ! Set tool loaddata
   !*****************************************************
-  PROC set_tool_load(INOUT tooldata object,loaddata value)
+  PROC SetToolLoad(INOUT tooldata object,loaddata value)
     object.tload:=value;
   ENDPROC
 
   !*****************************************************
   ! Get tool loaddata
   !*****************************************************
-  FUNC loaddata get_tool_load(tooldata object)
+  FUNC loaddata GetToolLoad(tooldata object)
     RETURN object.tload;
   ENDFUNC
 
   !*****************************************************
   ! Set Centre Of Gravity on tool loaddata
   !*****************************************************
-  PROC set_tool_cog(INOUT tooldata object,pos value)
+  PROC SetToolCOG(INOUT tooldata object,pos value)
     object.tload.cog:=[value.x,value.y,value.z];
   ENDPROC
 
   !*****************************************************
   ! Get Centre Of Gravity from tool loaddata
   !*****************************************************
-  FUNC pos get_tool_cog(tooldata object)
+  FUNC pos GetToolCOG(tooldata object)
     RETURN object.tload.cog;
   ENDFUNC
 
   !*****************************************************
   ! Set tool frame translation
   !*****************************************************
-  PROC set_tool_frame(INOUT tooldata object,num x,num y,num z)
+  PROC SetToolFrame(INOUT tooldata object,num x,num y,num z)
     object.tframe.trans.x:=x;
     object.tframe.trans.y:=y;
     object.tframe.trans.z:=z;
@@ -149,7 +149,7 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Add tool frame translation
   !*****************************************************
-  PROC add_tool_frame(INOUT tooldata object,num x,num y,num z)
+  PROC AddToolFrame(INOUT tooldata object,num x,num y,num z)
     Add object.tframe.trans.x,x;
     Add object.tframe.trans.y,y;
     Add object.tframe.trans.z,z;
@@ -164,14 +164,14 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Set orientation angle on a workobject with euler angles
   !*****************************************************
-  PROC set_wobj_rot_zyx(INOUT wobjdata object,num z,num y,num x)
+  PROC SetWObjZYX(INOUT wobjdata object,num z,num y,num x)
     object.oframe.rot:=OrientZYX(z,y,x);
   ENDPROC
 
   !*****************************************************
   ! Set oframe translation
   !*****************************************************
-  PROC set_wobj_oframe(INOUT wobjdata object,num x,num y,num z)
+  PROC SetWObjOFrame(INOUT wobjdata object,num x,num y,num z)
     object.oframe.trans.x:=x;
     object.oframe.trans.y:=y;
     object.oframe.trans.z:=z;
@@ -180,7 +180,7 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Set uframe translation
   !*****************************************************
-  PROC set_wobj_uframe(INOUT wobjdata object,num x,num y,num z)
+  PROC SetWObjUFrame(INOUT wobjdata object,num x,num y,num z)
     object.uframe.trans.x:=x;
     object.uframe.trans.y:=y;
     object.uframe.trans.z:=z;
@@ -189,7 +189,7 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Add oframe translation
   !*****************************************************
-  PROC add_wobj_oframe(INOUT wobjdata object,num x,num y,num z)
+  PROC AddWObjOFrame(INOUT wobjdata object,num x,num y,num z)
     Add object.oframe.trans.x,x;
     Add object.oframe.trans.y,y;
     Add object.oframe.trans.z,z;
@@ -198,7 +198,7 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Add uframe translation
   !*****************************************************
-  PROC add_wobj_uframe(INOUT wobjdata object,num x,num y,num z)
+  PROC AddWObjUFrame(INOUT wobjdata object,num x,num y,num z)
     Add object.uframe.trans.x,x;
     Add object.uframe.trans.y,y;
     Add object.uframe.trans.z,z;
@@ -213,35 +213,35 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Set Centre Of Gravity on loaddata
   !*****************************************************
-  PROC set_load_cog(INOUT loaddata object,pos value)
+  PROC SetLoadCOG(INOUT loaddata object,pos value)
     object.cog:=[value.x,value.y,value.z];
   ENDPROC
 
   !*****************************************************
   ! Get Centre Of Gravity from loaddata as a pos
   !*****************************************************
-  FUNC pos get_load_cog(loaddata object)
+  FUNC pos GetLoadCOG(loaddata object)
     RETURN object.cog;
   ENDFUNC
 
   !*****************************************************
   ! Set loaddata mass
   !*****************************************************
-  PROC set_load_mass(INOUT loaddata object,num value)
+  PROC SetLoadMass(INOUT loaddata object,num value)
     object.mass:=value;
   ENDPROC
 
   !*****************************************************
   ! Get loaddata mass
   !*****************************************************
-  FUNC num get_load_mass(loaddata object)
+  FUNC num GetLoadMass(loaddata object)
     RETURN object.mass;
   ENDFUNC
 
   !*****************************************************
   ! Set loaddata inertia with a pos
   !*****************************************************
-  PROC set_load_inertia(INOUT loaddata object,pos value)
+  PROC SetLoadInertia(INOUT loaddata object,pos value)
     object.ix:=value.x;
     object.iy:=value.y;
     object.iz:=value.z;
@@ -250,7 +250,7 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Get loaddata inertia as a pos
   !*****************************************************
-  FUNC pos get_load_inertia(loaddata object)
+  FUNC pos GetLoadInertia(loaddata object)
     VAR pos value:=[0,0,0];
     
     value.x:=object.ix;
@@ -268,56 +268,56 @@ MODULE ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Set zone as "Fine point"
   !*****************************************************
-  PROC set_zone_fine(INOUT zonedata object)
+  PROC SetZoneFine(INOUT zonedata object)
     object.finep:=TRUE;
   ENDPROC
 
   !*****************************************************
   ! Set zone as "Fly by"
   !*****************************************************
-  PROC set_zone_flyby(INOUT zonedata object)
+  PROC SetZoneFlyby(INOUT zonedata object)
     object.finep:=FALSE;
   ENDPROC
 
   !*****************************************************
   ! Path zone TCP
   !*****************************************************
-  PROC set_pzone_tcp(INOUT zonedata object,num value)
+  PROC SetPZoneTCP(INOUT zonedata object,num value)
     object.pzone_tcp:=value;
   ENDPROC
 
   !*****************************************************
   ! Path zone orientation
   !*****************************************************
-  PROC set_pzone_ori(INOUT zonedata object,num value)
+  PROC SetPZoneOrient(INOUT zonedata object,num value)
     object.pzone_ori:=value;
   ENDPROC
 
   !*****************************************************
   ! Path zone orientation external axes
   !*****************************************************
-  PROC set_pzone_eax(INOUT zonedata object,num value)
+  PROC SetPZoneEAx(INOUT zonedata object,num value)
     object.pzone_eax:=value;
   ENDPROC
 
   !*****************************************************
   ! Zone orientation
   !*****************************************************
-  PROC set_zone_ori(INOUT zonedata object,num value)
+  PROC SetZoneOrient(INOUT zonedata object,num value)
     object.zone_ori:=value;
   ENDPROC
 
   !*****************************************************
   ! Zone linear external axes
   !*****************************************************
-  PROC set_zone_leax(INOUT zonedata object,num value)
+  PROC SetZoneLEAx(INOUT zonedata object,num value)
     object.zone_leax:=value;
   ENDPROC
 
   !*****************************************************
   ! Zone rotational external axes
   !*****************************************************
-  PROC set_zone_reax(INOUT zonedata object,num value)
+  PROC SetZoneREAx(INOUT zonedata object,num value)
     object.zone_reax:=value;
   ENDPROC
 ENDMODULE
