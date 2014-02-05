@@ -23,9 +23,9 @@ MODULE LOGGER(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! Module Name: LOGGER
-  ! Version:     0.12b (syntax checked and partly tested)
+  ! Version:     0.15
   ! Description: Log utility
-  ! Date:        2014-01-10
+  ! Date:        2014-02-01
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
@@ -36,17 +36,17 @@ MODULE LOGGER(SYSMODULE,NOSTEPIN)
   LOCAL PERS string LOG_FOLDER:="HOME:";
 
   ! Loglevels (dont change)
-  CONST num LOG_OFF:=0;   ! No info or logging
-  CONST num LOG_ERROR:=1; ! Show only errors on screen
+  CONST num LOG_OFF:=0;   ! No information (only necessary stuff)
+  CONST num LOG_ERROR:=1; ! Show only errors
   CONST num LOG_INFO:=2;  ! Normal runtime Information (default)
-  CONST num LOG_DEBUG:=3; ! Detailed information on screen
-  CONST num LOG_TRACE:=4; ! Detailed information on screen + logfile
+  CONST num LOG_DEBUG:=3; ! A bit more detailed information
+  CONST num LOG_TRACE:=4; ! Even more detailed information
 
   ! Hold current loglevel
   PERS num LOG_LEVEL:=2;
   
   ! Decimal precision
-  LOCAL PERS num LOG_NUMPREC:=4;
+  LOCAL PERS num LOG_NUMPREC:=0;
 
   !*****************************************************
   ! Log
@@ -58,36 +58,45 @@ MODULE LOGGER(SYSMODULE,NOSTEPIN)
   
   LOCAL CONST num TYPE_FILE:=1;
   LOCAL CONST num TYPE_BOTH:=2;
+
+  LOCAL FUNC string GetPrefix(num level)
+    VAR string prefix;
+
+    TEST level
+    CASE LOG_ERROR:
+      prefix:="E:";
+    CASE LOG_INFO:
+      prefix:="I:";
+    CASE LOG_DEBUG:
+      prefix:="D:";
+    CASE LOG_TRACE:
+      prefix:="T:";
+    DEFAULT:
+      prefix:="?:";
+    ENDTEST
+    RETURN prefix;
+  ENDFUNC
   
   PROC Log(string message,num level,\switch FILE|switch BOTH)
     VAR num type:=0;
     VAR string prefix;
+    VAR string log_message;
     
     IF Present(FILE) type:=TYPE_FILE;
     IF Present(BOTH) type:=TYPE_BOTH;
 
     IF level<=LOG_LEVEL THEN
 
-      TEST level
-      CASE LOG_ERROR:
-        prefix:="E:";
-      CASE LOG_INFO:
-        prefix:="I:";
-      CASE LOG_DEBUG:
-        prefix:="D:";
-      CASE LOG_TRACE:
-        prefix:="T:";
-      ENDTEST
-
+      prefix:=GetPrefix(level);
+      log_message:=prefix+message;
       IF type=TYPE_FILE THEN
-        Log2File message;
+        Log2File log_message;
       ELSEIF type=TYPE_BOTH THEN
-        Log2File message;
-        TPWrite prefix+message;
+        Log2File log_message;
+        TPWrite log_message;
       ELSE
-        TPWrite prefix+message;
+        TPWrite log_message;
       ENDIF
-
     ENDIF
   ENDPROC
 
@@ -96,19 +105,25 @@ MODULE LOGGER(SYSMODULE,NOSTEPIN)
   ! Example:
   !   LogNum "The value=",nValue,LOG_DEBUG;
   !*****************************************************
-  PROC LogNum(string message,num value,num level)
+  PROC LogNum(string message,num value,num level,\switch FILE|switch BOTH)
+    VAR num type:=0;
+    VAR string prefix;
+    VAR string log_message;
+
+    IF Present(FILE) type:=TYPE_FILE;
+    IF Present(BOTH) type:=TYPE_BOTH;
+
     IF level<=LOG_LEVEL THEN
-      TEST level
-      CASE LOG_ERROR:
-        TPWrite "E:"+message\Num:=value;
-      CASE LOG_INFO:
-        TPWrite "I:"+message\Num:=value;
-      CASE LOG_DEBUG:
-        TPWrite "D:"+message\Num:=value;
-      CASE LOG_TRACE:
-        TPWrite "T:"+message\Num:=value;
-        Log2File message+NumToStr(value,LOG_NUMPREC);
-      ENDTEST
+      prefix:=GetPrefix(level);
+      log_message:=prefix+message+NumToStr(value,LOG_NUMPREC);
+      IF type=TYPE_FILE THEN
+        Log2File log_message;
+      ELSEIF type=TYPE_BOTH THEN
+        Log2File log_message;
+        TPWrite log_message;
+      ELSE
+        TPWrite log_message;
+      ENDIF
     ENDIF
   ENDPROC
 
