@@ -16,11 +16,11 @@
 
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; * Version:     0.26                                              *
+; * Version:     0.261                                             *
 ; * Description: Syntax highlight to use with UltraEdit, UEStudio. *
 ; *              When using older UE, change [.uew] to [.txt].     *
 ; *                                                                *
-; * Date:        2013-01-24                                        *
+; * Date:        2013-02-28                                        *
 ; * Author:      <rob@ernell.se>                                   *
 ; ******************************************************************
 
@@ -36,12 +36,12 @@
 /Function String 5 =  "[ ^t][ ^t]TRAP *"
 /Function String 6 =  "[ ^t][ ^t]LOCAL TRAP *"
 /TGBegin "Function"
-/TGFindStr = "%[ ^t]+PROC[ ^t]*(*$"
-/TGFindStr = "%[ ^t]+LOCAL[ ^t]PROC[ ^t]*(*$"
-/TGFindStr = "%[~\!]+[ ^t]+FUNC[ ^t]*[ ^t]*(*$"
-/TGFindStr = "%[~\!]+[ ^t]+LOCAL[ ^t]FUNC[ ^t]*[ ^t]*(*$"
-/TGFindStr = "%[~\!]+[ ^t]+TRAP[ ^t]*$"
-/TGFindStr = "%[ ^t]+LOCAL[ ^t]TRAP[ ^t]*(*$"
+/TGFindStr = "%[~\!]+[ ^t][ ^t]+PROC[ ^t]*(*$"
+/TGFindStr = "%[~\!]+[ ^t][ ^t]+LOCAL[ ^t]PROC[ ^t]*(*$"
+/TGFindStr = "%[~\!]+[ ^t][ ^t]+FUNC[ ^t]*[ ^t]*(*$"
+/TGFindStr = "%[~\!]+[ ^t][ ^t]+LOCAL[ ^t]FUNC[ ^t]*[ ^t]*(*$"
+/TGFindStr = "%[~\!]+[ ^t][ ^t]+TRAP[ ^t]*$"
+/TGFindStr = "%[ ^t][ ^t]+LOCAL[ ^t]TRAP[ ^t]*(*$"
 /TGEnd
 /Open Brace Strings  = "PROC"     "FUNC"    "TRAP"    "IF"    "FOR"    "TEST"
 /Close Brace Strings = "ENDPROC"  "ENDFUNC" "ENDTRAP" "ENDIF" "ENDFOR" "ENDTEST"
