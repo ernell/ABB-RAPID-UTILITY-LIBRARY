@@ -9,6 +9,8 @@ Functionlist
 - functionss + arguments
 - traps
 - records
+- workobjects
+- tooldata
 - syntax errors (views common mistakes)
 
 Highlights:
