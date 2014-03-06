@@ -3,17 +3,17 @@
 <h3>Features</h3>
 - ABB RAPID IRC5
 
-Functionlist
+<h5>Functionlist</h5>
 - module name
-- procedures + arguments
-- functionss + arguments
-- traps
+- procedures (global/local) + arguments
+- functions (global/local) + arguments
+- traps (global/local)
 - records
 - workobjects
 - tooldata
-- syntax errors (views common mistakes)
+- syntax errors (view common mistakes)
 
-Highlights:
+<h5>Highlighting</h5>
 - RAPID instructions and functions
 - RAPID datatypes
 - RAPID built-in default variables
