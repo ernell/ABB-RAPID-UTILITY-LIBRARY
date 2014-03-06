@@ -17,18 +17,18 @@
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
 ; *              + function list treeview parsing.                 *
-; * Version:     0.3                                               *
+; * Version:     0.302                                             *
 ; * Description: Syntax highlight to use with UltraEdit & UEStudio.*
 ; *                                                                *
-; * Date:        2013-03-04                                        *
+; * Date:        2013-03-06                                        *
 ; * Author:      <rob@ernell.se>                                   *
 ; ******************************************************************
 
 /L20"RAPID" Line Comment = ! String Chars = " File Extensions = PRG MOD SYS
 
 /TGBegin "Module name"
-  /TGFindStr = "%MODULE^([ ^t]+[~,()]+^)$"
-  /TGFindStr = "%MODULE^([ ^t][~,()]+([a-ö0-9_,]+)^)$"
+  /TGFindStr = "%[ ^t]++MODULE^([ ^t]+[a-z0-9_]+^)$"
+  /TGFindStr = "%[ ^t]++MODULE^([ ^t]+[a-z0-9_]+([a-ö0-9_,]+)^)$"
 /TGEnd
 
 /TGBegin "Functions"
@@ -62,7 +62,7 @@
     /TGFindBEnd = ")"
   /TGEnd
   /TGBegin "Variables"
-    /TGFindStr = "%[ ^t]+VAR[ ^t]+[~,()]+[ ^t]+[~,()]+:=[~,()]+;$"
+    /TGFindStr = "%[ ^t]++VAR[ ^t]+[~,()]+[ ^t]+[~,()]+:=[~,()]+;$"
     /TGFindBStart = "("
     /TGFindBEnd = ")"
   /TGEnd
@@ -90,12 +90,16 @@
   /TGFindStr = "%[ ^t]++RECORD[ ^t]+^([~,()]+$^)"
 /TGEnd
 
-/TGBegin "Tools"
-  /TGFindStr = "[ ^t]+tooldata[ ^t]+^([~,()]+:=*$^)"
+/TGBegin "Tooldata"
+  /TGFindStr = "[ ^t]+tooldata[ ^t]+^([~,();]+:=[~;]+[;]$^)"
 /TGEnd
 
 /TGBegin "WObjects"
-  /TGFindStr = "[ ^t]+wobjdata[ ^t]+^([~,()]+:=*$^)"
+  /TGFindStr = "[ ^t]+wobjdata[ ^t]+^([~,();]+:=[~;]+[;]$^)"
+/TGEnd
+
+/TGBegin "robtargets"
+  /TGFindStr = "[ ^t]+robtarget[ ^t]+^([~,();]+:=[~;]+[;]$^)"
 /TGEnd
 
 /TGBegin "Syntax Errors"
@@ -118,6 +122,12 @@
   /TGFindStr = "%[ ^t]+IF[ ^t]+[a-z0-9_]+:=[a-z0-9_]+[ ^t]+THEN$"
   /TGFindStr = "%[ ^t]+TEST[ ^t]+[a-z0-9_]+[:;]$"
   /TGFindStr = "%[ ^t]+CASE[ ^t]+[a-z0-9_]+$"
+  /TGFindStr = "%[ ^t]+VAR[ ^t]+[a-z]+[ ^t]+[a-z0-9_]+$"
+  /TGFindStr = "%[ ^t]+VAR[ ^t]+[a-z]+[ ^t]+[a-z0-9_]+:=[a-z0-9_^[^],^"]+$"
+  /TGFindStr = "%[ ^t]+VAR[ ^t]+[a-z]+[ ^t]+[a-z0-9_]+=[a-z0-9_^[^],^"]+;$"
+  /TGFindStr = "%[ ^t]+PERS[ ^t]+[a-z]+[ ^t]+[a-z0-9_]+$"
+  /TGFindStr = "%[ ^t]+PERS[ ^t]+[a-z]+[ ^t]+[a-z0-9_]+="
+  /TGFindStr = "%[ ^t]+PERS[ ^t]+[a-z]+[ ^t]+[a-z0-9_]+:=[a-z0-9_^[^],^"]+$"
 /TGEnd
 
 /Colors = 0,8421376,8421376,8421504,255,
