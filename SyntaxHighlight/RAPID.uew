@@ -1,4 +1,4 @@
-; ******************************************************************
+; *******************************************************************
 ; * Copyright (C) 2013 Robert Andersson, Sweden <rob@ernell.se>
 ; *
 ; * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,18 @@
 ; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; * See the License for the specific language governing permissions and
 ; * limitations under the License.
-; ******************************************************************
+; *******************************************************************
 
-; ******************************************************************
-; * Name:        ABB RAPID IRC5 syntax highlight definition        *
-; *              + function list treeview parsing.                 *
-; * Version:     0.303                                             *
-; * Description: Syntax highlight to use with UltraEdit & UEStudio.*
-; *                                                                *
-; * Date:        2013-03-06                                        *
-; * Author:      <rob@ernell.se>                                   *
-; ******************************************************************
+; *******************************************************************
+; * Name:        ABB RAPID IRC5 syntax highlight definition         *
+; *              + function list treeview parsing.                  *
+; * Version:     0.304                                              *
+; * Description: Syntax highlight to use with UltraEdit & UEStudio. *
+; *                                                                 *
+; * Date:        2013-03-07                                         *
+; * Author:      <rob@ernell.se>                                    *
+; * WWW:         http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY *
+; *******************************************************************
 
 /L20"RAPID" Line Comment = ! String Chars = " File Extensions = PRG MOD SYS
 
@@ -31,9 +32,37 @@
   /TGFindStr = "%[ ^t]++MODULE^([ ^t]+[a-z0-9_]+([a-ö0-9_,]+)^)$"
 /TGEnd
 
+/TGBegin "Traps (Local)"
+  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++TRAP[ ^t]+^([~,()]+$^)"
+/TGEnd
+
+/TGBegin "Traps"
+  /TGFindStr = "%[ ^t]++TRAP[ ^t]+^([~,()]+$^)"
+/TGEnd
+
+/TGBegin "Functions (Local)"
+  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+()$^)"
+  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t]++([~)]+)$"
+  /TGBegin "Parameters"
+    /TGFindStr = "[~,()]+"
+    /TGFindBStart = "("
+    /TGFindBEnd = ")"
+  /TGEnd
+/TGEnd
+
 /TGBegin "Functions"
   /TGFindStr = "%[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+()$^)"
   /TGFindStr = "%[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t^p]++([~)]+)$"
+  /TGBegin "Parameters"
+    /TGFindStr = "[~,()]+"
+    /TGFindBStart = "("
+    /TGFindBEnd = ")"
+  /TGEnd
+/TGEnd
+
+/TGBegin "Procedures (Local)"
+  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]PROC[ ^t]+^([~,()]+()$^)"
+  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]PROC[ ^t]+^([~,()]+^)[ ^t]++([~)]+)$"
   /TGBegin "Parameters"
     /TGFindStr = "[~,()]+"
     /TGFindBStart = "("
@@ -49,34 +78,6 @@
     /TGFindBStart = "("
     /TGFindBEnd = ")"
   /TGEnd
-/TGEnd
-
-/TGBegin "Functions (Local)"
-  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+()$^)"
-  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t]++([~)]+)$"
-  /TGBegin "Parameters"
-    /TGFindStr = "[~,()]+"
-    /TGFindBStart = "("
-    /TGFindBEnd = ")"
-  /TGEnd
-/TGEnd
-
-/TGBegin "Procedures (Local)"
-  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++PROC[ ^t]+^([~,()]+()$^)"
-  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++PROC[ ^t]+^([~,()]+^)[ ^t]++([~)]+)$"
-  /TGBegin "Parameters"
-    /TGFindStr = "[~,()]+"
-    /TGFindBStart = "("
-    /TGFindBEnd = ")"
-  /TGEnd
-/TGEnd
-
-/TGBegin "Traps"
-  /TGFindStr = "%[ ^t]++TRAP[ ^t]+^([~,()]+$^)"
-/TGEnd
-
-/TGBegin "Traps (Local)"
-  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++TRAP[ ^t]+^([~,()]+$^)"
 /TGEnd
 
 /TGBegin "Records"
