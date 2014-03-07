@@ -17,7 +17,7 @@
 ; ******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition        *
 ; *              + function list treeview parsing.                 *
-; * Version:     0.302                                             *
+; * Version:     0.303                                             *
 ; * Description: Syntax highlight to use with UltraEdit & UEStudio.*
 ; *                                                                *
 ; * Date:        2013-03-06                                        *
@@ -34,17 +34,7 @@
 /TGBegin "Functions"
   /TGFindStr = "%[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+()$^)"
   /TGFindStr = "%[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t^p]++([~)]+)$"
-  /TGBegin "Arguments"
-    /TGFindStr = "[~,()]+"
-    /TGFindBStart = "("
-    /TGFindBEnd = ")"
-  /TGEnd
-/TGEnd
-
-/TGBegin "Functions (Local)"
-  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+()$^)"
-  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t]++([~)]+)$"
-  /TGBegin "Arguments"
+  /TGBegin "Parameters"
     /TGFindStr = "[~,()]+"
     /TGFindBStart = "("
     /TGFindBEnd = ")"
@@ -54,15 +44,18 @@
 /TGBegin "Procedures"
   /TGFindStr = "%[ ^t]++PROC[ ^t]+^([~,()]+()$^)"
   /TGFindStr = "%[ ^t]++PROC[ ^t]+^([~,()]+^)[ ^t^p]++([~)]+)$"
-  /TGFindBStart = "("
-  /TGFindBEnd = "ENDPROC"
-  /TGBegin "Arguments"
+  /TGBegin "Parameters"
     /TGFindStr = "[~,()]+"
     /TGFindBStart = "("
     /TGFindBEnd = ")"
   /TGEnd
-  /TGBegin "Variables"
-    /TGFindStr = "%[ ^t]++VAR[ ^t]+[~,()]+[ ^t]+[~,()]+:=[~,()]+;$"
+/TGEnd
+
+/TGBegin "Functions (Local)"
+  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+()$^)"
+  /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t]++([~)]+)$"
+  /TGBegin "Parameters"
+    /TGFindStr = "[~,()]+"
     /TGFindBStart = "("
     /TGFindBEnd = ")"
   /TGEnd
@@ -71,7 +64,7 @@
 /TGBegin "Procedures (Local)"
   /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++PROC[ ^t]+^([~,()]+()$^)"
   /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++PROC[ ^t]+^([~,()]+^)[ ^t]++([~)]+)$"
-  /TGBegin "Arguments"
+  /TGBegin "Parameters"
     /TGFindStr = "[~,()]+"
     /TGFindBStart = "("
     /TGFindBEnd = ")"
@@ -255,7 +248,7 @@ MASS_KNOWN MASS_WITH_AX3
 PAY_LOAD_ID
 ROB_LM1_LOAD_VAL ROB_LOAD_VAL ROB_NOT_LOAD_VAL
 TOOL_LOAD_ID TRUE
-/C9"Common arguments/switches" STYLE_ATTRIBUTE Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C9"Common parameters/switches" STYLE_ATTRIBUTE Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 \AORamp \AOp \ASCII \Accuracy \AllMotionTasks \AllMoveTasks \AlreadyActive \Append \Arm \AxisNumber \BackupFile \Bin \Block \BreakFlag \BreakOff \Buttons \Bwd \CirPointOri \Clear \ClientAddress \Conc \ConfAngle \ConfigAngle \ConstSym \Continue \Corr \D \DIBreak \DNeg \DO \DO1 \DOBreak \DODelay \DOp \DPos \Data \DeactAll \DefinedFlag \DipLag \Dynamic \ErrDO \ErrIfChanged \ErrorId \ErrorNumber \ExeP \F1 \F2 \File \FilePath \Float4 \FromIndex \Fwd \GO1 \GO2 \GO3 \GO4 \GOp \GlobalSym \GrpSize \Halt \Header \Hex1 \High \ID \Icon \Image \Inhib \InitCmd \InMod \InPos \InRout \Inside \InstanceId \InTask \IntX \KeepSync \Level \ListNo \LoadIdType \LocalSym \Logic \MaxTime \MechUnit \MechUnitName \MsgLine2 \MsgLine3 \MsgLine4 \MsgLine5 \Network \NoCloseBtn \NoConc \NoEOffs \NoNewLine \NoOfBytes \NoRecBytes \NoRegain \Num \Object \ObjectFrame \ObjectName \Off \Old \On \Outside \PLength \PStop \ParIdType \PathFrame \PayLoad \PersSym \Phys \PollRate \PredTime \Quick \Ramp \Read \RefNum \RefPos \RelDist \Result \Retract \RL2 \RL3 \RL4 \RawData \Read \Result \Rot \SDelay \Save \Short \Single \SlowTest \Speed \Start \Stat \Status \Stop \StopBlock \StopMove \Str \Str1 \Str2 \Str3 \Str4 \Str5 \Strict \Sup \SyncLastMoveInst \SyncOrgMoveInst \T \T2 \T3 \T4 \T5 \T6 \T7 \T8 \TaskRef \Teach \Temp \Time \TimeFlag \TimeOut \ToAbsNum \ToAbsPos \ToRelNum \ToRelPos \Tool \ToolOffs \TuneValue \TypeMod \UnloadFile \UnloadPath \V \VarSym \W \WObj \Wrap \Wrist \Write \XPos \Z \num \switch
 /C10"Word List 10" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C11"Word List 11" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
