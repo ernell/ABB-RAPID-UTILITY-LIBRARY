@@ -17,10 +17,10 @@
 ; *******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition         *
 ; *              + function list treeview parsing.                  *
-; * Version:     0.304                                              *
+; * Version:     0.31                                               *
 ; * Description: Syntax highlight to use with UltraEdit & UEStudio. *
 ; *                                                                 *
-; * Date:        2013-03-07                                         *
+; * Date:        2013-03-08                                         *
 ; * Author:      <rob@ernell.se>                                    *
 ; * WWW:         http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY *
 ; *******************************************************************
@@ -43,7 +43,7 @@
 /TGBegin "Functions (Local)"
   /TGFindStr = "%[ ^t]++LOCAL++[ ^t]FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+()$^)"
   /TGFindStr = "%[ ^t]++LOCAL++[ ^t]FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t]++([~)]+)$"
-  /TGBegin "Parameters"
+  /TGBegin "Arguments"
     /TGFindStr = "[~,()]+"
     /TGFindBStart = "("
     /TGFindBEnd = ")"
@@ -53,7 +53,7 @@
 /TGBegin "Functions"
   /TGFindStr = "%[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+()$^)"
   /TGFindStr = "%[ ^t]++FUNC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t^p]++([~)]+)$"
-  /TGBegin "Parameters"
+  /TGBegin "Arguments"
     /TGFindStr = "[~,()]+"
     /TGFindBStart = "("
     /TGFindBEnd = ")"
@@ -63,7 +63,7 @@
 /TGBegin "Procedures (Local)"
   /TGFindStr = "%[ ^t]++LOCAL++[ ^t]PROC[ ^t]+^([~,()]+()$^)"
   /TGFindStr = "%[ ^t]++LOCAL++[ ^t]PROC[ ^t]+^([~,()]+^)[ ^t]++([~)]+)$"
-  /TGBegin "Parameters"
+  /TGBegin "Arguments"
     /TGFindStr = "[~,()]+"
     /TGFindBStart = "("
     /TGFindBEnd = ")"
@@ -73,7 +73,7 @@
 /TGBegin "Procedures"
   /TGFindStr = "%[ ^t]++PROC[ ^t]+^([~,()]+()$^)"
   /TGFindStr = "%[ ^t]++PROC[ ^t]+^([~,()]+^)[ ^t^p]++([~)]+)$"
-  /TGBegin "Parameters"
+  /TGBegin "Arguments"
     /TGFindStr = "[~,()]+"
     /TGFindBStart = "("
     /TGFindBEnd = ")"
@@ -163,19 +163,22 @@ NOT NOTEQ
 OR
 XOR
 /C3"Instructions" STYLE_METHOD Colors = 33023 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
-AccSet ActUnit Add AliasIO ArcC ArcKill ArcL ArcRefresh
+AROEnter AROExit AROWarning AccSet ActUnit Add AliasIO ArcC ArcKill ArcL ArcRefresh
 BitClear BitSet BookErrNo Break
-CalibJ CalibL Calibrate CallByVar CancelLoad CirPathMode CirPathReori Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir Compact ConfJ ConfL CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrRead CorrWrite
-DataLogReset DeactUnit Decr DitherAct DitherDeact DropSensor DropWObj
+CalibJ CalibL Calibrate CallByVar CancelLoad CirPathMode CirPathReori Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir CnvStopSigName Compact ConfJ ConfL CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrRead CorrWrite CreateInstDat
+DataLogReset DeactUnit Decr DistCnvStart DitherAct DitherDeact DropSensor DropWObj
 EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrRaise ErrWrite ExitCycle
-GetDataVal GetSysData GetTrapData GlueC GlueJ GlueL GripLoad
+FreeItmSrc FlushItmSrc
+GetAllItmSrc GetDataVal GetItmTgt GetItmTgts GetSysData GetTrapData GlueC GlueJ GlueL GripLoad
 HollowWristReset
-IDelete IDisable IEnable IError IODisable IOEnable IPers ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep ITimer IVarValue IWatch Incr IndAMove IndCMove IndDMove IndRMove IndReset InvertDO
+IDelete IDisable IEnable IError IODisable IOEnable IPers ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep ITimer IVarValue IWatch Incr IndAMove IndCMove IndDMove IndRMove IndReset InvertDO InstDat ItmSrcByName
 LimConfL Load LoadId
 MToolRotCalib MToolTCPCalib MakeDir ManLoadIdProc MechUnitLoad MotionSup MoveAbsJ MoveC MoveCDO MoveCSync MoveExtJ MoveJ MoveJDO MoveJSync MoveL MoveLDO MoveLSync
+NewItmSrc
 Open OpenDir
-PDispOff PDispOn PDispSet PFIOResto PackDNHeader PackRawBytes PathAccLim PathRecMoveBwd PathRecMoveFwd PathRecStart PathRecStop PathResol ProbeReset ProcCall ProcerrRecovery PulseDO
-RESTORE_IO RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes ReadVar RemoveDir RemoveFile RenameFile Reset RestoPath Rewind
+PDispOff PDispOn PDispSet PFIOResto PackDNHeader PackRawBytes PathAccLim PathRecMoveBwd PathRecMoveFwd PathRecStart PathRecStop PathResol ProbeReset ProcCall ProcerrRecovery ProcErrStatus PulseDO PutItmTgt PutItmTgts
+QStartItmSrc QStopItmSrc
+RESTORE_IO RaiseToUser ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes ReadVar RemoveDir RemoveFile RenameFile Reset ResetItmSrc RestoPath Rewind
 SCWrite STCalcForce STCalcTorgue STCalib STClose STIsClosed STIsOpen STOpen STTune STTuneReset SToolRotCalib SToolTCPCalib SYS_POWERON SYS_RESET SearchC SearchL Set SetAO SetAllDataVal SetDO SetDataSearch SetDataVal SetForce SetGO ShadowDO SingArea SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketSend SoftAct SoftDeact SpcCon SpcDiscon SpcDump SpcRead SpcStat SpcWrite SpeedPrioDeact SpotJ SpotL SpotMJ SpotML SpyStart SpyStop StartMove StartMoveRetry StepBwdPath Stop StopMove StorePath SyncMoveOff SyncMoveOn SyncMoveUndo SyncToSensor SysInit1
 TPErase TPReadFK TPReadNum TPShow TPWrite TestSignDefine TestSignReset TextTabInstall TriggC TriggCheckIO TriggEquip TriggIO TriggInt TriggJ TriggL TriggSpeed TriggStopProc TuneReset TuneServo
 UIMsgBox UnLoad UnpackRawBytes
@@ -209,7 +212,7 @@ datapos dionum dir
 equipdata errdomain errnum errtype extjoint
 forcedata
 ggundata gundata gunmdata
-intnum iodev
+intnum iodev itmsrc itmsrcinstdat itmtgt
 jointtarget
 loaddata loadsession
 mecunit motsetdata
@@ -238,19 +241,19 @@ speed speed_ref stEmpty stoptime stoptime0_5 stoptime1_0 stoptime1_5
 tool0 torque_ref
 v0 v1 v10 v100 v1000 v150 v1500 v2 v20 v200 v2000 v25 v250 v2500 v3 v30 v300 v3000 v35 v350 v3500 v4 v40 v400 v4000 v45 v450 v4500 v5 v50 v500 v5000 v5500 v60 v600 v6000 v6500 v70 v700 v7000 v80 v800 v90 v900 v_max vmax
 wobj0
-z0 z1 z10 z100 z15 z150 z20 z200 z30 z40 z5 z50 z60 z80
+z0 z1 z10 z100 z15 z150 z2 z20 z200 z3 z30 z4 z40 z5 z5 z50 z60 z70 z80 z90
 /C8"System constants and vars" STYLE_VARIABLE Colors = 255 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 AW_EQIP_ERR AW_IGNI_ERR AW_START_ERR AW_STOP_ERR AW_TRACK_ERR AW_TRACKSTA_ERR AW_USERSIG_ERR AW_WDM_SIGNSTOP AW_WDM_STABSTOP AW_WELD_ERR AW_WIRE_ERR
 DO_GL_Active DO_GL_Err DO_GL_OvrSpd
-ERR_ACC_TOO_LOW ERR_ADDR_INUSE ERR_ALIASIO_DEF ERR_ALIASIO_TYPE ERR_ALRDYCNT ERR_ALRDY_MOVING ERR_AO_LIM ERR_ARGDUPCND ERR_ARGNAME ERR_ARGNOTPER ERR_ARGNOTVAR ERR_ARGVALERR ERR_AXIS_ACT ERR_AXIS_IND ERR_AXIS_MOVING ERR_AXIS_PAR ERR_BUSSTATE ERR_BWDLIMIT ERR_CALC_DIVZERO ERR_CALC_NEG ERR_CALC_OVERFLOW ERR_CALLPROC ERR_CFG_ILLTYPE ERR_CFG_INTERNAL ERR_CFG_LIMIT ERR_CFG_NOTFND ERR_CFG_OUTOFBOUNDS ERR_CNTNOTVAR ERR_CNV_CONNECT ERR_CNV_DROPPED ERR_CNV_NOT_ACT ERR_COMM_EXT ERR_COMM_INIT_FAILED ERR_DATA_RECV ERR_DEV_MAXTIME ERR_DIPLAG_LIM ERR_DIVZERO ERR_EXECPHR ERR_FILEACC ERR_FILEEXIST ERR_FILEOPEN ERR_FILNOTFND ERR_FNCNORET ERR_FRAME ERR_GO_LIM ERR_ILLDIM ERR_ILLQUAT ERR_ILLRAISE ERR_INDCNV_ORDER ERR_INOISSAFE ERR_INOMAX ERR_INT_MAXVAL ERR_INT_NOTVAL ERR_INVDIM ERR_IODISABLE ERR_IOENABLE ERR_IOERROR ERR_LINKREF ERR_LOADED ERR_LOADID_FATAL ERR_LOADID_RETRY ERR_LOADNO_INUSE ERR_LOADNO_NOUSE ERR_MAXINTVAL ERR_MODULE ERR_MOD_NOTLOADED ERR_NAME_INVALID ERR_NORUNUNIT ERR_NOTARR ERR_NOTEQDIM ERR_NOTINTVAL ERR_NOTPRES ERR_NOTSAVED ERR_NOT_MOVETASK ERR_NUM_LIMIT ERR_OUTOFBND ERR_OVERFLOW ERR_PATH ERR_PATHDIST ERR_PATH_STOP ERR_PID_MOVESTOP ERR_PID_RAISE_PP ERR_PRGMEMFULL ERR_PROCSIGNAL_OFF ERR_PROGSTOP ERR_RANYBIN_CHK ERR_RANYBIN_EOF ERR_RCVDATA ERR_REFUNKDAT ERR_REFUNKFUN ERR_REFUNKPRC ERR_REFUNKTRP ERR_RMQ_DIM ERR_RMQ_FULL ERR_RMQ_INVALID ERR_RMQ_INVMSG ERR_RMQ_MSGSIZE ERR_RMQ_NAME ERR_RMQ_NOMSG ERR_RMQ_TIMEOUT ERR_RMQ_VALUE ERR_ROBLIMIT ERR_SC_WRITE ERR_SIGSUPSEARCH ERR_SOCK_CLOSED ERR_SOCK_TIMEOUT ERR_SPEED_REFRESH_LIM ERR_STARTMOVE ERR_STRTOOLNG ERR_SYM_ACCESS ERR_SYNCMOVEOFF ERR_SYNCMOVEON ERR_SYNTAX ERR_TASKNAME ERR_TP_DIBREAK ERR_TP_DOBREAK ERR_TP_MAXTIME ERR_TP_NO_CLIENT ERR_TRUSTLEVEL ERR_TXTNOEXIST ERR_UISHOW_FATAL ERR_UISHOW_FULL ERR_UI_INITVALUE ERR_UI_MAXMIN ERR_UI_NOTINT ERR_UNIT_PAR ERR_UNKINO ERR_UNKPROC ERR_UNLOAD ERR_WAITSYNCTASK ERR_WAIT_MAXTIME ERR_WHLSEARCH ERR_WOBJ_MOVING
+ERR_ACC_TOO_LOW ERR_ADDR_INUSE ERR_ALIASIO_DEF ERR_ALIASIO_TYPE ERR_ALRDYCNT ERR_ALRDY_MOVING ERR_AO_LIM ERR_ARGDUPCND ERR_ARGNAME ERR_ARGNOTPER ERR_ARGNOTVAR ERR_ARGVALERR ERR_AXIS_ACT ERR_AXIS_IND ERR_AXIS_MOVING ERR_AXIS_PAR ERR_BUSSTATE ERR_BWDLIMIT ERR_CALC_DIVZERO ERR_CALC_NEG ERR_CALC_OVERFLOW ERR_CALLPROC ERR_CFG_ILLTYPE ERR_CFG_INTERNAL ERR_CFG_LIMIT ERR_CFG_NOTFND ERR_CFG_OUTOFBOUNDS ERR_CNTNOTVAR ERR_CNV_CONNECT ERR_CNV_DROPPED ERR_CNV_NOT_ACT ERR_COMM_EXT ERR_COMM_INIT_FAILED ERR_DATA_RECV ERR_DEV_MAXTIME ERR_DIPLAG_LIM ERR_DIVZERO ERR_EXECPHR ERR_FILEACC ERR_FILEEXIST ERR_FILEOPEN ERR_FILNOTFND ERR_FNCNORET ERR_FRAME ERR_GO_LIM ERR_ILLDIM ERR_ILLQUAT ERR_ILLRAISE ERR_INDCNV_ORDER ERR_INOISSAFE ERR_INOMAX ERR_INT_MAXVAL ERR_INT_NOTVAL ERR_INVDIM ERR_IODISABLE ERR_IOENABLE ERR_IOERROR ERR_LINKREF ERR_LOADED ERR_LOADID_FATAL ERR_LOADID_RETRY ERR_LOADNO_INUSE ERR_ITMSRC_UNDEF ERR_LOADNO_NOUSE ERR_MAXINTVAL ERR_MODULE ERR_MOD_NOTLOADED ERR_NAME_INVALID ERR_NORUNUNIT ERR_NOTARR ERR_NOTEQDIM ERR_NOTINTVAL ERR_NOTPRES ERR_NOTSAVED ERR_NOT_MOVETASK ERR_NUM_LIMIT ERR_OUTOFBND ERR_OVERFLOW ERR_PATH ERR_PATHDIST ERR_PATH_STOP ERR_PID_MOVESTOP ERR_PID_RAISE_PP ERR_PPA_BUFFULL ERR_PPA_NONAME ERR_PRGMEMFULL ERR_PROCSIGNAL_OFF ERR_PROGSTOP ERR_RANYBIN_CHK ERR_RANYBIN_EOF ERR_RCVDATA ERR_REFUNKDAT ERR_REFUNKFUN ERR_REFUNKPRC ERR_REFUNKTRP ERR_RMQ_DIM ERR_RMQ_FULL ERR_RMQ_INVALID ERR_RMQ_INVMSG ERR_RMQ_MSGSIZE ERR_RMQ_NAME ERR_RMQ_NOMSG ERR_RMQ_TIMEOUT ERR_RMQ_VALUE ERR_ROBLIMIT ERR_SC_WRITE ERR_SIGSUPSEARCH ERR_SOCK_CLOSED ERR_SOCK_TIMEOUT ERR_SPEED_REFRESH_LIM ERR_STARTMOVE ERR_STRTOOLNG ERR_SYM_ACCESS ERR_SYNCMOVEOFF ERR_SYNCMOVEON ERR_SYNTAX ERR_TASKNAME ERR_TP_DIBREAK ERR_TP_DOBREAK ERR_TP_MAXTIME ERR_TP_NO_CLIENT ERR_TRUSTLEVEL ERR_TXTNOEXIST ERR_UISHOW_FATAL ERR_UISHOW_FULL ERR_UI_INITVALUE ERR_UI_MAXMIN ERR_UI_NOTINT ERR_UNIT_PAR ERR_UNKINO ERR_UNKPROC ERR_UNLOAD ERR_WAITSYNCTASK ERR_WAIT_MAXTIME ERR_WHLSEARCH ERR_WOBJ_MOVING
 FALSE
 IRBP_A_C_ID IRBP_B_D_ID IRBP_K_ID IRBP_L_ID IRBP_R_ID IRB_EXT_ID
 MASS_KNOWN MASS_WITH_AX3
-PAY_LOAD_ID
-ROB_LM1_LOAD_VAL ROB_LOAD_VAL ROB_NOT_LOAD_VAL
+PAY_LOAD_ID PPA_PPA_ALT_NAME PICK_NAME PPA_PLACE_NAME
+RAPBIOF_CLOSE RAPBIOF_CLOSE_ALL RAPBIOF_OPEN RAPBIOF_READREQ RAPBIOF_WRITE RAPCFG_LOAD_PARAMETERS RAPCFG_SAVE_PARAMETERS RAPFIL_CLOSE RAPFIL_CLOSE_ALL RAPFIL_DELETE RAPFIL_DIR RAPFIL_GET_TIME RAPFIL_LIST_DEVICES RAPFIL_MKDIR RAPFIL_OPEN RAPFIL_READ RAPFIL_RENAME RAPFIL_RMDIR RAPFIL_SET_TIME RAPFIL_WRITE RAPGEN_CLOSE RAPGEN_OPEN RAPGEN_RELEASE_MASTER RAPGEN_REQUEST_MASTER RAPGEN_RESTART RAPLOG_BACKUP RAPLOG_DUMP_SERVICE RAPLOG_RESET_LOG RAPLOG_RESTORE RAPLOG_SAVE_LOG RAPPGM_DELETE_MODULE RAPPGM_DELETE_PROGRAM RAPPGM_GET_MODE RAPPGM_LOAD_MODULE RAPPGM_LOAD_PROGRAM RAPPGM_PREP_PROGRAM RAPPGM_SAVE_MODULE RAPPGM_SAVE_PROGRAM RAPPGM_SET_MODE RAPPGM_START RAPPGM_STOP RAPVAR_DEFINE_PAGE RAPVAR_READ_NAME RAPVAR_READ_NAME_ARRAY RAPVAR_READ_NAME_IO RAPVAR_READ_PAGE RAPVAR_SPONMSG_RESP RAPVAR_UNDEFINE_PAGE RAPVAR_WRITE_NAME RAPVAR_WRITE_NAME_ARRAY RAPVAR_WRITE_PAGE RAPVAR_ARRAY_DATA_TYPE RAPVAR_ARRAY_DIM_TYPE RAPVAR_BOOL_TYPE RAPVAR_CONFDATA_TYPE RAPVAR_CTLIDDATA_TYPE RAPVAR_CTLVERSDATA_TYPE RAPVAR_CURR_ROBTARGET_TYPE RAPVAR_DATA_TYPE RAPVAR_DESCR_DATA_TYPE RAPVAR_DESCR_PAGE_DATA_TYPE RAPVAR_DOMAIN_TYPE RAPVAR_EIODATA_TYPE RAPVAR_EVENT_ID RAPVAR_EVIDDATA1_TYPE RAPVAR_EXTJOINT_TYPE RAPVAR_LOADDATA_TYPE RAPVAR_LOGDATA_TYPE RAPVAR_MOTSETDATA_TYPE RAPVAR_NAME_TYPE RAPVAR_NUM_TYPE RAPVAR_ORIENT_TYPE RAPVAR_PAGE_DATA_TYPE RAPVAR_PAGE_DESCR_NUMBER_TYPE RAPVAR_PAGE_DESCR_TYPE RAPVAR_PAGE_TYPE RAPVAR_PAGENUMBER_TYPE RAPVAR_PGMDATA_TYPE RAPVAR_POS_TYPE RAPVAR_POSE_TYPE RAPVAR_PROGDISP_TYPE RAPVAR_READ_NAME RAPVAR_READ_NAME_IO RAPVAR_ROBTARGET_TYPE RAPVAR_SPEEDDATA_TYPE RAPVAR_SPONDATA1_TYPE RAPVAR_SPONDATA2_TYPE RAPVAR_SPONMSG RAPVAR_STATUSDATA1_TYPE RAPVAR_STRING_TYPE RAPVAR_SUBEIO_TYPE RAPVAR_SUBLOG_TYPE RAPVAR_SUBSCWRITE_TYPE RAPVAR_SYSSTDATA_TYPE RAPVAR_TOOLDATA_TYPE RAPVAR_VAR_DESCR_TYPE RAPVAR_WOBJDATA_TYPE RAPVAR_WRITE_NAME RAPVAR_XDATA_TYPE RAPVAR_ZONEDATA_TYPE ROB_LM1_LOAD_VAL ROB_LOAD_VAL ROB_NOT_LOAD_VAL
 TOOL_LOAD_ID TRUE
-/C9"Common parameters/switches" STYLE_ATTRIBUTE Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
-\AORamp \AOp \ASCII \Accuracy \AllMotionTasks \AllMoveTasks \AlreadyActive \Append \Arm \AxisNumber \BackupFile \Bin \Block \BreakFlag \BreakOff \Buttons \Bwd \CirPointOri \Clear \ClientAddress \Conc \ConfAngle \ConfigAngle \ConstSym \Continue \Corr \D \DIBreak \DNeg \DO \DO1 \DOBreak \DODelay \DOp \DPos \Data \DeactAll \DefinedFlag \DipLag \Dynamic \ErrDO \ErrIfChanged \ErrorId \ErrorNumber \ExeP \F1 \F2 \File \FilePath \Float4 \FromIndex \Fwd \GO1 \GO2 \GO3 \GO4 \GOp \GlobalSym \GrpSize \Halt \Header \Hex1 \High \ID \Icon \Image \Inhib \InitCmd \InMod \InPos \InRout \Inside \InstanceId \InTask \IntX \KeepSync \Level \ListNo \LoadIdType \LocalSym \Logic \MaxTime \MechUnit \MechUnitName \MsgLine2 \MsgLine3 \MsgLine4 \MsgLine5 \Network \NoCloseBtn \NoConc \NoEOffs \NoNewLine \NoOfBytes \NoRecBytes \NoRegain \Num \Object \ObjectFrame \ObjectName \Off \Old \On \Outside \PLength \PStop \ParIdType \PathFrame \PayLoad \PersSym \Phys \PollRate \PredTime \Quick \Ramp \Read \RefNum \RefPos \RelDist \Result \Retract \RL2 \RL3 \RL4 \RawData \Read \Result \Rot \SDelay \Save \Short \Single \SlowTest \Speed \Start \Stat \Status \Stop \StopBlock \StopMove \Str \Str1 \Str2 \Str3 \Str4 \Str5 \Strict \Sup \SyncLastMoveInst \SyncOrgMoveInst \T \T2 \T3 \T4 \T5 \T6 \T7 \T8 \TaskRef \Teach \Temp \Time \TimeFlag \TimeOut \ToAbsNum \ToAbsPos \ToRelNum \ToRelPos \Tool \ToolOffs \TuneValue \TypeMod \UnloadFile \UnloadPath \V \VarSym \W \WObj \Wrap \Wrist \Write \XPos \Z \num \switch
+/C9"Common Arguments/switches" STYLE_ATTRIBUTE Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+\AORamp \AOp \ASCII \Accuracy \AllMotionTasks \AllMoveTasks \AlreadyActive \Append \Arm \AxisNumber \BackupFile \Bin \Block \BreakFlag \BreakOff \Buttons \Bwd \CirPointOri \Clear \ClientAddress \Conc \ConfAngle \ConfigAngle \ConstSym \Continue \Corr \D \DIBreak \DNeg \DO \DO1 \DOBreak \DODelay \DOp \DPos \Data \DeactAll \DefinedFlag \DipLag \DistCnvStart \Dynamic \EioNameSensor \EioNameStop \EioNameTrigVis \ErrDO \ErrIfChanged \ErrorId \ErrorNumber \ExeP \F1 \F2 \File \FilePath \Float4 \FromIndex \Fwd \GO1 \GO2 \GO3 \GO4 \GOp \GlobalSym \GrpSize \Halt \Header \Hex1 \High \ID \Icon \Image \Inhib \InitCmd \InMod \InPos \InRout \Inside \InstanceId \InTask \IntX \KeepSync \Level \ListNo \LoadIdType \LocalSym \Logic \MaxTime \MechUnit \MechUnitName \MsgLine2 \MsgLine3 \MsgLine4 \MsgLine5 \Network \NoCloseBtn \NoConc \NoEOffs \NoNewLine \NoOfBytes \NoRecBytes \NoRegain \Num \Object \ObjectFrame \ObjectName \Off \Old \On \Outside \PLength \PStop \ParIdType \PathFrame \PayLoad \PersSym \Phys \PollRate \PredTime \Quick \Ramp \Read \RefNum \RefPos \RelDist \Result \Retract \RL2 \RL3 \RL4 \RawData \Read \Result \Rot \SDelay \Save \Short \Single \SlowTest \Speed \Start \Stat \Status \Stop \StopBlock \StopMove \Str \Str1 \Str2 \Str3 \Str4 \Str5 \Strict \Sup \SyncLastMoveInst \SyncOrgMoveInst \T \T2 \T3 \T4 \T5 \T6 \T7 \T8 \TaskRef \Teach \Temp \Time \TimeFlag \TimeOut \ToAbsNum \ToAbsPos \ToRelNum \ToRelPos \Tool \ToolOffs \TuneValue \TypeMod \UnloadFile \UnloadPath \V \VarSym \W \WObj \WorkAreaWarning \Wrap \Wrist \Write \XPos \Z \num \switch
 /C10"Word List 10" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C11"Word List 11" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C12"Word List 12" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
