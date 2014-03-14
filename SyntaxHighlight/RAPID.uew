@@ -17,10 +17,10 @@
 ; *******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition         *
 ; *              + function list treeview parsing.                  *
-; * Version:     0.31                                               *
+; * Version:     0.312                                              *
 ; * Description: Syntax highlight to use with UltraEdit & UEStudio. *
 ; *                                                                 *
-; * Date:        2013-03-08                                         *
+; * Date:        2013-03-14                                         *
 ; * Author:      <rob@ernell.se>                                    *
 ; * WWW:         http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY *
 ; *******************************************************************
@@ -101,6 +101,7 @@
   /TGFindStr = "%[ ^t]++LOCAL++[ ^t]++PROC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t]++([~)]+)$"
   /TGFindStr = "%[ ^t]++PROC[ ^t]+^([a-z]+[ ^t]+[~,()]+()$^)"
   /TGFindStr = "%[ ^t]++PROC[ ^t]+^([a-z]+[ ^t]+[~,()]+^)[ ^t]++([~)]+)$"
+  /TGFindStr = "%[ ^t]++[a-z0-9_]+();$"
   /TGFindStr = "THEN[:;]"
   /TGFindStr = "ELSE[:;]"
   /TGFindStr = "ELSEIF[:;]"
@@ -188,7 +189,7 @@ label
 /C4"Functions" STYLE_FUNCTION Colors = 32768 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 ACos AInput AOutput ASin ATan ATan2 Abs AbsDnum ArgName
 BitAnd BitCheck BitLSh BitNeg BitOr BitRSh BitXOr ByteToStr
-CDate CJoint CJointT CRobT CSpeedOverride CTime CTool CWobj CalcJointT CalcRobT CalcRotAxFrameZ CalcRotAxisFrame ClkRead Cos Cpos
+CDate CJoint CJointT CPos CRobT CSpeedOverride CTime CTool CWobj CalcJointT CalcRobT CalcRotAxFrameZ CalcRotAxisFrame ClkRead Cos
 DInput DOutput DecToHex DefAccFrame DefDFrame DefFrame Dim Distance DnumToStr DotProd
 EulerZYX Exp
 FSSize FileSize FileTime
