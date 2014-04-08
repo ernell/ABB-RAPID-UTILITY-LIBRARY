@@ -11,7 +11,7 @@
 - records
 - workobjects
 - tooldata
-- syntax errors (view common mistakes)
+- syntax errors
 
 <h5>Highlighting</h5>
 - RAPID instructions and functions
