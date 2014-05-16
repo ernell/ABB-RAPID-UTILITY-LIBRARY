@@ -17,10 +17,10 @@
 ; *******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition         *
 ; *              + function list treeview parsing.                  *
-; * Version:     0.32                                               *
+; * Version:     0.33                                               *
 ; * Description: Syntax highlight to use with UltraEdit & UEStudio. *
 ; *                                                                 *
-; * Date:        2013-03-25                                         *
+; * Date:        2013-05-16                                         *
 ; * Author:      <rob@ernell.se>                                    *
 ; * WWW:         http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY *
 ; *******************************************************************
@@ -248,9 +248,7 @@ pi
 ram1disk reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8 reg9 resolver_angle
 speed speed_ref stEmpty stoptime stoptime0_5 stoptime1_0 stoptime1_5
 tool0 torque_ref
-v0 v1 v10 v100 v1000 v150 v1500 v2 v20 v200 v2000 v25 v250 v2500 v3 v30 v300 v3000 v35 v350 v3500 v4 v40
-v400 v4000 v45 v450 v4500 v5 v50 v500 v5000 v5500 v60 v600 v6000 v6500 v70 v700 v7000 v80 v800 v90 v900
-v_max vmax
+v_max v_leax v_ori v_reax v_tcp v0 v1 v10 v100 v1000 v150 v1500 v2 v20 v200 v2000 v25 v250 v2500 v3 v30 v300 v3000 v35 v350 v3500 v4 v40 v400 v4000 v45 v450 v4500 v5 v50 v500 v5000 v5500 v60 v600 v6000 v6500 v70 v700 v7000 v80 v800 v90 v900 vlin10 vlin100 vlin1000 vlin20 vlin200 vlin50 vlin500 vmax vrot1 vrot10 vrot100 vrot2 vrot20 vrot5 vrot50
 wobj0
 z0 z1 z10 z100 z15 z150 z2 z20 z200 z3 z30 z4 z40 z5 z50 z60 z70 z80 z90
 /C8"System constants and vars" STYLE_VARIABLE Colors = 255 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
@@ -300,6 +298,7 @@ RAPVAR_SPONMSG RAPVAR_SPONMSG_RESP RAPVAR_STATUSDATA1_TYPE RAPVAR_STRING_TYPE RA
 RAPVAR_SUBLOG_TYPE RAPVAR_SUBSCWRITE_TYPE RAPVAR_SYSSTDATA_TYPE RAPVAR_TOOLDATA_TYPE RAPVAR_UNDEFINE_PAGE
 RAPVAR_VAR_DESCR_TYPE RAPVAR_WOBJDATA_TYPE RAPVAR_WRITE_NAME RAPVAR_WRITE_NAME_ARRAY RAPVAR_WRITE_PAGE
 RAPVAR_XDATA_TYPE RAPVAR_ZONEDATA_TYPE ROB_LM1_LOAD_VAL ROB_LOAD_VAL ROB_NOT_LOAD_VAL
+SOCKET_BOUND SOCKET_CLOSED SOCKET_CONNECTED SOCKET_CREATED SOCKET_LISTENING
 TOOL_LOAD_ID TRUE
 /C9"Common Arguments/switches" STYLE_ATTRIBUTE Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 \AORamp \AOp \ASCII \Accuracy \AllMotionTasks \AllMoveTasks \AlreadyActive \Append \Arm \AxisNumber
