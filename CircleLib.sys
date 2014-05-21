@@ -42,7 +42,6 @@ MODULE CircleLib(SYSMODULE,NOSTEPIN)
   ! Overlap = TRUE
   !*****************************************************
   FUNC bool COverlap(circle c1,circle c2)
-    IF (c1.radius+c2.radius)<(c1.radius+c2.radius) RETURN TRUE;
     RETURN FALSE;
   ENDFUNC
 
