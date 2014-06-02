@@ -23,9 +23,9 @@ MODULE CircleLib(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! Module Name: CircleLib
-  ! Version:     0.1a
+  ! Version:     0.11a
   ! Description: Circle calculations
-  ! Date:        2014-05-17
+  ! Date:        2014-06-02
   ! Author:      Robert Andersson <rob@ernell.se>
   !*****************************************************
 
@@ -42,7 +42,7 @@ MODULE CircleLib(SYSMODULE,NOSTEPIN)
   ! Overlap = TRUE
   !*****************************************************
   FUNC bool COverlap(circle c1,circle c2)
-    RETURN FALSE;
+    RETURN Distance(c1.position,c2.position)<(c1.radius+c2.radius);
   ENDFUNC
 
   !*****************************************************
