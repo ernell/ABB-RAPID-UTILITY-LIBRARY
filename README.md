@@ -9,3 +9,6 @@ Added a new definitionfile for ABB Rapid IRC5 to use with UltraEdit & UEStudio. 
 
 <h3>Help</h3>
 If you like to contribute to this library, please send what you got to my email, and I will add it to the collection. Dont forget to write a module header like the one in TIMER.mod. Use the LICENSE-TEMPLATE.txt. The code should be readable, nice and tidy.
+
+<h3>No guarantees</h3>
+All code comes "AS IS", and its your responsibility to check for errors before you use it in a production environment. If you find errors, please tell me.
