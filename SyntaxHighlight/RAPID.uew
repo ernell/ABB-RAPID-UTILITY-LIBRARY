@@ -17,10 +17,10 @@
 ; *******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition         *
 ; *              + function list treeview parsing.                  *
-; * Version:     0.33                                               *
+; * Version:     0.332                                              *
 ; * Description: Syntax highlight to use with UltraEdit & UEStudio. *
 ; *                                                                 *
-; * Date:        2013-05-16                                         *
+; * Date:        2014-06-06                                         *
 ; * Author:      <rob@ernell.se>                                    *
 ; * WWW:         http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY *
 ; *******************************************************************
@@ -278,6 +278,7 @@ ERR_UNKPROC ERR_UNLOAD ERR_WAITSYNCTASK ERR_WAIT_MAXTIME ERR_WHLSEARCH ERR_WOBJ_
 FALSE
 IRBP_A_C_ID IRBP_B_D_ID IRBP_K_ID IRBP_L_ID IRBP_R_ID IRB_EXT_ID
 MASS_KNOWN MASS_WITH_AX3
+OP_AUTO OP_MAN_PROG OP_MAN_TEST OP_UNDEF
 PAY_LOAD_ID PICK_NAME PPA_PLACE_NAME PPA_PPA_ALT_NAME
 RAPBIOF_CLOSE RAPBIOF_CLOSE_ALL RAPBIOF_OPEN RAPBIOF_READREQ RAPBIOF_WRITE RAPCFG_LOAD_PARAMETERS
 RAPCFG_SAVE_PARAMETERS RAPFIL_CLOSE RAPFIL_CLOSE_ALL RAPFIL_DELETE RAPFIL_DIR RAPFIL_GET_TIME
@@ -298,24 +299,25 @@ RAPVAR_SPONMSG RAPVAR_SPONMSG_RESP RAPVAR_STATUSDATA1_TYPE RAPVAR_STRING_TYPE RA
 RAPVAR_SUBLOG_TYPE RAPVAR_SUBSCWRITE_TYPE RAPVAR_SYSSTDATA_TYPE RAPVAR_TOOLDATA_TYPE RAPVAR_UNDEFINE_PAGE
 RAPVAR_VAR_DESCR_TYPE RAPVAR_WOBJDATA_TYPE RAPVAR_WRITE_NAME RAPVAR_WRITE_NAME_ARRAY RAPVAR_WRITE_PAGE
 RAPVAR_XDATA_TYPE RAPVAR_ZONEDATA_TYPE ROB_LM1_LOAD_VAL ROB_LOAD_VAL ROB_NOT_LOAD_VAL
+RUN_CONT_CYCLE RUN_INSTR_BWD RUN_INSTR_FWD RUN_SIM RUN_STEP_MOVE RUN_UNDEF
 SOCKET_BOUND SOCKET_CLOSED SOCKET_CONNECTED SOCKET_CREATED SOCKET_LISTENING
 TOOL_LOAD_ID TRUE
 /C9"Common Arguments/switches" STYLE_ATTRIBUTE Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 \AORamp \AOp \ASCII \Accuracy \AllMotionTasks \AllMoveTasks \AlreadyActive \Append \Arm \AxisNumber
 \BackupFile \Bin \Block \BreakFlag \BreakOff \Buttons \Bwd \CirPointOri \Clear \ClientAddress \Conc
 \ConfAngle \ConfigAngle \ConstSym \Continue \Corr \D \DIBreak \DNeg \DO \DO1 \DOBreak \DODelay \DOp \DPos
-\Data \DeactAll \DefinedFlag \DipLag \DistCnvStart \Dynamic \EioNameSensor \EioNameStop \EioNameTrigVis
+\Data \DeactAll \DefinedFlag \DipLag \DistCnvStart \Dx \Dy \Dynamic \Dz \EioNameSensor \EioNameStop \EioNameTrigVis
 \ErrDO \ErrIfChanged \ErrorId \ErrorNumber \ExeP \F1 \F2 \File \FilePath \Float4 \FromIndex \Fwd \GO1 \GO2
 \GO3 \GO4 \GOp \GlobalSym \GrpSize \Halt \Header \Hex1 \High \ID \Icon \Image \InMod \InPos \InRout
 \InTask \Inhib \InitCmd \Inside \InstanceId \IntX \KeepSync \Level \ListNo \LoadIdType \LocalSym \Logic
 \MaxTime \MechUnit \MechUnitName \MsgLine2 \MsgLine3 \MsgLine4 \MsgLine5 \Network \NoCloseBtn \NoConc
 \NoEOffs \NoNewLine \NoOfBytes \NoRecBytes \NoRegain \Num \Object \ObjectFrame \ObjectName \Off \Old \On
 \Outside \PLength \PStop \ParIdType \PathFrame \PayLoad \PersSym \Phys \PollRate \PredTime \Quick \RL2
-\RL3 \RL4 \Ramp \RawData \Read \RefNum \RefPos \RelDist \Result \Retract \Rot \SDelay \Save \Short \Single
+\RL3 \RL4 \Ramp \RawData \Read \RefNum \RefPos \RelDist \Result \Retract \Rot \Rx \Ry \Rz \SDelay \Save \Short \Single
 \SlowTest \Speed \Start \Stat \Status \Stop \StopBlock \StopMove \Str \Str1 \Str2 \Str3 \Str4 \Str5
 \Strict \Sup \SyncLastMoveInst \SyncOrgMoveInst \T \T2 \T3 \T4 \T5 \T6 \T7 \T8 \TaskRef \Teach \Temp \Time
 \TimeFlag \TimeOut \ToAbsNum \ToAbsPos \ToRelNum \ToRelPos \Tool \ToolOffs \TuneValue \TypeMod \UnloadFile
-\UnloadPath \V \VarSym \W \WObj \WorkAreaWarning \Wrap \Wrist \Write \XPos \Z \num \switch
+\UnloadPath \V \VarSym \W \WObj \WorkAreaWarning \Wrap \Wrist \Write \X \XPos \Y \Z \num \switch
 /C10"Word List 10" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C11"Word List 11" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C12"Word List 12" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
