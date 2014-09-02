@@ -22,13 +22,13 @@ MODULE SORT(SYSMODULE,NOSTEPIN)
   !*****************************************************
 
   !*****************************************************
-  ! Module Name: SORT
-  ! Version:     0.11b (not yet tested)
+  ! Module Name: LIB_SORT
+  ! Version:     0.12b (not yet tested)
   ! Description: Sorting lib.
   !              - Various data swap functions
   !              -
   !              -
-  ! Date:        2013-12-19
+  ! Date:        2014-09-02
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
