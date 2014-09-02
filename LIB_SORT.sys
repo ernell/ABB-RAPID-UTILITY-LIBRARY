@@ -3,7 +3,7 @@
   LANGUAGE:ENGLISH
 %%%
 
-MODULE SORT(SYSMODULE,NOSTEPIN)
+MODULE LIB_SORT(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! * Copyright (C) 2013 Robert Andersson <rob@ernell.se>
