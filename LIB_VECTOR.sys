@@ -3,7 +3,7 @@
   LANGUAGE:ENGLISH
 %%%
 
-MODULE VECTORLIB(SYSMODULE,NOSTEPIN)
+MODULE LIB_VECTOR(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! * Copyright (C) 2013 Robert Andersson <rob@ernell.se>
@@ -22,7 +22,7 @@ MODULE VECTORLIB(SYSMODULE,NOSTEPIN)
   !*****************************************************
 
   !*****************************************************
-  ! Module Name: VECTORLIB
+  ! Module Name: LIB_VECTOR
   ! Version:     0.1b (not yet tested)
   ! Description: Vector type
   !              - Various functions that use vector type
