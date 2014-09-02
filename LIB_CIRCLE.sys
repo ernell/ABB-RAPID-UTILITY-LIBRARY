@@ -3,7 +3,7 @@
   LANGUAGE:ENGLISH
 %%%
 
-MODULE CircleLib(SYSMODULE,NOSTEPIN)
+MODULE LIB_CIRCLE(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! * Copyright (C) 2013 Robert Andersson <rob@ernell.se>
@@ -22,10 +22,10 @@ MODULE CircleLib(SYSMODULE,NOSTEPIN)
   !*****************************************************
 
   !*****************************************************
-  ! Module Name: CircleLib
-  ! Version:     0.11a
+  ! Module Name: LIB_CIRCLE
+  ! Version:     0.12a
   ! Description: Circle calculations
-  ! Date:        2014-06-02
+  ! Date:        2014-09-02
   ! Author:      Robert Andersson <rob@ernell.se>
   !*****************************************************
 
