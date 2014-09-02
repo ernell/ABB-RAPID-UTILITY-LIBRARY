@@ -22,7 +22,7 @@ MODULE NumArray(SYSMODULE,NOSTEPIN)
   !*****************************************************
 
   !*****************************************************
-  ! Module Name: NumArray
+  ! Module Name: LIB_NARRAY
   ! Version:     0.1b (not yet tested)
   ! Description: Dynamic array (as dynamic as it gets)
   !              - Stack functions (push & pop)
