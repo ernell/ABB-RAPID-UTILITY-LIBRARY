@@ -27,7 +27,6 @@ MODULE LIB_SORT(SYSMODULE,NOSTEPIN)
   ! Description: Sorting lib.
   !              - Various data swap functions
   !              -
-  !              -
   ! Date:        2014-09-02
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
