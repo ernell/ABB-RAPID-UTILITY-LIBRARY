@@ -17,10 +17,10 @@
 ; *******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition         *
 ; *              + function list treeview parsing.                  *
-; * Version:     0.332                                              *
+; * Version:     0.333                                              *
 ; * Description: Syntax highlight to use with UltraEdit & UEStudio. *
 ; *                                                                 *
-; * Date:        2014-06-06                                         *
+; * Date:        2014-09-15                                         *
 ; * Author:      <rob@ernell.se>                                    *
 ; * WWW:         http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY *
 ; *******************************************************************
@@ -215,20 +215,21 @@ UIAlphaEntry UIClientExist UIListView UIMessageBox UINumEntry UINumTune
 ValToStr VectMagn
 /C5"Datatypes" STYLE_KEYWORD Colors = 4210816 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 Dnum
-beaddata bool byte
+beaddata bool busstate byte
 clock confdata corrdescr
 datapos dionum dir
-equipdata errdomain errnum errtype extjoint
+equipdata errdomain errnum errtype event_type extjoint
 forcedata
 ggundata gundata gunmdata
-intnum iodev itmsrc itmsrcinstdat itmtgt
+handler_type
+icon_data identno intnum iodev itmsrc itmsrcinstdat itmtgt
 jointtarget
-loaddata loadsession
+listitem loaddata loadidnum loadsession
 mecunit motsetdata
 num
 o_jointtarget o_robtarget opnum orient
-pos pose progdisp
-robjoint robtarget
+paridnum pathrecid pos pose progdisp
+rmqheader rmqmessage rmqslot robjoint robtarget
 seamdata shapedata signalai signalao signaldi signaldo signalgi signalgo simdata socketdev speeddata
 spotdata spotmdata string switch symnum syncident
 taskid tasks testsignal tooldata tpnum trapdata triggdata tunetype
