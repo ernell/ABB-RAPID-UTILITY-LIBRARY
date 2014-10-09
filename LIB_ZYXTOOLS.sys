@@ -6,7 +6,7 @@
 MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
-  ! * Copyright (C) 2013 Robert Andersson <rob@ernell.se>
+  ! * Copyright (C) 2014 Robert Andersson <rob@ernell.se>
   ! *
   ! * Licensed under the Apache License, Version 2.0 (the "License");
   ! * you may not use this file except in compliance with the License.
@@ -23,18 +23,29 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! Module Name: LIB_ZYXTOOLS
-  ! Version:     0.1a (syntax ok)
+  ! Version:     0.3
   ! Description: 
-  !              Chapter 1: misc. functions
-  !              Chapter 2: tooldata functions
-  !              Chapter 3: wobjdata functions
-  !              Chapter 4: loaddata functions
-  !              Chapter 5: zonedata functions
+  !              - Vars & Constants
+  !              - Chapter 1: misc. functions
+  !              - Chapter 2: tooldata functions
+  !              - Chapter 3: wobjdata functions
+  !              - Chapter 4: loaddata functions
+  !              - Chapter 5: zonedata functions
+  !              - Chapter 6: custom move procedures
   !              
-  ! Date:        2014-01-13
+  ! Date:        2014-10-05
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
+
+  !*****************************************************
+  !
+  ! Vars & Constants
+  !
+  !*****************************************************
+  
+  ! Default speeddata for movement instruktions in chapter 6
+  LOCAL PERS speeddata vXYZ:=[5,10,5000,1000];
 
   !*****************************************************
   !
@@ -75,84 +86,101 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
 
   !*****************************************************
+  ! TCP tframe transformation in xyz
+  ! Orientation is not affected
+  !*****************************************************
+  PROC TCPTrans(PERS tooldata pTool,num x,num y,num z)
+    VAR pose poTool:=[[0,0,0],[1,0,0,0]];
+    VAR pose poTrans:=[[0,0,0],[1,0,0,0]];
+    VAR pose poResult:=[[0,0,0],[1,0,0,0]];
+
+    poTool:=pTool.tframe;
+    poTrans.trans.x:=x;
+    poTrans.trans.y:=y;
+    poTrans.trans.z:=z;
+    poResult:=PoseMult(poTool,poTrans);
+    pTool.tframe:=poResult;
+  ENDPROC
+
+  !*****************************************************
   ! Set orientation angle on tooldata from euler angles
   !*****************************************************
-  PROC SetToolZYX(INOUT tooldata object,num z,num y,num x)
-    object.tframe.rot:=OrientZYX(z,y,x);
+  PROC SetToolZYX(INOUT tooldata pTool,num z,num y,num x)
+    pTool.tframe.rot:=OrientZYX(z,y,x);
   ENDPROC
 
   !*****************************************************
   ! Set orientation angle on tooldata with quaternion (orient object)
   !*****************************************************
-  PROC SetToolOrient(INOUT tooldata object,orient value)
-    object.tframe.rot:=value;
+  PROC SetToolOrient(INOUT tooldata pTool,orient value)
+    pTool.tframe.rot:=value;
   ENDPROC
 
   !*****************************************************
   ! Get orientation from tooldata as an orient object
   !*****************************************************
-  FUNC orient GetToolOrient(tooldata object)
-    RETURN object.tframe.rot;
+  FUNC orient GetToolOrient(tooldata pTool)
+    RETURN pTool.tframe.rot;
   ENDFUNC
 
   !*****************************************************
   ! Set mass on tooldata
   !*****************************************************
-  PROC SetToolMass(INOUT tooldata object,num value)
-    object.tload.mass:=value;
+  PROC SetToolMass(INOUT tooldata pTool,num value)
+    pTool.tload.mass:=value;
   ENDPROC
 
   !*****************************************************
   ! Get tool mass from tooldata
   !*****************************************************
-  FUNC num GetToolMass(tooldata object)
-    RETURN object.tload.mass;
+  FUNC num GetToolMass(tooldata pTool)
+    RETURN pTool.tload.mass;
   ENDFUNC
 
   !*****************************************************
   ! Set tool loaddata
   !*****************************************************
-  PROC SetToolLoad(INOUT tooldata object,loaddata value)
-    object.tload:=value;
+  PROC SetToolLoad(INOUT tooldata pTool,loaddata value)
+    pTool.tload:=value;
   ENDPROC
 
   !*****************************************************
   ! Get tool loaddata
   !*****************************************************
-  FUNC loaddata GetToolLoad(tooldata object)
-    RETURN object.tload;
+  FUNC loaddata GetToolLoad(tooldata pTool)
+    RETURN pTool.tload;
   ENDFUNC
 
   !*****************************************************
   ! Set Centre Of Gravity on tool loaddata
   !*****************************************************
-  PROC SetToolCOG(INOUT tooldata object,pos value)
-    object.tload.cog:=[value.x,value.y,value.z];
+  PROC SetToolCOG(INOUT tooldata pTool,pos value)
+    pTool.tload.cog:=[value.x,value.y,value.z];
   ENDPROC
 
   !*****************************************************
   ! Get Centre Of Gravity from tool loaddata
   !*****************************************************
-  FUNC pos GetToolCOG(tooldata object)
-    RETURN object.tload.cog;
+  FUNC pos GetToolCOG(tooldata pTool)
+    RETURN pTool.tload.cog;
   ENDFUNC
 
   !*****************************************************
   ! Set tool frame translation
   !*****************************************************
-  PROC SetToolFrame(INOUT tooldata object,num x,num y,num z)
-    object.tframe.trans.x:=x;
-    object.tframe.trans.y:=y;
-    object.tframe.trans.z:=z;
+  PROC SetToolFrame(INOUT tooldata pTool,num x,num y,num z)
+    pTool.tframe.trans.x:=x;
+    pTool.tframe.trans.y:=y;
+    pTool.tframe.trans.z:=z;
   ENDPROC
 
   !*****************************************************
   ! Add tool frame translation
   !*****************************************************
-  PROC AddToolFrame(INOUT tooldata object,num x,num y,num z)
-    Add object.tframe.trans.x,x;
-    Add object.tframe.trans.y,y;
-    Add object.tframe.trans.z,z;
+  PROC AddToolFrame(INOUT tooldata pTool,num x,num y,num z)
+    Add pTool.tframe.trans.x,x;
+    Add pTool.tframe.trans.y,y;
+    Add pTool.tframe.trans.z,z;
   ENDPROC
 
   !*****************************************************
@@ -164,44 +192,44 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Set orientation angle on a workobject with euler angles
   !*****************************************************
-  PROC SetWObjZYX(INOUT wobjdata object,num z,num y,num x)
-    object.oframe.rot:=OrientZYX(z,y,x);
+  PROC SetWObjZYX(INOUT wobjdata pWObj,num z,num y,num x)
+    pWObj.oframe.rot:=OrientZYX(z,y,x);
   ENDPROC
 
   !*****************************************************
   ! Set oframe translation
   !*****************************************************
-  PROC SetWObjOFrame(INOUT wobjdata object,num x,num y,num z)
-    object.oframe.trans.x:=x;
-    object.oframe.trans.y:=y;
-    object.oframe.trans.z:=z;
+  PROC SetWObjOFrame(INOUT wobjdata pWObj,num x,num y,num z)
+    pWObj.oframe.trans.x:=x;
+    pWObj.oframe.trans.y:=y;
+    pWObj.oframe.trans.z:=z;
   ENDPROC
 
   !*****************************************************
   ! Set uframe translation
   !*****************************************************
-  PROC SetWObjUFrame(INOUT wobjdata object,num x,num y,num z)
-    object.uframe.trans.x:=x;
-    object.uframe.trans.y:=y;
-    object.uframe.trans.z:=z;
+  PROC SetWObjUFrame(INOUT wobjdata pWObj,num x,num y,num z)
+    pWObj.uframe.trans.x:=x;
+    pWObj.uframe.trans.y:=y;
+    pWObj.uframe.trans.z:=z;
   ENDPROC
 
   !*****************************************************
   ! Add oframe translation
   !*****************************************************
-  PROC AddWObjOFrame(INOUT wobjdata object,num x,num y,num z)
-    Add object.oframe.trans.x,x;
-    Add object.oframe.trans.y,y;
-    Add object.oframe.trans.z,z;
+  PROC AddWObjOFrame(INOUT wobjdata pWObj,num x,num y,num z)
+    Add pWObj.oframe.trans.x,x;
+    Add pWObj.oframe.trans.y,y;
+    Add pWObj.oframe.trans.z,z;
   ENDPROC
 
   !*****************************************************
   ! Add uframe translation
   !*****************************************************
-  PROC AddWObjUFrame(INOUT wobjdata object,num x,num y,num z)
-    Add object.uframe.trans.x,x;
-    Add object.uframe.trans.y,y;
-    Add object.uframe.trans.z,z;
+  PROC AddWObjUFrame(INOUT wobjdata pWObj,num x,num y,num z)
+    Add pWObj.uframe.trans.x,x;
+    Add pWObj.uframe.trans.y,y;
+    Add pWObj.uframe.trans.z,z;
   ENDPROC
    
   !*****************************************************
@@ -213,50 +241,50 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Set Centre Of Gravity on loaddata
   !*****************************************************
-  PROC SetLoadCOG(INOUT loaddata object,pos value)
-    object.cog:=[value.x,value.y,value.z];
+  PROC SetLoadCOG(INOUT loaddata pLoad,pos value)
+    pLoad.cog:=[value.x,value.y,value.z];
   ENDPROC
 
   !*****************************************************
   ! Get Centre Of Gravity from loaddata as a pos
   !*****************************************************
-  FUNC pos GetLoadCOG(loaddata object)
-    RETURN object.cog;
+  FUNC pos GetLoadCOG(loaddata pLoad)
+    RETURN pLoad.cog;
   ENDFUNC
 
   !*****************************************************
   ! Set loaddata mass
   !*****************************************************
-  PROC SetLoadMass(INOUT loaddata object,num value)
-    object.mass:=value;
+  PROC SetLoadMass(INOUT loaddata pLoad,num value)
+    pLoad.mass:=value;
   ENDPROC
 
   !*****************************************************
   ! Get loaddata mass
   !*****************************************************
-  FUNC num GetLoadMass(loaddata object)
-    RETURN object.mass;
+  FUNC num GetLoadMass(loaddata pLoad)
+    RETURN pLoad.mass;
   ENDFUNC
 
   !*****************************************************
   ! Set loaddata inertia with a pos
   !*****************************************************
-  PROC SetLoadInertia(INOUT loaddata object,pos value)
-    object.ix:=value.x;
-    object.iy:=value.y;
-    object.iz:=value.z;
+  PROC SetLoadInertia(INOUT loaddata pLoad,pos pPos)
+    pLoad.ix:=pPos.x;
+    pLoad.iy:=pPos.y;
+    pLoad.iz:=pPos.z;
   ENDPROC
 
   !*****************************************************
   ! Get loaddata inertia as a pos
   !*****************************************************
-  FUNC pos GetLoadInertia(loaddata object)
-    VAR pos value:=[0,0,0];
+  FUNC pos GetLoadInertia(loaddata pLoad)
+    VAR pos inertia:=[0,0,0];
     
-    value.x:=object.ix;
-    value.y:=object.iy;
-    value.z:=object.iz;
-    RETURN value;
+    inertia.x:=pLoad.ix;
+    inertia.y:=pLoad.iy;
+    inertia.z:=pLoad.iz;
+    RETURN inertia;
   ENDFUNC
 
   !*****************************************************
@@ -268,56 +296,127 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Set zone as "Fine point"
   !*****************************************************
-  PROC SetZoneFine(INOUT zonedata object)
-    object.finep:=TRUE;
+  PROC SetZoneFine(INOUT zonedata pZone)
+    pZone.finep:=TRUE;
   ENDPROC
 
   !*****************************************************
   ! Set zone as "Fly by"
   !*****************************************************
-  PROC SetZoneFlyby(INOUT zonedata object)
-    object.finep:=FALSE;
+  PROC SetZoneFlyby(INOUT zonedata pZone)
+    pZone.finep:=FALSE;
   ENDPROC
 
   !*****************************************************
   ! Path zone TCP
   !*****************************************************
-  PROC SetPZoneTCP(INOUT zonedata object,num value)
-    object.pzone_tcp:=value;
+  PROC SetPZoneTCP(INOUT zonedata pZone,num value)
+    pZone.pzone_tcp:=value;
   ENDPROC
 
   !*****************************************************
   ! Path zone orientation
   !*****************************************************
-  PROC SetPZoneOrient(INOUT zonedata object,num value)
-    object.pzone_ori:=value;
+  PROC SetPZoneOrient(INOUT zonedata pZone,num value)
+    pZone.pzone_ori:=value;
   ENDPROC
 
   !*****************************************************
   ! Path zone orientation external axes
   !*****************************************************
-  PROC SetPZoneEAx(INOUT zonedata object,num value)
-    object.pzone_eax:=value;
+  PROC SetPZoneEAx(INOUT zonedata pZone,num value)
+    pZone.pzone_eax:=value;
   ENDPROC
 
   !*****************************************************
   ! Zone orientation
   !*****************************************************
-  PROC SetZoneOrient(INOUT zonedata object,num value)
-    object.zone_ori:=value;
+  PROC SetZoneOrient(INOUT zonedata pZone,num value)
+    pZone.zone_ori:=value;
   ENDPROC
 
   !*****************************************************
   ! Zone linear external axes
   !*****************************************************
-  PROC SetZoneLEAx(INOUT zonedata object,num value)
-    object.zone_leax:=value;
+  PROC SetZoneLEAx(INOUT zonedata pZone,num value)
+    pZone.zone_leax:=value;
   ENDPROC
 
   !*****************************************************
   ! Zone rotational external axes
   !*****************************************************
-  PROC SetZoneREAx(INOUT zonedata object,num value)
-    object.zone_reax:=value;
+  PROC SetZoneREAx(INOUT zonedata pZone,num value)
+    pZone.zone_reax:=value;
   ENDPROC
+
+  !*****************************************************
+  !
+  ! Chapter 6: reltool move procedures
+  !
+  !*****************************************************
+
+  !*****************************************************
+  ! Rotate around tool X-axis
+  !*****************************************************
+  PROC ToolRotX(INOUT tooldata pTool,num rot_x)
+    ToolRot pTool,rot_x,0,0;
+  ENDPROC
+
+  !*****************************************************
+  ! Rotate around tool Y-axis
+  !*****************************************************
+  PROC ToolRotY(INOUT tooldata pTool,num rot_y)
+    ToolRot pTool,0,rot_y,0;
+  ENDPROC
+
+  !*****************************************************
+  ! Rotate around tool Z-axis
+  !*****************************************************
+  PROC ToolRotZ(INOUT tooldata pTool,num rot_z)
+    ToolRot pTool,0,0,rot_z;
+  ENDPROC
+
+  !*****************************************************
+  ! Rotate around tool X+Y+Z-axis
+  !*****************************************************
+  PROC ToolRot(INOUT tooldata pTool,num rot_x,num rot_y,num rot_z)
+    VAR robtarget current_pos;
+    
+    current_pos:=CRobT(\Tool:=pTool\WObj:=wobj0);
+    current_pos:=CRobT(\Tool:=pTool\WObj:=wobj0);
+    ConfL \Off;
+    MoveL RelTool (current_pos, 0, 0, 0 \Rx:=rot_x\Ry:=rot_y\Rz:=rot_z), vXYZ, fine, pTool;
+    ConfL \On;
+  ENDPROC
+
+  !*****************************************************
+  ! Move TCP linear in XYZ-axis
+  !*****************************************************
+  PROC ToolXYZ(INOUT tooldata pTool,num trans_x,num trans_y,num trans_z)
+    VAR robtarget current_pos;
+    
+    current_pos:=CRobT(\Tool:=pTool\WObj:=wobj0);
+    current_pos:=CRobT(\Tool:=pTool\WObj:=wobj0);
+    ConfL \Off;
+    MoveL RelTool (current_pos, trans_x,trans_y,trans_z), vXYZ, fine, pTool;
+    ConfL \On;
+  ENDPROC
+
+  !*****************************************************
+  ! Can we reach the robtarget with the specified tool/wobj
+  ! workobject is optional
+  !*****************************************************
+  FUNC bool IsReachable(robtarget pTarget,PERS tooldata pTool,\PERS wobjdata WObj)
+    VAR bool result:=TRUE;
+    VAR jointtarget tJoints;
+    
+    tJoints:=CalcJointT(pTarget,pTool \WObj?WObj);
+    RETURN result;
+  ERROR
+    IF ERRNO=ERR_ROBLIMIT THEN
+      SkipWarn;
+      result:=FALSE;
+      TRYNEXT;
+    ENDIF
+  ENDFUNC
 ENDMODULE
