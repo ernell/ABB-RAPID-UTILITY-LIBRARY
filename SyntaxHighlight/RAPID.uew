@@ -17,10 +17,10 @@
 ; *******************************************************************
 ; * Name:        ABB RAPID IRC5 syntax highlight definition         *
 ; *              + function list treeview parsing.                  *
-; * Version:     0.333                                              *
+; * Version:     0.334                                              *
 ; * Description: Syntax highlight to use with UltraEdit & UEStudio. *
 ; *                                                                 *
-; * Date:        2014-09-15                                         *
+; * Date:        2014-12-18                                         *
 ; * Author:      <rob@ernell.se>                                    *
 ; * WWW:         http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY *
 ; *******************************************************************
@@ -152,7 +152,7 @@ OR
 XOR
 /C3"Instructions" STYLE_METHOD Colors = 33023 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 AROEnter AROExit AROWarning AccSet ActUnit Add AliasIO ArcC ArcKill ArcL ArcRefresh
-BitClear BitSet BookErrNo Break
+BEDebugState BERefPointer BESetupToolJ BETcpExtend BitClear BitSet BookErrNo Break
 CalibJ CalibL Calibrate CallByVar CancelLoad CirPathMode CirPathReori Clear ClearIOBuff ClearPath
 ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir CnvStopSigName Compact ConfJ ConfL CopyFile
 CopyRawBytes CorrClear CorrCon CorrDiscon CorrRead CorrWrite CreateInstDat
@@ -203,7 +203,7 @@ HexToDec
 IOUnitState IndInpos IndSpeed IsFile IsMechUnitActive IsPers IsStopStateEvent IsSyncMoveOn IsSysId IsVar
 MaxRobSpeed MirPos ModTime
 NOrient NonMotionMode NumToStr
-ORobT Offs OpMode OrientZXY
+ORobT Offs OffsToolPolar OffsToolXYZ OpMode OrientZXY
 PFRestart ParIdPosValid ParIdRobValid PathRecValidBwd PoseInv PoseMult PoseVect Pow PowDnum Present
 ProgMemFree
 RawBytesLen ReadBin ReadMotor ReadNum ReadStr ReadStrBin RelTool RobOS Round RoundDnum RunMode
@@ -215,7 +215,7 @@ UIAlphaEntry UIClientExist UIListView UIMessageBox UINumEntry UINumTune
 ValToStr VectMagn
 /C5"Datatypes" STYLE_KEYWORD Colors = 4210816 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 Dnum
-beaddata bool busstate byte
+be_device be_scan be_tooldesign beaddata bool busstate byte
 clock confdata corrdescr
 datapos dionum dir
 equipdata errdomain errnum errtype event_type extjoint
@@ -235,6 +235,7 @@ spotdata spotmdata string switch symnum syncident
 taskid tasks testsignal tooldata tpnum trapdata triggdata tunetype
 weavedata welddata wobjdata wzstationary wztemporary
 zonedata
+
 /C6"Placeholders" STYLE_KEYWORD Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 <ALT> <ARG> <CSE> <DDN> <DIM> <EIT> <EXP> <ID> <PAR> <RDN> <SMT> <TDN> <VAR>
 /C7"Variables" STYLE_VARIABLE Colors = 255 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
@@ -304,21 +305,22 @@ RUN_CONT_CYCLE RUN_INSTR_BWD RUN_INSTR_FWD RUN_SIM RUN_STEP_MOVE RUN_UNDEF
 SOCKET_BOUND SOCKET_CLOSED SOCKET_CONNECTED SOCKET_CREATED SOCKET_LISTENING
 TOOL_LOAD_ID TRUE
 /C9"Common Arguments/switches" STYLE_ATTRIBUTE Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
-\AORamp \AOp \ASCII \Accuracy \AllMotionTasks \AllMoveTasks \AlreadyActive \Append \Arm \AxisNumber
-\BackupFile \Bin \Block \BreakFlag \BreakOff \Buttons \Bwd \CirPointOri \Clear \ClientAddress \Conc
+\AORamp \AOp \ASCII \Absolute \Accuracy \AllMotionTasks \AllMoveTasks \AlreadyActive \Append \Arm \AxisNumber
+\BackupFile \Bin \Block \BreakFlag \BreakOff \Buttons \Bwd \CheckBeamAngle \CheckRange \CirPointOri \Clear \ClientAddress \Conc
 \ConfAngle \ConfigAngle \ConstSym \Continue \Corr \D \DIBreak \DNeg \DO \DO1 \DOBreak \DODelay \DOp \DPos
-\Data \DeactAll \DefinedFlag \DipLag \DistCnvStart \Dx \Dy \Dynamic \Dz \EioNameSensor \EioNameStop \EioNameTrigVis
-\ErrDO \ErrIfChanged \ErrorId \ErrorNumber \ExeP \F1 \F2 \File \FilePath \Float4 \FromIndex \Fwd \GO1 \GO2
+\Data \DeactAll \DefinedFlag \DipLag \DistCnvStart \Dx \Dy \Dynamic \Dz \EioNameSensor \EioNameStop \EioNameTrigVis \ElapsedTime
+\ErrDO \ErrIfChanged \ErrorId \ErrorNumber \ExeP \F1 \F2 \File \FilePath \FixedAxes \Float4 \FromIndex \Fwd \GO1 \GO2
 \GO3 \GO4 \GOp \GlobalSym \GrpSize \Halt \Header \Hex1 \High \ID \Icon \Image \InMod \InPos \InRout
 \InTask \Inhib \InitCmd \Inside \InstanceId \IntX \KeepSync \Level \ListNo \LoadIdType \LocalSym \Logic
-\MaxTime \MechUnit \MechUnitName \MsgLine2 \MsgLine3 \MsgLine4 \MsgLine5 \Network \NoCloseBtn \NoConc
+\MaxDev \MaxFromDay1 \MaxTime \MeanDev \MechUnit \MechUnitName \MsgLine2 \MsgLine3 \MsgLine4 \MsgLine5 \Network \NewExtens \NoCloseBtn \NoConc
 \NoEOffs \NoNewLine \NoOfBytes \NoRecBytes \NoRegain \Num \Object \ObjectFrame \ObjectName \Off \Old \On
 \Outside \PLength \PStop \ParIdType \PathFrame \PayLoad \PersSym \Phys \PollRate \PredTime \Quick \RL2
 \RL3 \RL4 \Ramp \RawData \Read \RefNum \RefPos \RelDist \Result \Retract \Rot \Rx \Ry \Rz \SDelay \Save \Short \Single
 \SlowTest \Speed \Start \Stat \Status \Stop \StopBlock \StopMove \Str \Str1 \Str2 \Str3 \Str4 \Str5
-\Strict \Sup \SyncLastMoveInst \SyncOrgMoveInst \T \T2 \T3 \T4 \T5 \T6 \T7 \T8 \TaskRef \Teach \Temp \Time
-\TimeFlag \TimeOut \ToAbsNum \ToAbsPos \ToRelNum \ToRelPos \Tool \ToolOffs \TuneValue \TypeMod \UnloadFile
-\UnloadPath \V \VarSym \W \WObj \WorkAreaWarning \Wrap \Wrist \Write \X \XPos \Y \Z \num \switch
+\Strict \Sup \SyncLastMoveInst \SyncOrgMoveInst \T \T2 \T3 \T4 \T5 \T6 \T7 \T8 \TLoad \TaskRef \Teach \Temp \Time
+\TimeFlag \TimeOut \ToAbsNum \ToAbsPos \ToRelNum \ToRelPos \Tool \ToolOffs \TuneValue \TypeMod
+\UnloadFile \UnloadPath \UserInterface
+\V \VarSym \W \WObj \WorkAreaWarning \Wrap \Wrist \Write \X \XPos \XYZOnly \Y \Z \num \switch
 /C10"Word List 10" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C11"Word List 11" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 /C12"Word List 12" Colors = 0 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
