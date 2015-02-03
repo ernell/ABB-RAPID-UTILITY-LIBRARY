@@ -23,7 +23,7 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! Module Name: LIB_ZYXTOOLS
-  ! Version:     0.3
+  ! Version:     0.31
   ! Description: 
   !              - Vars & Constants
   !              - Chapter 1: misc. functions
@@ -32,8 +32,9 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !              - Chapter 4: loaddata functions
   !              - Chapter 5: zonedata functions
   !              - Chapter 6: custom move procedures
+  !              - Chapter 7: robtarget functions
   !              
-  ! Date:        2014-10-05
+  ! Date:        2015-02-03
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
@@ -44,7 +45,7 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !
   !*****************************************************
   
-  ! Default speeddata for movement instruktions in chapter 6
+  ! Default speeddata for movement instructions in chapter 6
   LOCAL PERS speeddata vXYZ:=[5,10,5000,1000];
 
   !*****************************************************
@@ -231,7 +232,7 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
     Add pWObj.uframe.trans.y,y;
     Add pWObj.uframe.trans.z,z;
   ENDPROC
-   
+
   !*****************************************************
   !
   ! Chapter 4: loaddata
@@ -381,7 +382,17 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
   !*****************************************************
   PROC ToolRot(INOUT tooldata pTool,num rot_x,num rot_y,num rot_z)
     VAR robtarget current_pos;
+    VAR num input:=0;
     
+    ! error check
+    IF rot_x>=180 OR rot_y>=180 OR rot_z>=180 THEN
+      TPErase;
+      TPWrite "Cannot rotate 180+ degrees!";
+      TPWrite "The robot cannot decide";
+      TPWrite "which direction to rotate.";
+      TPReadFK input,"","","","[OK]","","";
+      RETURN;
+    ENDIF
     current_pos:=CRobT(\Tool:=pTool\WObj:=wobj0);
     current_pos:=CRobT(\Tool:=pTool\WObj:=wobj0);
     ConfL \Off;
@@ -418,5 +429,38 @@ MODULE LIB_ZYXTOOLS(SYSMODULE,NOSTEPIN)
       result:=FALSE;
       TRYNEXT;
     ENDIF
+  ENDFUNC
+  
+  !*****************************************************
+  !
+  ! Chapter 7: robtarget functions
+  !
+  !*****************************************************
+
+  !*****************************************************
+  !
+  ! RobTarget Offset + Rotation
+  !
+  !*****************************************************
+  FUNC robtarget RTOffs(robtarget Point,num XOffset,num YOffset,num ZOffset\num Rx\num Ry\num Rz)
+
+    Point:=Offs(Point,XOffset,YOffset,ZOffset);
+    IF Present(Rz) Point.rot:=Point.rot*OrientZYX(Rz,0,0);
+    IF Present(Ry) Point.rot:=Point.rot*OrientZYX(0,Ry,0);
+    IF Present(Rx) Point.rot:=Point.rot*OrientZYX(0,0,Rx);
+    RETURN Point;
+  ENDFUNC
+
+  !*****************************************************
+  !
+  ! RobTarget Rotation
+  !
+  !*****************************************************
+  FUNC robtarget RTRot(robtarget Point\num Rx\num Ry\num Rz)
+
+    IF Present(Rz) Point.rot:=Point.rot*OrientZYX(Rz,0,0);
+    IF Present(Ry) Point.rot:=Point.rot*OrientZYX(0,Ry,0);
+    IF Present(Rx) Point.rot:=Point.rot*OrientZYX(0,0,Rx);
+    RETURN Point;
   ENDFUNC
 ENDMODULE
