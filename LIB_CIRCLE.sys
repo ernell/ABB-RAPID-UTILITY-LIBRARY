@@ -49,14 +49,14 @@ MODULE LIB_CIRCLE(SYSMODULE,NOSTEPIN)
   ! Circle area
   !*****************************************************
   FUNC num CArea(num radius)
-    RETURN (Pow(c1.radius,2)*pi);
+    RETURN (Pow(radius,2)*pi);
   ENDFUNC
 
   !*****************************************************
   ! Circle circumference
   !*****************************************************
   FUNC num CCircumference(num radius)
-    RETURN (2*pi*c1.radius);
+    RETURN (2*pi*radius);
   ENDFUNC
 
   !*****************************************************
@@ -64,6 +64,6 @@ MODULE LIB_CIRCLE(SYSMODULE,NOSTEPIN)
   ! If the circle were a sphere, calculate the volume.
   !*****************************************************
   FUNC num CVolume(num radius)
-    RETURN (4*pi*Pow(c1.radius,3))/3;
+    RETURN (4*pi*Pow(radius,3))/3;
   ENDFUNC
 ENDMODULE
