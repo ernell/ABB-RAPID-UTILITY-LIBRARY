@@ -3,7 +3,7 @@
   LANGUAGE:ENGLISH
 %%%
 
-MODULE LIB_VECTOR(SYSMODULE,NOSTEPIN)
+MODULE LIB_VECTOR2D(SYSMODULE,NOSTEPIN)
 
   !*****************************************************
   ! * Copyright (C) 2013 Robert Andersson <rob@ernell.se>
@@ -36,7 +36,7 @@ MODULE LIB_VECTOR(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Vector type with x and y components
   !*****************************************************
-  RECORD Vector
+  RECORD Vector2D
       num x;
       num y;
   ENDRECORD
@@ -66,21 +66,21 @@ MODULE LIB_VECTOR(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Distance between two vector coordinates
   !*****************************************************
-  FUNC num vector_dist(Vector vec1,Vector vec2)
+  FUNC num vector_dist(Vector2D vec1,Vector2D vec2)
     RETURN Sqrt(Pow(vec1.x-vec2.x,2)+Pow(vec1.y-vec2.y,2));
   ENDFUNC
 
   !*****************************************************
   ! Magnitude of a vector
   !*****************************************************
-  FUNC num vector_magn(Vector vec)
+  FUNC num vector_magn(Vector2D vec)
     RETURN Sqrt(Pow(vec.x,2)+Pow(vec.y,2));
   ENDFUNC
   
   !*****************************************************
   ! Swap the values of two Vector objects
   !*****************************************************
-  PROC swap_vector(INOUT Vector value1,INOUT Vector value2)
+  PROC swap_vector(INOUT Vector2D value1,INOUT Vector2D value2)
     VAR Vector tmp;
 
     tmp:=value1;
@@ -96,9 +96,9 @@ MODULE LIB_VECTOR(SYSMODULE,NOSTEPIN)
   !          SA|SD - Also sort by second variable, Ascending(default)|Descending
   !           Tol  - Tolerance on second variable. Used for sorting rows where values are not exactly the same, but within tolerance limits
   !*****************************************************
-  PROC sort_vector(INOUT Vector array{*},\switch X|switch Y,\switch A|switch D,\switch SA|switch SD,\num tol)
+  PROC sort_vector(INOUT Vector2D array{*},\switch X|switch Y,\switch A|switch D,\switch SA|switch SD,\num tol)
     VAR num size;
-    VAR Vector tmp;
+    VAR Vector2D tmp;
     VAR num tolerance:=0;
     
     size:=Dim(array,1);
@@ -163,8 +163,8 @@ MODULE LIB_VECTOR(SYSMODULE,NOSTEPIN)
   !*****************************************************
   ! Reverse the elements of an array of Vectors (first=last)
   !*****************************************************
-  PROC rev_vector_array(INOUT Vector array{*})
-    VAR Vector tmp;
+  PROC rev_vector_array(INOUT Vector2D array{*})
+    VAR Vector2D tmp;
     VAR num size;
     VAR num count:=0;
     
