@@ -1,0 +1,829 @@
+MODULE lib_rob(SYSMODULE)
+  !*****************************************************
+  ! * Copyright (C) 2015 Robert Andersson <rob@ernell.se>
+  ! *
+  ! * Licensed under the Apache License, Version 2.0 (the "License");
+  ! * you may not use this file except in compliance with the License.
+  ! * You may obtain a copy of the License at
+  ! *
+  ! *      http://www.apache.org/licenses/LICENSE-2.0
+  ! *
+  ! * Unless required by applicable law or agreed to in writing, software
+  ! * distributed under the License is distributed on an "AS IS" BASIS,
+  ! * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ! * See the License for the specific language governing permissions and
+  ! * limitations under the License.
+  !*****************************************************
+
+  !*****************************************************
+  ! Module Name: lib_rob
+  ! Description: various robot utilities
+  ! Date:        2015-03-05
+  ! Author:      Robert Andersson <rob@ernell.se>
+  ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
+  !*****************************************************
+
+  !*****************************************************
+  ! Calculate angle between x_side/hypotenuse in a triangle
+  !*****************************************************
+  FUNC num Angle_XH(num y_side,num x_side)
+    RETURN ATan2(y_side,x_side);
+  ENDFUNC
+  
+  !*****************************************************
+  ! RobTarget offset + rotation
+  !*****************************************************
+  FUNC robtarget RTOffs(robtarget Point,num Ox,num Oy,num Oz\num Rx\num Ry\num Rz)
+    VAR pos psRot:=[0,0,0];
+
+    Point:=Offs(Point,Ox,Oy,Oz);
+    IF Present(Rz) psRot.z:=Rz;
+    IF Present(Ry) psRot.y:=Ry;
+    IF Present(Rx) psRot.x:=Rx;
+    IF Present(Rz) OR Present(Ry) OR Present(Rx) THEN
+      Point:=RTRot(Point\Rx:=psRot.x\Ry:=psRot.y\Rz:=psRot.z);
+    ENDIF
+    RETURN Point;
+  ENDFUNC
+
+  !*****************************************************
+  ! RobTarget rotation
+  !*****************************************************
+  FUNC robtarget RTRot(robtarget Point\num Rx\num Ry\num Rz)
+    VAR robtarget p;
+
+    p:=Point;
+    IF Present(Rz) AND Rz<>0 p.rot:=p.rot*OrientZYX(Rz,0,0);
+    IF Present(Ry) AND Ry<>0 p.rot:=p.rot*OrientZYX(0,Ry,0);
+    IF Present(Rx) AND Rx<>0 p.rot:=p.rot*OrientZYX(0,0,Rx);
+    RETURN p;
+  ENDFUNC
+
+  !*****************************************************
+  ! Calculate intermediate position between p0 & p1 (x,y,z)
+  ! Orientation is kept from p0
+  !*****************************************************
+  FUNC robtarget MidPos(robtarget p0,robtarget p1)
+    VAR robtarget p;
+    VAR pos v;
+
+    p:=p0;
+    v:=p1.trans-p0.trans;
+    Add p.trans.x,(v.x*0.5);
+    Add p.trans.y,(v.y*0.5);
+    Add p.trans.z,(v.z*0.5);
+    RETURN p;
+  ENDFUNC
+
+  !*****************************************************
+  ! TCP offset in tool xyz-direction, orientation is not affected.
+  ! Example use:
+  !               TCPOffs toMyTool\Ox:=20\Oy:=10\Oz:=-5;
+  !               TCPOffs toMyTool\Oz:=50;
+  !*****************************************************
+  PROC TCPOffs(PERS tooldata pTool\num Ox\num Oy\num Oz)
+    VAR pose poTool:=[[0,0,0],[1,0,0,0]];
+    VAR pose poOffs:=[[0,0,0],[1,0,0,0]];
+
+    poTool:=pTool.tframe;
+    IF Present(Ox) poOffs.trans.x:=Ox;
+    IF Present(Oy) poOffs.trans.y:=Oy;
+    IF Present(Oz) poOffs.trans.z:=Oz;
+    pTool.tframe:=PoseMult(poTool,poOffs);
+  ENDPROC
+
+  !*****************************************************
+  ! Set orientation angle on tooldata from euler angles
+  !*****************************************************
+  PROC SetToolZYX(INOUT tooldata pTool,num z,num y,num x)
+    pTool.tframe.rot:=OrientZYX(z,y,x);
+  ENDPROC
+
+  !*****************************************************
+  ! Set orientation on tooldata
+  !*****************************************************
+  PROC SetToolRot(INOUT tooldata pTool,orient r)
+    pTool.tframe.rot:=r;
+  ENDPROC
+
+  !*****************************************************
+  ! Get orientation from tooldata as an orient object
+  !*****************************************************
+  FUNC orient GetToolRot(tooldata pTool)
+    RETURN pTool.tframe.rot;
+  ENDFUNC
+
+  !*****************************************************
+  ! Set mass on tooldata
+  !*****************************************************
+  PROC SetToolMass(INOUT tooldata pTool,num v)
+    pTool.tload.mass:=v;
+  ENDPROC
+
+  !*****************************************************
+  ! Get tool mass from tooldata
+  !*****************************************************
+  FUNC num GetToolMass(tooldata pTool)
+    RETURN pTool.tload.mass;
+  ENDFUNC
+
+  !*****************************************************
+  ! Set tool loaddata
+  !*****************************************************
+  PROC SetToolLoad(INOUT tooldata pTool,loaddata v)
+    pTool.tload:=v;
+  ENDPROC
+
+  !*****************************************************
+  ! Get tool loaddata
+  !*****************************************************
+  FUNC loaddata GetToolLoad(tooldata pTool)
+    RETURN pTool.tload;
+  ENDFUNC
+
+  !*****************************************************
+  ! Set Centre Of Gravity on tool loaddata
+  !*****************************************************
+  PROC SetToolCOG(INOUT tooldata pTool,pos v)
+    pTool.tload.cog:=[v.x,v.y,v.z];
+  ENDPROC
+
+  !*****************************************************
+  ! Get Centre Of Gravity from tool loaddata
+  !*****************************************************
+  FUNC pos GetToolCOG(tooldata pTool)
+    RETURN pTool.tload.cog;
+  ENDFUNC
+
+  !*****************************************************
+  ! Set tool frame translation
+  !*****************************************************
+  PROC SetToolFrame(INOUT tooldata pTool,num x,num y,num z)
+    pTool.tframe.trans.x:=x;
+    pTool.tframe.trans.y:=y;
+    pTool.tframe.trans.z:=z;
+  ENDPROC
+
+  !*****************************************************
+  ! Add tool frame translation
+  !*****************************************************
+  PROC AddToolFrame(INOUT tooldata pTool,num x,num y,num z)
+    pTool.tframe.trans.x:=pTool.tframe.trans.x+x;
+    pTool.tframe.trans.y:=pTool.tframe.trans.y+y;
+    pTool.tframe.trans.z:=pTool.tframe.trans.z+z;
+  ENDPROC
+  
+  !*****************************************************
+  ! Set Centre Of Gravity on loaddata
+  !*****************************************************
+  PROC SetLoadCOG(INOUT loaddata pLoad,pos v)
+    pLoad.cog:=[v.x,v.y,v.z];
+  ENDPROC
+
+  !*****************************************************
+  ! Get Centre Of Gravity from loaddata as a pos
+  !*****************************************************
+  FUNC pos GetLoadCOG(loaddata pLoad)
+    RETURN pLoad.cog;
+  ENDFUNC
+
+  !*****************************************************
+  ! Set loaddata mass
+  !*****************************************************
+  PROC SetLoadMass(INOUT loaddata pLoad,num v)
+    pLoad.mass:=v;
+  ENDPROC
+
+  !*****************************************************
+  ! Get loaddata mass
+  !*****************************************************
+  FUNC num GetLoadMass(loaddata pLoad)
+    RETURN pLoad.mass;
+  ENDFUNC
+
+  !*****************************************************
+  ! Set loaddata inertia with a pos
+  !*****************************************************
+  PROC SetLoadInertia(INOUT loaddata pLoad,pos pPos)
+    pLoad.ix:=pPos.x;
+    pLoad.iy:=pPos.y;
+    pLoad.iz:=pPos.z;
+  ENDPROC
+
+  !*****************************************************
+  ! Get loaddata inertia as a pos
+  !*****************************************************
+  FUNC pos GetLoadInertia(loaddata pLoad)
+    VAR pos inertia:=[0,0,0];
+    
+    inertia.x:=pLoad.ix;
+    inertia.y:=pLoad.iy;
+    inertia.z:=pLoad.iz;
+    RETURN inertia;
+  ENDFUNC
+
+  !*****************************************************
+  ! Set zone as "Fine point"
+  !*****************************************************
+  PROC SetZoneFine(INOUT zonedata pZone)
+    pZone.finep:=TRUE;
+  ENDPROC
+
+  !*****************************************************
+  ! Set zone as "Fly by"
+  !*****************************************************
+  PROC SetZoneFlyby(INOUT zonedata pZone)
+    pZone.finep:=FALSE;
+  ENDPROC
+
+  !*****************************************************
+  ! Path zone TCP
+  !*****************************************************
+  PROC SetPZoneTCP(INOUT zonedata pZone,num v)
+    pZone.pzone_tcp:=v;
+  ENDPROC
+
+  !*****************************************************
+  ! Path zone orientation
+  !*****************************************************
+  PROC SetPZoneOrient(INOUT zonedata pZone,num v)
+    pZone.pzone_ori:=v;
+  ENDPROC
+
+  !*****************************************************
+  ! Path zone orientation external axes
+  !*****************************************************
+  PROC SetPZoneEAx(INOUT zonedata pZone,num v)
+    pZone.pzone_eax:=v;
+  ENDPROC
+
+  !*****************************************************
+  ! Zone orientation
+  !*****************************************************
+  PROC SetZoneOrient(INOUT zonedata pZone,num v)
+    pZone.zone_ori:=v;
+  ENDPROC
+
+  !*****************************************************
+  ! Zone linear external axes
+  !*****************************************************
+  PROC SetZoneLEAx(INOUT zonedata pZone,num v)
+    pZone.zone_leax:=v;
+  ENDPROC
+
+  !*****************************************************
+  ! Zone rotational external axes
+  !*****************************************************
+  PROC SetZoneREAx(INOUT zonedata pZone,num v)
+    pZone.zone_reax:=v;
+  ENDPROC
+
+  !*****************************************************
+  ! WorkObject UFrame Offset + Rotation
+  !*****************************************************
+  PROC WOUFOffs(INOUT wobjdata woob,num Ox,num Oy,num Oz\num Rx\num Ry\num Rz)
+    woob.uframe.trans.x:=woob.uframe.trans.x+Ox;
+    woob.uframe.trans.y:=woob.uframe.trans.y+Oy;
+    woob.uframe.trans.z:=woob.uframe.trans.z+Oz;
+    IF Present(Rz) woob.uframe.rot:=woob.uframe.rot*OrientZYX(Rz,0,0);
+    IF Present(Ry) woob.uframe.rot:=woob.uframe.rot*OrientZYX(0,Ry,0);
+    IF Present(Rx) woob.uframe.rot:=woob.uframe.rot*OrientZYX(0,0,Rx);
+  ENDPROC
+
+  !*****************************************************
+  ! WorkObject OFrame Offset + Rotation
+  !*****************************************************
+  PROC WOOFOffs(INOUT wobjdata woob,num Ox,num Oy,num Oz\num Rx\num Ry\num Rz)
+    woob.oframe.trans.x:=woob.oframe.trans.x+Ox;
+    woob.oframe.trans.y:=woob.oframe.trans.y+Oy;
+    woob.oframe.trans.z:=woob.oframe.trans.z+Oz;
+    IF Present(Rz) woob.oframe.rot:=woob.oframe.rot*OrientZYX(Rz,0,0);
+    IF Present(Ry) woob.oframe.rot:=woob.oframe.rot*OrientZYX(0,Ry,0);
+    IF Present(Rx) woob.oframe.rot:=woob.oframe.rot*OrientZYX(0,0,Rx);
+  ENDPROC
+
+  !*****************************************************
+  ! Create new frame from 3 pos
+  !*****************************************************
+  FUNC pose PSFrame(pos x1,pos x2,pos y1)
+    VAR pose poFrame;
+    VAR robtarget rx1:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    VAR robtarget rx2:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    VAR robtarget ry1:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    
+    rx1.trans:=x1;
+    rx2.trans:=x2;
+    ry1.trans:=y1;
+    poFrame:=DefFrame(rx1,rx2,ry1);
+    RETURN poFrame;
+  ENDFUNC
+
+  !*****************************************************
+  ! Create new frame from 3 pose
+  !*****************************************************
+  FUNC pose PSEFrame(pose x1,pose x2,pose y1)
+    VAR pose poFrame;
+    VAR robtarget rx1:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    VAR robtarget rx2:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    VAR robtarget ry1:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    
+    rx1.trans:=x1.trans;
+    rx2.trans:=x2.trans;
+    ry1.trans:=y1.trans;
+    rx1.rot:=x1.rot;
+    rx2.rot:=x2.rot;
+    ry1.rot:=y1.rot;
+    poFrame:=DefFrame(rx1,rx2,ry1);
+    RETURN poFrame;
+  ENDFUNC
+
+  !*****************************************************
+  ! Set orientation angle on a workobject with euler angles
+  !*****************************************************
+  PROC WOUZYX(INOUT wobjdata woob,num z,num y,num x)
+    woob.uframe.rot:=OrientZYX(z,y,x);
+  ENDPROC
+
+  !*****************************************************
+  ! Workobject rotation (default is UFrame rotation)
+  !*****************************************************
+  PROC WORot(PERS wobjdata woob\switch OF\num Rx\num Ry\num Rz)
+    VAR orient rwo;
+    VAR orient r;
+
+    IF Present(OF) THEN
+      rwo:=woob.oframe.rot;
+    ELSE
+      rwo:=woob.uframe.rot;
+    ENDIF
+    !
+    IF Present(Rz) AND Rz<>0 rwo:=rwo*OrientZYX(Rz,0,0);
+    IF Present(Ry) AND Ry<>0 rwo:=rwo*OrientZYX(0,Ry,0);
+    IF Present(Rx) AND Rx<>0 rwo:=rwo*OrientZYX(0,0,Rx);
+    !
+    IF Present(OF) THEN
+      woob.oframe.rot:=rwo;
+    ELSE
+      woob.uframe.rot:=rwo;
+    ENDIF
+    !
+  ENDPROC
+
+  !*****************************************************
+  ! Set orientation angle on a workobject with euler angles
+  !*****************************************************
+  PROC WOUROT(INOUT wobjdata woob,orient r)
+    woob.uframe.rot:=r;
+  ENDPROC
+
+  !*****************************************************
+  ! Set oframe translation
+  !*****************************************************
+  PROC WOOFrame(INOUT wobjdata woob,num x,num y,num z)
+    woob.oframe.trans.x:=x;
+    woob.oframe.trans.y:=y;
+    woob.oframe.trans.z:=z;
+  ENDPROC
+
+  !*****************************************************
+  ! Set uframe translation
+  !*****************************************************
+  PROC WOUFrame(INOUT wobjdata woob,num x,num y,num z)
+    woob.uframe.trans.x:=x;
+    woob.uframe.trans.y:=y;
+    woob.uframe.trans.z:=z;
+  ENDPROC
+
+  !*****************************************************
+  ! Add oframe translation
+  !*****************************************************
+  PROC WOffsO(INOUT wobjdata woob,pos f)
+    woob.oframe.trans.x:=woob.oframe.trans.x+f.x;
+    woob.oframe.trans.y:=woob.oframe.trans.y+f.y;
+    woob.oframe.trans.z:=woob.oframe.trans.z+f.z;
+  ENDPROC
+
+  !*****************************************************
+  ! Add uframe translation
+  !*****************************************************
+  PROC WOffsU(INOUT wobjdata woob,pos f)
+    woob.uframe.trans.x:=woob.uframe.trans.x+f.x;
+    woob.uframe.trans.y:=woob.uframe.trans.y+f.y;
+    woob.uframe.trans.z:=woob.uframe.trans.z+f.z;
+  ENDPROC
+
+  !*****************************************************
+  ! Vector magnitude
+  !*****************************************************
+  FUNC num Magnitude(pos v)
+    RETURN (Sqrt(v.x*v.x+v.y*v.y+v.z*v.z));
+  ENDFUNC
+
+  !*****************************************************
+  ! Vector Cross Product
+  !*****************************************************
+  FUNC pos Cross(pos u,pos v)
+    VAR pos c;
+
+    c.x:=(u.y*v.z)-(u.z*v.y);
+    c.y:=(u.z*v.x)-(u.x*v.z);
+    c.z:=(u.x*v.y)-(u.y*v.x);
+    RETURN c;
+  ENDFUNC
+
+  !*****************************************************
+  ! Vector Dot Product
+  !*****************************************************
+  FUNC num Dot(pos u,pos v)
+    VAR num p:=0;
+    
+    p:=(u.x*v.x);
+    p:=p+(u.y*v.y);
+    p:=p+(u.z*v.z);
+    RETURN p;
+  ENDFUNC
+
+  !*****************************************************
+  ! Vector Scalar Product
+  !*****************************************************
+  FUNC pos Scale(pos u,num s)
+    VAR pos v;
+    
+    v.x:=u.x*s;
+    v.y:=u.y*s;
+    v.z:=u.z*s;
+    RETURN v;
+  ENDFUNC
+
+  !*****************************************************
+  ! Find the centre of a 3d triangle
+  !*****************************************************
+  FUNC pos TriCent(pos a,pos b, pos c)
+    VAR pos centre;
+    
+    centre.x:=(a.x+b.x+c.x)/3;
+    centre.y:=(a.y+b.y+c.y)/3;
+    centre.z:=(a.z+b.z+c.z)/3;
+    RETURN centre;
+  ENDFUNC
+
+  !*****************************************************
+  ! Get the normalization error from an orientation
+  !*****************************************************
+  FUNC num OrientErr(orient rot)
+    RETURN Abs(Sqrt(rot.q1*rot.q1+rot.q2*rot.q2+rot.q3*rot.q3+rot.q4*rot.q4));
+  ENDFUNC
+
+  !*****************************************************
+  ! Normalize orientation
+  ! tolerance option
+  !*****************************************************
+  FUNC orient Normalize(orient rot\num error_tol)
+    VAR orient r;
+    VAR num err;
+    VAR num tol:=0.00001;
+    
+    IF Present(error_tol) tol:=error_tol;
+    r:=rot;
+    err:=OrientErr(rot);
+    IF (err>tol) r:=NOrient(rot);
+    RETURN r;
+  ENDFUNC
+
+  !*****************************************************
+  ! Create new quaternion object from numbers
+  !*****************************************************
+  FUNC orient Quat(num q1,num q2,num q3,num q4)
+    VAR orient r:=[0,0,0,0];
+    
+    r.q1:=q1;
+    r.q2:=q2;
+    r.q3:=q3;
+    r.q4:=q4;
+    RETURN r;
+  ENDFUNC
+  
+  !*****************************************************
+  ! Return quaternion inverse
+  !*****************************************************
+  FUNC orient QuatInv(orient q)
+    VAR orient r:=[0,0,0,0];
+    
+    r.q1:=q.q1;
+    r.q2:=-q.q2;
+    r.q3:=-q.q3;
+    r.q4:=-q.q4;
+    RETURN r;
+  ENDFUNC
+
+  !*****************************************************
+  ! Normalise quaternion
+  !*****************************************************
+  FUNC orient QuatNorm(orient q)
+    VAR num n;
+    VAR orient r;
+    
+    n:=Sqrt(q.q1*q.q1 + q.q2*q.q2 + q.q3*q.q3 + q.q4*q.q4);
+    IF n<>0 THEN
+      r.q1:=q.q1/n;
+      r.q2:=q.q2/n;
+      r.q3:=q.q3/n;
+      r.q4:=q.q4/n;
+    ENDIF
+    RETURN r;
+  ENDFUNC
+
+  !*****************************************************
+  ! Is the quaternion an identity quaternion [1,0,0,0]
+  !*****************************************************
+  FUNC bool QuatId(orient q)
+    RETURN (q.q1=1 AND q.q2=0 AND q.q3=0 AND q.q4=0);
+  ENDFUNC
+
+  !*****************************************************
+  ! Quaternion to Euler angles. Return as a pos.
+  !*****************************************************
+  FUNC pos Quat2Eul(orient r)
+    VAR pos rs;
+    
+    rs.z:=EulerZYX(\Z,r);
+    rs.y:=EulerZYX(\Y,r);
+    rs.x:=EulerZYX(\X,r);
+    RETURN rs;
+  ENDFUNC
+
+  !*****************************************************
+  ! Quaternion multiplication
+  !*****************************************************
+  FUNC orient QuatMul(orient u,orient v)
+    VAR orient r;
+
+    r.q1:=u.q1*v.q1 - u.q2*v.q2 - u.q3*v.q3 - u.q4*v.q4;
+    r.q2:=u.q1*v.q2 + u.q2*v.q1 + u.q3*v.q4 - u.q4*v.q3;
+    r.q3:=u.q1*v.q3 - u.q2*v.q4 + u.q3*v.q1 + u.q4*v.q2;
+    r.q4:=u.q1*v.q4 + u.q2*v.q3 - u.q3*v.q2 + u.q4*v.q1;
+    RETURN r;
+  ENDFUNC
+
+  !*****************************************************
+  ! Sort array of vectors
+  ! Switches: 
+  !           X|Y  - Vector variable used for sorting, default is X
+  !           A|D  - Ascending(default)|Descending
+  !          SA|SD - Also sort by second variable, Ascending(default)|Descending
+  !           Tol  - Tolerance on second variable. Used for sorting rows where values are not exactly the same, but within tolerance limits
+  !*****************************************************
+  PROC SortPos(INOUT pos array{*},\switch X|switch Y,\switch A|switch D,\switch SA|switch SD,\num tol)
+    VAR num size;
+    VAR pos tmp;
+    VAR num tolerance:=0;
+    
+    size:=Dim(array,1);
+    
+    ! Tolerance
+    IF Present(tol) THEN
+      tolerance:=tol;
+      IF tolerance<0 tolerance:=Abs(tolerance); ! cannot allow negative values, convert to positive
+    ENDIF
+    
+    FOR i FROM 1 TO (size-1) DO
+      FOR j FROM 1 TO (size-1) DO
+        IF Present(Y) THEN
+          IF Present(D) THEN
+            ! Y/D
+            IF array{j}.y<array{j+1}.y swap_pos array{j},array{j+1}; ! descending Y
+          ELSE
+            ! Y/A
+            IF array{j}.y>array{j+1}.y swap_pos array{j},array{j+1}; ! ascending Y
+          ENDIF
+          IF array{j}.y=array{j+1}.y THEN
+            IF Present(SD) THEN
+              ! SD. First check if not within tolerance
+              IF cmp(array{j}.x,array{j+1}.x\tol:=tolerance)=FALSE THEN
+                IF array{j}.x>array{j+1}.x swap_pos array{j},array{j+1};
+              ENDIF
+            ELSE
+              ! SA. First check if not within tolerance
+              IF cmp(array{j}.x,array{j+1}.x\tol:=tolerance)=FALSE THEN
+                IF array{j}.x<array{j+1}.x swap_pos array{j},array{j+1};
+              ENDIF
+            ENDIF
+          ENDIF
+        ELSE
+          IF Present(D) THEN
+            ! X/D
+            IF array{j}.x<array{j+1}.x swap_pos array{j},array{j+1}; ! descending Y
+          ELSE
+            ! X/A
+            ! default (if no switches are used)
+            IF array{j}.x>array{j+1}.x swap_pos array{j},array{j+1}; ! ascending X
+          ENDIF
+          ! SA/SD
+          IF array{j}.x=array{j+1}.x THEN
+            IF Present(SD) THEN
+              ! SD. First check if not within tolerance
+              IF cmp(array{j}.y,array{j+1}.y\tol:=tolerance)=FALSE THEN
+                IF array{j}.y>array{j+1}.y swap_pos array{j},array{j+1};
+              ENDIF
+            ELSE
+              ! SA. First check if not within tolerance
+              IF cmp(array{j}.y,array{j+1}.y\tol:=tolerance)=FALSE THEN
+                IF array{j}.y<array{j+1}.y swap_pos array{j},array{j+1};
+              ENDIF
+            ENDIF
+          ENDIF
+        ENDIF
+      ENDFOR
+    ENDFOR
+  ENDPROC
+  
+  !*****************************************************
+  ! Reverse the elements of an array of Vectors (first=last)
+  !*****************************************************
+  PROC pos_array_rev(INOUT pos array{*})
+    VAR pos tmp;
+    VAR num size;
+    VAR num count:=0;
+    
+    size:=Dim(array,1);
+    WHILE count<size DO
+        swap_pos array{count},array{size};
+        Incr count;
+        Decr size;
+    ENDWHILE
+  ENDPROC
+
+  !*****************************************************
+  ! Compare with +/- tolerance. Tolerance is applied on second value.
+  ! Example:
+  !           bool result:=cmp(100,101);
+  !           result will be FALSE
+  !
+  !           bool result:=cmp(100,101\tol:=1);
+  !           result will be TRUE
+  !           
+  !           500\tol:=100 means values between 400-600 is TRUE
+  !           cmp(399,500\tol:=100) = FALSE
+  !           cmp(400,500\tol:=100) = TRUE
+  !*****************************************************
+  LOCAL FUNC bool cmp(num v1,num v2,\num tol)
+    VAR num tolerance;
+    
+    IF Present(tol) THEN
+      IF v1>=(v2-tol) AND v1<=(v2+tol) RETURN TRUE;
+      RETURN FALSE;
+    ENDIF
+    IF v1=v2 RETURN TRUE;
+    RETURN FALSE;
+  ENDFUNC
+
+  !*****************************************************
+  ! Swap the values of two nums
+  !*****************************************************
+  PROC swap_num(INOUT num v1,INOUT num v2)
+    VAR num tmp;
+    
+    tmp:=v1;
+    v1:=v2;
+    v2:=tmp;
+  ENDPROC
+
+  !*****************************************************
+  ! Swap the values of two pos
+  !*****************************************************
+  PROC swap_pos(INOUT pos v1,INOUT pos v2)
+    VAR pos tmp;
+    
+    tmp:=v1;
+    v1:=v2;
+    v2:=tmp;
+  ENDPROC
+  
+  !*****************************************************
+  ! Check if values are equal
+  !*****************************************************
+  FUNC bool Equal(num value1,num value2)
+    IF value1=value2 RETURN TRUE;
+    RETURN FALSE;
+  ENDFUNC
+
+  !*****************************************************
+  ! Check if values are within a given range
+  ! Return: TRUE if within given range
+  ! Ex. IF Interval(nMyValue,nLowEnd,nHighEnd) THEN ...
+  !*****************************************************
+  FUNC bool Interval(num value,num lownum,num highnum)
+    IF value>=lownum AND value<=highnum RETURN TRUE;
+    RETURN FALSE;
+  ENDFUNC
+
+  !*****************************************************
+  ! Difference between two values
+  !*****************************************************
+  FUNC num Diff(num highnum,num lownum)
+    RETURN Abs(highnum-lownum);
+  ENDFUNC
+
+  !*****************************************************
+  ! Reverse the elements of an array of num (first=last)
+  !*****************************************************
+  PROC num_array_rev(INOUT num array{*})
+    VAR num tmp;
+    VAR num size;
+    VAR num count:=0;
+    
+    size:=Dim(array,1);
+    WHILE count<size DO
+        swap_num array{count},array{size};
+        Incr count;
+        Decr size;
+    ENDWHILE
+  ENDPROC
+
+  !*****************************************************
+  ! Clear screen, show the program
+  !*****************************************************
+  PROC TPClear()
+    TPErase;
+    TPShow TP_PROGRAM;
+  ENDPROC
+
+  !*****************************************************
+  ! Read numeric value from user input
+  !
+  ! Ex:
+  !   TPErase;
+  !   TPWrite "Your age?";
+  !   nAge=:TPNumRead();
+  !*****************************************************
+  FUNC num InputValue()
+    VAR num input:=0;
+
+    TPReadNum input,"";
+    RETURN input;
+  ENDFUNC
+
+  !*****************************************************
+  ! Test boolean flag
+  !*****************************************************
+  FUNC bool TestBO(VAR bool flag)
+    RETURN flag;
+  ENDFUNC
+
+  !*****************************************************
+  ! Force operator to use manual mode
+  !*****************************************************
+  PROC WaitManualMode()
+    WHILE OpMode()=OP_AUTO DO
+      TPErase;
+      TPWrite " STOP!!!";
+      TPWrite " Switch to manual mode!";
+      WaitTime 1.0;
+    ENDWHILE
+    TPErase;
+  ENDPROC
+
+  !*****************************************************
+  ! Force operator to use automatic mode
+  !*****************************************************
+  PROC WaitAutoMode()
+    WHILE OpMode()<>OP_AUTO DO
+      TPErase;
+      TPWrite " STOP!!!";
+      TPWrite " Switch to automatic mode!";
+      WaitTime 1.0;
+    ENDWHILE
+    TPErase;
+  ENDPROC
+
+  !*****************************************************
+  ! Is the robot in auto mode?
+  !*****************************************************
+  FUNC bool IsAuto()
+    IF OpMode()=OP_AUTO RETURN TRUE;
+    RETURN FALSE;
+  ENDFUNC
+
+  !*****************************************************
+  ! Wait for user to press [OK] or [Cancel] on TP
+  ! Return:
+  !         [OK] = TRUE
+  !         [Cancel] = FALSE
+  !*****************************************************
+  FUNC bool InputOK()
+    VAR num input:=0;
+
+    TPReadFK input,"","","","[OK]","","Cancel";
+    IF input=3 RETURN TRUE;
+    RETURN FALSE;
+  ENDFUNC
+
+  !*****************************************************
+  ! Wait for user to press [OK] on TP
+  !*****************************************************
+  PROC PressOK()
+    VAR num input:=0;
+
+    TPReadFK input,"","","","[OK]","","";
+  ENDPROC
+ENDMODULE
