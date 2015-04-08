@@ -17,8 +17,8 @@ MODULE lib_robmove(SYSMODULE)
 
   !*****************************************************
   ! Module Name: lib_robmove
-  ! Description: various robot special moves
-  ! Date:        2015-03-05
+  ! Description: various robot special moves and search routines
+  ! Date:        2015-03-30
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
@@ -134,13 +134,13 @@ MODULE lib_robmove(SYSMODULE)
   ! Return:
   !   robtarget search end position
   !*****************************************************
-  FUNC robtarget PSearch(VAR signaldi pSignal,robtarget pEndPoint,PERS tooldata pTool \PERS wobjdata WObj\speeddata pSlowSpeed\speeddata pFastSpeed\speeddata pSlomoSpeed)
+  FUNC robtarget PSearch(VAR signaldi pSignal,robtarget pEndPoint,PERS tooldata pTool \PERS wobjdata WObj\speeddata pSlowSpeed\speeddata pFastSpeed\speeddata pSlomoSpeed\switch INFO)
     VAR robtarget pStart;
     VAR robtarget pResult{2};
     VAR robtarget pFinalRes;
     VAR speeddata fast_speed:=[15,100,5000,1000];
     VAR speeddata slow_speed:=[2.5,100,5000,1000];
-    VAR speeddata slomo_speed:=[0.2,100,5000,1000];
+    VAR speeddata slomo_speed:=[0.25,100,5000,1000];
     
     IF Present(pSlomoSpeed) slomo_speed:=pSlomoSpeed;
     IF Present(pSlowSpeed) slow_speed:=pSlowSpeed;
@@ -161,17 +161,73 @@ MODULE lib_robmove(SYSMODULE)
     ! very slow search forward until signal change
     SearchL\PStop,pSignal\Flanks,pResult{1},pEndPoint,slomo_speed,pTool \WObj?WObj;
     WaitTime\InPos,0.2;
-    !TPWrite "pRes{1}="\Pos:=pResult{1}.trans;
     
     ! very slow search backwards until signal change
     SearchL\PStop,pSignal\Flanks,pResult{2},pStart,slomo_speed,pTool \WObj?WObj;
     WaitTime\InPos,0.4;
-    !TPWrite "pRes{2}="\Pos:=pResult{2}.trans;
 
     pFinalRes:=MidPos(pResult{1},pResult{2});
-    TPWrite "PSearch="\Pos:=pFinalRes.trans;
+    IF Present(INFO) TPWrite "PSearch:[x="+NumToStr(pFinalRes.trans.x,2)+",y="+NumToStr(pFinalRes.trans.y,2)+",z="+NumToStr(pFinalRes.trans.z,2)+"]";
+
     ! return mid-position for best accuracy
     RETURN pFinalRes;
+  ENDFUNC
+
+  !*****************************************************
+  ! CenterFind Search.
+  ! Search from p1/p2->startpoint for a laserbeam.
+  ! p1/p2 is calculated from the value of p_slen.
+  ! A point in between the results is calculated and returned.
+  !
+  ! p_slen: how far away from p_start are the endpoints p1+p2
+  ! Use switch \X,\Y or \Z to specify the axis to search along.
+  ! \REVERSE Search is done from the startpoint->p1/p2
+  !
+  ! Example: Laserbeam is aligned along the wobj X-axis
+  !          p1->p2 is the wobj Y-axis (choose switch \Y)
+  !
+  !              Laserbeam
+  !                 |X+
+  ! Y+              |
+  ! p1------------pStart-----------p2
+  !      p_slen     |     -p_slen
+  !                 |
+  !
+  !*****************************************************
+  FUNC robtarget CFSearch(VAR signaldi pSignal,robtarget p_start,num p_slen,PERS tooldata pTool \PERS wobjdata WObj,\switch X|switch Y|switch Z,\switch REVERSE,\switch INFO)
+    VAR robtarget p_endpos{2};
+    VAR robtarget p_result{2};
+
+    ! Prepare endpoints for the search depending on which axis is choosen
+    IF Present(Y) THEN
+      p_endpos{1}:=Offs(p_start,0,p_slen,0);
+      p_endpos{2}:=Offs(p_start,0,-p_slen,0);
+    ELSEIF Present(Z) THEN
+      p_endpos{1}:=Offs(p_start,0,0,p_slen);
+      p_endpos{2}:=Offs(p_start,0,0,-p_slen);
+    ELSE
+      p_endpos{1}:=Offs(p_start,p_slen,0,0);
+      p_endpos{2}:=Offs(p_start,-p_slen,0,0);
+    ENDIF
+
+    IF Present(REVERSE) THEN
+      MoveL p_start,v100,fine,pTool \WObj?WObj;
+      p_result{1}:=PSearch(diLaser,p_endpos{1},pTool \WObj?WObj\INFO?INFO);
+      WaitTime\InPos,0.25;
+      MoveL p_start,v100,fine,pTool \WObj?WObj;
+      p_result{2}:=PSearch(diLaser,p_endpos{2},pTool \WObj?WObj\INFO?INFO);
+      WaitTime\InPos,0.25;
+    ELSE
+      MoveL p_start,v100,fine,pTool \WObj?WObj;
+      MoveL p_endpos{1},v100,fine,pTool \WObj?WObj;
+      p_result{1}:=PSearch(diLaser,p_start,pTool \WObj?WObj\INFO?INFO);
+      WaitTime\InPos,0.25;
+      MoveL p_endpos{2},v100,fine,pTool \WObj?WObj;
+      p_result{2}:=PSearch(diLaser,p_start,pTool \WObj?WObj\INFO?INFO);
+      WaitTime\InPos,0.25;
+    ENDIF
+    MoveL p_start,v100,fine,pTool \WObj?WObj;
+    RETURN MidPos(p_result{1},p_result{2});
   ENDFUNC
 
   !*****************************************************
@@ -192,6 +248,7 @@ MODULE lib_robmove(SYSMODULE)
   !   pSignal: the digital input from sensor
   !   pOffset: endpos offset from current position
   !   pTool:   the tooldata to use
+  !   \WObj:   workobject to use
   !
   ! Return:
   !   robtarget search end position
@@ -241,7 +298,7 @@ MODULE lib_robmove(SYSMODULE)
 
     ! slow search towards sensor, wait for signal=1, result->p1
     SearchL\PStop,pSignal\Flanks,p1,RelTool(ro_start,pOffset.x,pOffset.y,pOffset.z),speed, pTool \WObj?WObj;
-    WaitTime\Inpos,0.2;
+    WaitTime\Inpos,0.5;
 
     ! final result: calulate a position between p0 & p1 for best accuracy
     result:=MidPos(p0,p1);
@@ -256,18 +313,6 @@ MODULE lib_robmove(SYSMODULE)
     ConfL\On;
 
     RETURN result;
-  ERROR
-    IF ERRNO = ERR_WHLSEARCH THEN
-      TPErase;
-      TPWrite "Error: ERR_WHLSEARCH";
-      TPWrite "Endpoint reached without signal.";
-      TPWrite "[OK] to retry";
-      PressOK;
-      ! Move back to start position
-      MoveL ro_start,v10,fine,pTool \WObj?WObj;
-      WaitTime 1.0;
-      RETRY;
-    ENDIF
   ENDFUNC
    
   !*****************************************************
