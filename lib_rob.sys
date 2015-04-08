@@ -17,8 +17,10 @@ MODULE lib_rob(SYSMODULE)
 
   !*****************************************************
   ! Module Name: lib_rob
-  ! Description: various robot utilities
-  ! Date:        2015-03-05
+  !
+  ! Description: Various robot utility tools
+  ! Last update: 2015-04-08
+  !
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
@@ -30,6 +32,13 @@ MODULE lib_rob(SYSMODULE)
     RETURN ATan2(y_side,x_side);
   ENDFUNC
   
+  !*****************************************************
+  ! Calculate the difference between two frames.
+  !*****************************************************
+  FUNC pose FrameDiff(pose p1,pose p2)
+    RETURN PoseMult(PoseInv(p1),p2);
+  ENDFUNC
+
   !*****************************************************
   ! RobTarget offset + rotation
   !*****************************************************
@@ -346,12 +355,13 @@ MODULE lib_rob(SYSMODULE)
 
   !*****************************************************
   ! Workobject rotation (default is UFrame rotation)
+  ! Use /OFrame switch for OFrame rotation
   !*****************************************************
-  PROC WORot(PERS wobjdata woob\switch OF\num Rx\num Ry\num Rz)
+  PROC WORot(PERS wobjdata woob\switch OFrame\num Rx\num Ry\num Rz)
     VAR orient rwo;
     VAR orient r;
 
-    IF Present(OF) THEN
+    IF Present(OFrame) THEN
       rwo:=woob.oframe.rot;
     ELSE
       rwo:=woob.uframe.rot;
@@ -361,7 +371,7 @@ MODULE lib_rob(SYSMODULE)
     IF Present(Ry) AND Ry<>0 rwo:=rwo*OrientZYX(0,Ry,0);
     IF Present(Rx) AND Rx<>0 rwo:=rwo*OrientZYX(0,0,Rx);
     !
-    IF Present(OF) THEN
+    IF Present(OFrame) THEN
       woob.oframe.rot:=rwo;
     ELSE
       woob.uframe.rot:=rwo;
@@ -370,28 +380,21 @@ MODULE lib_rob(SYSMODULE)
   ENDPROC
 
   !*****************************************************
-  ! Set orientation angle on a workobject with euler angles
-  !*****************************************************
-  PROC WOUROT(INOUT wobjdata woob,orient r)
-    woob.uframe.rot:=r;
-  ENDPROC
-
-  !*****************************************************
   ! Set oframe translation
   !*****************************************************
-  PROC WOOFrame(INOUT wobjdata woob,num x,num y,num z)
-    woob.oframe.trans.x:=x;
-    woob.oframe.trans.y:=y;
-    woob.oframe.trans.z:=z;
+  PROC WOOFrame(INOUT wobjdata woob,pos p)
+    woob.oframe.trans.x:=p.x;
+    woob.oframe.trans.y:=p.y;
+    woob.oframe.trans.z:=p.z;
   ENDPROC
 
   !*****************************************************
   ! Set uframe translation
   !*****************************************************
-  PROC WOUFrame(INOUT wobjdata woob,num x,num y,num z)
-    woob.uframe.trans.x:=x;
-    woob.uframe.trans.y:=y;
-    woob.uframe.trans.z:=z;
+  PROC WOUFrame(INOUT wobjdata woob,pos p)
+    woob.uframe.trans.x:=p.x;
+    woob.uframe.trans.y:=p.y;
+    woob.uframe.trans.z:=p.z;
   ENDPROC
 
   !*****************************************************
@@ -468,6 +471,18 @@ MODULE lib_rob(SYSMODULE)
   ENDFUNC
 
   !*****************************************************
+  ! Quaternion to Euler angles. Return as a pos.
+  !*****************************************************
+  FUNC pos Quat2Euler(orient r)
+    VAR pos rs;
+    
+    rs.z:=EulerZYX(\Z,r);
+    rs.y:=EulerZYX(\Y,r);
+    rs.x:=EulerZYX(\X,r);
+    RETURN rs;
+  ENDFUNC
+
+  !*****************************************************
   ! Get the normalization error from an orientation
   !*****************************************************
   FUNC num OrientErr(orient rot)
@@ -538,18 +553,6 @@ MODULE lib_rob(SYSMODULE)
   !*****************************************************
   FUNC bool QuatId(orient q)
     RETURN (q.q1=1 AND q.q2=0 AND q.q3=0 AND q.q4=0);
-  ENDFUNC
-
-  !*****************************************************
-  ! Quaternion to Euler angles. Return as a pos.
-  !*****************************************************
-  FUNC pos Quat2Eul(orient r)
-    VAR pos rs;
-    
-    rs.z:=EulerZYX(\Z,r);
-    rs.y:=EulerZYX(\Y,r);
-    rs.x:=EulerZYX(\X,r);
-    RETURN rs;
   ENDFUNC
 
   !*****************************************************
@@ -710,10 +713,23 @@ MODULE lib_rob(SYSMODULE)
   !*****************************************************
   ! Check if values are within a given range
   ! Return: TRUE if within given range
-  ! Ex. IF Interval(nMyValue,nLowEnd,nHighEnd) THEN ...
+  ! Ex. IF Interval(nMyValue,nLow,nHigh) THEN ...
   !*****************************************************
   FUNC bool Interval(num value,num lownum,num highnum)
     IF value>=lownum AND value<=highnum RETURN TRUE;
+    RETURN FALSE;
+  ENDFUNC
+
+  !*****************************************************
+  ! Check if value is within a +- tolerance value
+  ! Return: TRUE if within the tolerance range
+  ! Examples:
+  !  InTol(0.5,1) tests if 0.5 is in the range -1 to 1   = TRUE
+  !  InTol(-2,12) tests if  -2 is in the range -12 to 12 = TRUE
+  !  InTol(50,20) tests if  50 is in the range -20 to 20 = FALSE
+  !*****************************************************
+  FUNC bool InTol(num value,num tol_value)
+    IF value>=-tol_value AND value<=tol_value RETURN TRUE;
     RETURN FALSE;
   ENDFUNC
 
@@ -825,5 +841,59 @@ MODULE lib_rob(SYSMODULE)
     VAR num input:=0;
 
     TPReadFK input,"","","","[OK]","","";
+  ENDPROC
+
+  !*****************************************************
+  ! Print posdata in customized readable format
+  ! \DP:=<num>       Decimal Precision (default=3)
+  ! \C               Clear the screen before printing
+  ! \S               Components viewed in 3 individual rows, use if you have a higher precision value
+  !*****************************************************
+  PROC print_pos(pos data\num DP\switch C\switch S)
+    VAR num prec:=3;
+    
+    IF Present(DP) THEN
+      IF DP>=0 prec:=DP;
+      IF prec>7 prec:=7;
+    ENDIF
+    IF Present(C) TPErase;
+    IF Present(S) THEN
+      TPWrite "[x="+NumToStr(data.x,prec)+"]";
+      TPWrite "[y="+NumToStr(data.y,prec)+"]";
+      TPWrite "[z="+NumToStr(data.z,prec)+"]";
+    ELSE
+      TPWrite "[x="+NumToStr(data.x,prec)+",y="+NumToStr(data.y,prec)+",z="+NumToStr(data.z,prec)+"]";
+    ENDIF
+  ENDPROC
+
+  !*****************************************************
+  ! Print orientdata in customized readable format
+  ! \C               Clear the screen before printing
+  ! \S               Components viewed in individual rows
+  ! \E               View as Euler angles
+  !*****************************************************
+  PROC print_ori(orient data\switch C\switch S\switch E)
+    VAR pos angles;
+    
+    IF Present(C) TPErase;
+    IF Present(E) THEN
+      angles:=Quat2Euler(data);
+      IF Present(S) THEN
+        TPWrite "[z="+NumToStr(angles.z,3)+"]";
+        TPWrite "[y="+NumToStr(angles.y,3)+"]";
+        TPWrite "[x="+NumToStr(angles.x,3)+"]";
+      ELSE
+        TPWrite "[z="+NumToStr(angles.z,3)+",y="+NumToStr(angles.y,3)+",x="+NumToStr(angles.x,3);
+      ENDIF
+    ELSE
+      IF Present(S) THEN
+        TPWrite "[q1="+NumToStr(data.q1,7)+"]";
+        TPWrite "[q2="+NumToStr(data.q2,7)+"]";
+        TPWrite "[q3="+NumToStr(data.q3,7)+"]";
+        TPWrite "[q4="+NumToStr(data.q4,7)+"]";
+      ELSE
+        TPWrite "[q1="+NumToStr(data.q1,3)+",q2="+NumToStr(data.q2,3)+",q3="+NumToStr(data.q3,3)+",q4="+NumToStr(data.q4,3)+"]";
+      ENDIF
+    ENDIF
   ENDPROC
 ENDMODULE
