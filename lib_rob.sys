@@ -19,12 +19,83 @@ MODULE lib_rob(SYSMODULE)
   ! Module Name: lib_rob
   !
   ! Description: Various robot utility tools
-  ! Last update: 2015-04-08
+  ! Last update: 2015-05-03
   !
   ! Author:      Robert Andersson <rob@ernell.se>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
 
+  !*****************************************************
+  ! Clear any 2-dimensional matrix (or fill with any number)
+  !*****************************************************
+  PROC MatrixClr(INOUT num matrix{*,*},\num Fill)
+    VAR num number:=0;
+    VAR num rows:=0;
+    VAR num cols:=0;
+    
+    rows:=Dim(matrix,1);
+    cols:=Dim(matrix,2);
+    IF Present(Fill) number:=Fill;
+    TPErase;
+    FOR i FROM 1 TO rows DO
+      FOR j FROM 1 TO cols DO
+        matrix{i,j}:=number;
+      ENDFOR
+    ENDFOR
+  ENDPROC
+
+  !*****************************************************
+  ! Create a rotation matrix from an angle.
+  ! Specify which type of rotation you want (X/Y/Z) otherwise nothing will happen.
+  !*****************************************************
+  PROC RotMat(INOUT num matrix{*,*},num Angle\switch X|switch Y|switch Z)
+    IF Present(X) THEN
+      matrix{1,1}:=1;
+      matrix{1,2}:=0;
+      matrix{1,3}:=0;
+      matrix{2,1}:=0;
+      matrix{2,2}:=Cos(Angle);
+      matrix{2,3}:=Sin(Angle);
+      matrix{3,1}:=0;
+      matrix{3,2}:=-Sin(Angle);
+      matrix{3,3}:=Cos(Angle);
+    ELSEIF Present(Y) THEN
+      matrix{1,1}:=Cos(Angle);
+      matrix{1,2}:=0;
+      matrix{1,3}:=-Sin(Angle);
+      matrix{2,1}:=0;
+      matrix{2,2}:=1;
+      matrix{2,3}:=0;
+      matrix{3,1}:=Sin(Angle);
+      matrix{3,2}:=0;
+      matrix{3,3}:=Cos(Angle);
+    ELSEIF Present(Z) THEN
+      matrix{1,1}:=Cos(Angle);
+      matrix{1,2}:=Sin(Angle);
+      matrix{1,3}:=0;
+      matrix{2,1}:=-Sin(Angle);
+      matrix{2,2}:=Cos(Angle);
+      matrix{2,3}:=0;
+      matrix{3,1}:=0;
+      matrix{3,2}:=0;
+      matrix{3,3}:=1;
+    ENDIF
+  ENDPROC
+
+  !*****************************************************
+  ! Matrix 3x3 multiplication
+  !*****************************************************
+  PROC MatMul3x3(num matrix_1{*,*},num matrix_2{*,*},INOUT num result_matrix{*,*})
+    FOR i FROM 1 TO 3 DO
+      FOR j FROM 1 TO 3 DO
+        result_matrix{i,j}:=0;
+        FOR k FROM 1 TO 3 DO
+          result_matrix{i,j}:=result_matrix{i,j} + (matrix_1{i,k}*matrix_2{k,j});
+        ENDFOR
+      ENDFOR
+    ENDFOR
+  ENDPROC
+  
   !*****************************************************
   ! Calculate angle between x_side/hypotenuse in a triangle
   !*****************************************************
@@ -40,6 +111,20 @@ MODULE lib_rob(SYSMODULE)
   ENDFUNC
 
   !*****************************************************
+  ! Frame offset and rotation
+  !*****************************************************
+  FUNC pose RelFrame(pose Frame,num Ox,num Oy,num Oz\num Rx\num Ry\num Rz)
+    VAR robtarget tmp;
+
+    tmp.trans:=Frame.trans;
+    tmp.rot:=Frame.rot;
+    tmp:=RTOffs(tmp,Ox,Oy,Oz\Rx?Rx\Ry?Ry\Rz?Rz);
+    Frame.trans:=tmp.trans;
+    Frame.rot:=tmp.rot;
+    RETURN Frame;
+  ENDFUNC
+
+    !*****************************************************
   ! RobTarget offset + rotation
   !*****************************************************
   FUNC robtarget RTOffs(robtarget Point,num Ox,num Oy,num Oz\num Rx\num Ry\num Rz)
@@ -67,7 +152,7 @@ MODULE lib_rob(SYSMODULE)
     IF Present(Rx) AND Rx<>0 p.rot:=p.rot*OrientZYX(0,0,Rx);
     RETURN p;
   ENDFUNC
-
+  
   !*****************************************************
   ! Calculate intermediate position between p0 & p1 (x,y,z)
   ! Orientation is kept from p0
@@ -85,7 +170,7 @@ MODULE lib_rob(SYSMODULE)
   ENDFUNC
 
   !*****************************************************
-  ! TCP offset in tool xyz-direction, orientation is not affected.
+  ! TCP offset in tool xyz-direction.
   ! Example use:
   !               TCPOffs toMyTool\Ox:=20\Oy:=10\Oz:=-5;
   !               TCPOffs toMyTool\Oz:=50;
@@ -174,15 +259,6 @@ MODULE lib_rob(SYSMODULE)
   ENDPROC
 
   !*****************************************************
-  ! Add tool frame translation
-  !*****************************************************
-  PROC AddToolFrame(INOUT tooldata pTool,num x,num y,num z)
-    pTool.tframe.trans.x:=pTool.tframe.trans.x+x;
-    pTool.tframe.trans.y:=pTool.tframe.trans.y+y;
-    pTool.tframe.trans.z:=pTool.tframe.trans.z+z;
-  ENDPROC
-  
-  !*****************************************************
   ! Set Centre Of Gravity on loaddata
   !*****************************************************
   PROC SetLoadCOG(INOUT loaddata pLoad,pos v)
@@ -213,10 +289,10 @@ MODULE lib_rob(SYSMODULE)
   !*****************************************************
   ! Set loaddata inertia with a pos
   !*****************************************************
-  PROC SetLoadInertia(INOUT loaddata pLoad,pos pPos)
-    pLoad.ix:=pPos.x;
-    pLoad.iy:=pPos.y;
-    pLoad.iz:=pPos.z;
+  PROC SetLoadInertia(INOUT loaddata pLoad,pos data)
+    pLoad.ix:=data.x;
+    pLoad.iy:=data.y;
+    pLoad.iz:=data.z;
   ENDPROC
 
   !*****************************************************
@@ -315,23 +391,23 @@ MODULE lib_rob(SYSMODULE)
   ! Create new frame from 3 pos
   !*****************************************************
   FUNC pose PSFrame(pos x1,pos x2,pos y1)
-    VAR pose poFrame;
+    VAR pose frame;
     VAR robtarget rx1:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
     VAR robtarget rx2:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
     VAR robtarget ry1:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    
+
     rx1.trans:=x1;
     rx2.trans:=x2;
     ry1.trans:=y1;
-    poFrame:=DefFrame(rx1,rx2,ry1);
-    RETURN poFrame;
+    frame:=DefFrame(rx1,rx2,ry1);
+    RETURN frame;
   ENDFUNC
 
   !*****************************************************
   ! Create new frame from 3 pose
   !*****************************************************
   FUNC pose PSEFrame(pose x1,pose x2,pose y1)
-    VAR pose poFrame;
+    VAR pose frame;
     VAR robtarget rx1:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
     VAR robtarget rx2:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
     VAR robtarget ry1:=[[0,0,0],[1,0,0,0],[1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
@@ -342,8 +418,8 @@ MODULE lib_rob(SYSMODULE)
     rx1.rot:=x1.rot;
     rx2.rot:=x2.rot;
     ry1.rot:=y1.rot;
-    poFrame:=DefFrame(rx1,rx2,ry1);
-    RETURN poFrame;
+    frame:=DefFrame(rx1,rx2,ry1);
+    RETURN frame;
   ENDFUNC
 
   !*****************************************************
@@ -414,6 +490,22 @@ MODULE lib_rob(SYSMODULE)
     woob.uframe.trans.y:=woob.uframe.trans.y+f.y;
     woob.uframe.trans.z:=woob.uframe.trans.z+f.z;
   ENDPROC
+
+  !*****************************************************
+  ! Return a vector with magnitude=1
+  !*****************************************************
+  FUNC pos UnitVector(pos v)
+    VAR pos res_v:=[0,0,0];
+    VAR num m;
+
+    m:=Sqrt(v.x*v.x+v.y*v.y+v.z*v.z);
+    IF m>0 THEN
+      res_v.x:=v.x/m;
+      res_v.y:=v.y/m;
+      res_v.z:=v.z/m;
+    ENDIF
+    RETURN res_v;
+  ENDFUNC
 
   !*****************************************************
   ! Vector magnitude
@@ -594,44 +686,44 @@ MODULE lib_rob(SYSMODULE)
         IF Present(Y) THEN
           IF Present(D) THEN
             ! Y/D
-            IF array{j}.y<array{j+1}.y swap_pos array{j},array{j+1}; ! descending Y
+            IF array{j}.y<array{j+1}.y SwapPos array{j},array{j+1}; ! descending Y
           ELSE
             ! Y/A
-            IF array{j}.y>array{j+1}.y swap_pos array{j},array{j+1}; ! ascending Y
+            IF array{j}.y>array{j+1}.y SwapPos array{j},array{j+1}; ! ascending Y
           ENDIF
           IF array{j}.y=array{j+1}.y THEN
             IF Present(SD) THEN
               ! SD. First check if not within tolerance
               IF cmp(array{j}.x,array{j+1}.x\tol:=tolerance)=FALSE THEN
-                IF array{j}.x>array{j+1}.x swap_pos array{j},array{j+1};
+                IF array{j}.x>array{j+1}.x SwapPos array{j},array{j+1};
               ENDIF
             ELSE
               ! SA. First check if not within tolerance
               IF cmp(array{j}.x,array{j+1}.x\tol:=tolerance)=FALSE THEN
-                IF array{j}.x<array{j+1}.x swap_pos array{j},array{j+1};
+                IF array{j}.x<array{j+1}.x SwapPos array{j},array{j+1};
               ENDIF
             ENDIF
           ENDIF
         ELSE
           IF Present(D) THEN
             ! X/D
-            IF array{j}.x<array{j+1}.x swap_pos array{j},array{j+1}; ! descending Y
+            IF array{j}.x<array{j+1}.x SwapPos array{j},array{j+1}; ! descending Y
           ELSE
             ! X/A
             ! default (if no switches are used)
-            IF array{j}.x>array{j+1}.x swap_pos array{j},array{j+1}; ! ascending X
+            IF array{j}.x>array{j+1}.x SwapPos array{j},array{j+1}; ! ascending X
           ENDIF
           ! SA/SD
           IF array{j}.x=array{j+1}.x THEN
             IF Present(SD) THEN
               ! SD. First check if not within tolerance
               IF cmp(array{j}.y,array{j+1}.y\tol:=tolerance)=FALSE THEN
-                IF array{j}.y>array{j+1}.y swap_pos array{j},array{j+1};
+                IF array{j}.y>array{j+1}.y SwapPos array{j},array{j+1};
               ENDIF
             ELSE
               ! SA. First check if not within tolerance
               IF cmp(array{j}.y,array{j+1}.y\tol:=tolerance)=FALSE THEN
-                IF array{j}.y<array{j+1}.y swap_pos array{j},array{j+1};
+                IF array{j}.y<array{j+1}.y SwapPos array{j},array{j+1};
               ENDIF
             ENDIF
           ENDIF
@@ -650,7 +742,7 @@ MODULE lib_rob(SYSMODULE)
     
     size:=Dim(array,1);
     WHILE count<size DO
-        swap_pos array{count},array{size};
+        SwapPos array{count},array{size};
         Incr count;
         Decr size;
     ENDWHILE
@@ -683,7 +775,7 @@ MODULE lib_rob(SYSMODULE)
   !*****************************************************
   ! Swap the values of two nums
   !*****************************************************
-  PROC swap_num(INOUT num v1,INOUT num v2)
+  PROC SwapNum(INOUT num v1,INOUT num v2)
     VAR num tmp;
     
     tmp:=v1;
@@ -694,7 +786,7 @@ MODULE lib_rob(SYSMODULE)
   !*****************************************************
   ! Swap the values of two pos
   !*****************************************************
-  PROC swap_pos(INOUT pos v1,INOUT pos v2)
+  PROC SwapPos(INOUT pos v1,INOUT pos v2)
     VAR pos tmp;
     
     tmp:=v1;
@@ -702,6 +794,16 @@ MODULE lib_rob(SYSMODULE)
     v2:=tmp;
   ENDPROC
   
+  !*****************************************************
+  ! Swap the values of two booleans
+  !*****************************************************
+  PROC SwapBool(INOUT bool v1,INOUT bool v2)
+    VAR bool tmp;
+    
+    tmp:=v1;
+    v1:=v2;
+    v2:=tmp;
+  ENDPROC
   !*****************************************************
   ! Check if values are equal
   !*****************************************************
@@ -750,7 +852,7 @@ MODULE lib_rob(SYSMODULE)
     
     size:=Dim(array,1);
     WHILE count<size DO
-        swap_num array{count},array{size};
+        SwapNum array{count},array{size};
         Incr count;
         Decr size;
     ENDWHILE
@@ -792,8 +894,8 @@ MODULE lib_rob(SYSMODULE)
   PROC WaitManualMode()
     WHILE OpMode()=OP_AUTO DO
       TPErase;
-      TPWrite " STOP!!!";
-      TPWrite " Switch to manual mode!";
+      TPW " STOP!!!";
+      TPW " Switch to manual mode!";
       WaitTime 1.0;
     ENDWHILE
     TPErase;
@@ -805,8 +907,8 @@ MODULE lib_rob(SYSMODULE)
   PROC WaitAutoMode()
     WHILE OpMode()<>OP_AUTO DO
       TPErase;
-      TPWrite " STOP!!!";
-      TPWrite " Switch to automatic mode!";
+      TPW " STOP!!!";
+      TPW " Switch to automatic mode!";
       WaitTime 1.0;
     ENDWHILE
     TPErase;
@@ -842,58 +944,96 @@ MODULE lib_rob(SYSMODULE)
 
     TPReadFK input,"","","","[OK]","","";
   ENDPROC
-
+  
   !*****************************************************
-  ! Print posdata in customized readable format
-  ! \DP:=<num>       Decimal Precision (default=3)
-  ! \C               Clear the screen before printing
-  ! \S               Components viewed in 3 individual rows, use if you have a higher precision value
+  ! Data Printing in a customized human readable format
+  ! Currently supports: pose,pos,orient
+  !
+  ! Setting switches
+  ! \C          Clear the screen before printing
+  ! \S          Components viewed in individual rows, use if you have a higher precision value
+  ! \DP:=<num>  Decimal Precision (default=3)
+  !
+  ! Type specific switches
+  ! \E          View orient as Euler angles
+  !
+  ! Example use:
+  !   DPrint\C\S\d_pose:=my_pose;
+  !   DPrint\C\d_pos:=my_pose.trans\d_orient:=my_pose.rot;
+  !   DPrint\C\S\d_orient:=my_pose.rot\E;
   !*****************************************************
-  PROC print_pos(pos data\num DP\switch C\switch S)
-    VAR num prec:=3;
-    
-    IF Present(DP) THEN
-      IF DP>=0 prec:=DP;
-      IF prec>7 prec:=7;
-    ENDIF
-    IF Present(C) TPErase;
-    IF Present(S) THEN
-      TPWrite "[x="+NumToStr(data.x,prec)+"]";
-      TPWrite "[y="+NumToStr(data.y,prec)+"]";
-      TPWrite "[z="+NumToStr(data.z,prec)+"]";
-    ELSE
-      TPWrite "[x="+NumToStr(data.x,prec)+",y="+NumToStr(data.y,prec)+",z="+NumToStr(data.z,prec)+"]";
-    ENDIF
-  ENDPROC
-
-  !*****************************************************
-  ! Print orientdata in customized readable format
-  ! \C               Clear the screen before printing
-  ! \S               Components viewed in individual rows
-  ! \E               View as Euler angles
-  !*****************************************************
-  PROC print_ori(orient data\switch C\switch S\switch E)
+  PROC DPrint(\switch C\switch S\num DP,\pos d_pos,\orient d_orient\switch E,\pose d_pose)
     VAR pos angles;
-    
+    VAR num dps:=3;
+
     IF Present(C) TPErase;
-    IF Present(E) THEN
-      angles:=Quat2Euler(data);
+
+    ! Check dp value
+    IF Present(DP) THEN
+      dps:=DP;
+      IF dps<0 dps:=0;
+      IF dps>7 dps:=7;
+    ENDIF
+
+    ! Print pos
+    IF Present(d_pos) THEN
       IF Present(S) THEN
-        TPWrite "[z="+NumToStr(angles.z,3)+"]";
-        TPWrite "[y="+NumToStr(angles.y,3)+"]";
-        TPWrite "[x="+NumToStr(angles.x,3)+"]";
+        TPW "[x="+NumToStr(d_pos.x,dps)+"]";
+        TPW "[y="+NumToStr(d_pos.y,dps)+"]";
+        TPW "[z="+NumToStr(d_pos.z,dps)+"]";
       ELSE
-        TPWrite "[z="+NumToStr(angles.z,3)+",y="+NumToStr(angles.y,3)+",x="+NumToStr(angles.x,3);
-      ENDIF
-    ELSE
-      IF Present(S) THEN
-        TPWrite "[q1="+NumToStr(data.q1,7)+"]";
-        TPWrite "[q2="+NumToStr(data.q2,7)+"]";
-        TPWrite "[q3="+NumToStr(data.q3,7)+"]";
-        TPWrite "[q4="+NumToStr(data.q4,7)+"]";
-      ELSE
-        TPWrite "[q1="+NumToStr(data.q1,3)+",q2="+NumToStr(data.q2,3)+",q3="+NumToStr(data.q3,3)+",q4="+NumToStr(data.q4,3)+"]";
+        TPW "[x="+NumToStr(d_pos.x,dps)+",y="+NumToStr(d_pos.y,dps)+",z="+NumToStr(d_pos.z,dps)+"]";
       ENDIF
     ENDIF
+
+    ! Print orient
+    IF Present(d_orient) THEN
+      IF Present(E) THEN
+        angles:=Quat2Euler(d_orient);
+        IF Present(S) THEN
+          TPW "[z="+NumToStr(angles.z,dps)+"]";
+          TPW "[y="+NumToStr(angles.y,dps)+"]";
+          TPW "[x="+NumToStr(angles.x,dps)+"]";
+        ELSE
+          TPW "[z="+NumToStr(angles.z,dps)+",y="+NumToStr(angles.y,dps)+",x="+NumToStr(angles.x,dps);
+        ENDIF
+      ELSE
+        IF Present(S) THEN
+          TPW "[q1="+NumToStr(d_orient.q1,dps)+"]";
+          TPW "[q2="+NumToStr(d_orient.q2,dps)+"]";
+          TPW "[q3="+NumToStr(d_orient.q3,dps)+"]";
+          TPW "[q4="+NumToStr(d_orient.q4,dps)+"]";
+        ELSE
+          TPW "[q1="+NumToStr(d_orient.q1,dps)+",q2="+NumToStr(d_orient.q2,dps)+",q3="+NumToStr(d_orient.q3,dps)+",q4="+NumToStr(d_orient.q4,dps)+"]";
+        ENDIF
+      ENDIF
+    ENDIF
+
+    ! Print pose
+    IF Present(d_pose) THEN
+      DPrint \S?S\DP?DP\d_pos:=d_pose.trans\d_orient:=d_pose.rot;
+    ENDIF
+
   ENDPROC
+
+  !*****************************************************
+  ! Short version of TPWrite
+  !*****************************************************
+  PROC TPW(string data)
+    TPWrite data;
+  ENDPROC
+
+  !*****************************************************
+  ! Return radius from a given diameter.
+  !*****************************************************
+  FUNC num Rad(num diameter)
+    RETURN diameter*0.5;
+  ENDFUNC
+
+  !*****************************************************
+  ! Return diameter from a given radius.
+  !*****************************************************
+  FUNC num Dia(num radius)
+    RETURN radius*2;
+  ENDFUNC
 ENDMODULE
