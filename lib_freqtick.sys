@@ -1,0 +1,96 @@
+MODULE lib_freqtick(SYSMODULE)
+ !*****************************************************
+  ! * Copyright (C) 2018 Robert Andersson <rob@ernell.se>
+  ! *
+  ! * Licensed under the Apache License, Version 2.0 (the "License");
+  ! * you may not use this file except in compliance with the License.
+  ! * You may obtain a copy of the License at
+  ! *
+  ! *      http://www.apache.org/licenses/LICENSE-2.0
+  ! *
+  ! * Unless required by applicable law or agreed to in writing, software
+  ! * distributed under the License is distributed on an "AS IS" BASIS,
+  ! * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ! * See the License for the specific language governing permissions and
+  ! * limitations under the License.
+  !*****************************************************
+　
+  !*****************************************************
+  ! Module Name: lib_freqtick
+  ! Version:     0.001
+  ! Description: Return true/false with a frequency (every nth time)
+  ! Date:        2018
+  ! Author:      Robert Andersson <rob@ernell.se>
+  ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
+  !*****************************************************
+　
+  ! Example use:
+  !   FT_Tick()
+  !
+  ! Set frequency with: FT_FreqSet <value>\INV;
+  ! Value table
+  !    Normal   Inverted
+  ! 1= 100%     0%
+  ! 2=  50%     50%
+  ! 3=  33%     66%
+  ! 4=  25%     75%
+  ! 5=  20%     80%
+  ! 8=  12.5%   87.5%
+  ! 10= 10%     90%
+  !
+  ! Example 33%/66%:
+  !   FT_FreqSet 3; or FT_FreqSet 3\INV;
+  !   WHILE TRUE DO
+  !     IF(FT_Tick()) THEN 
+  !       TPWrite "Im TRUE!";
+  !     ELSE
+  !       TPWrite "Im FALSE!";
+  !     ENDIF
+  !   ENDWHILE
+  
+  !*****************************************************
+  ! Counter
+  LOCAL PERS num nCounter:=7;
+  ! Frequency (>=1)
+  LOCAL PERS num nTickFreq:=10;
+  ! Invert
+  LOCAL PERS bool bInvert:=FALSE;
+　
+  !*****************************************************
+  ! Return TRUE on a set frequency (or if inverted, FALSE)
+  !*****************************************************
+  FUNC bool FT_Tick()
+    FT_Count;
+    IF(bInvert)THEN
+      IF(nCounter MOD nTickFreq = 0) RETURN FALSE;
+      RETURN TRUE;
+    ELSE
+      IF(nCounter MOD nTickFreq = 0) RETURN TRUE;
+      RETURN FALSE;
+    ENDIF
+    RETURN FALSE;
+  ENDFUNC
+  
+  !*****************************************************
+  ! Set the frequency
+  !*****************************************************
+  PROC FT_FreqSet(num freq\switch INV)
+    ! set invert flag
+    bInvert:=FALSE;
+    IF(Present(INV)) bInvert:=TRUE; 
+    ! reset counter
+    nCounter:=0;
+    ! set frequency
+    nTickFreq:=freq;
+    ! check for faulty values
+    IF(nTickFreq <= 0) nTickFreq:=1;
+  ENDPROC
+  
+  !*****************************************************
+  ! Tick the counter
+  !*****************************************************
+  LOCAL PROC FT_Count(\bool dummy)
+    Incr nCounter;
+    IF(nCounter >= nTickFreq) nCounter:=0;
+  ENDPROC
+ENDMODULE
