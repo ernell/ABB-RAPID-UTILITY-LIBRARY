@@ -1,3 +1,8 @@
+%%%
+  VERSION:1
+  LANGUAGE:ENGLISH
+%%%
+　
 MODULE lib_freqtick(SYSMODULE)
  !*****************************************************
   ! * Copyright (C) 2018 Robert Andersson <rob@ernell.se>
@@ -17,7 +22,7 @@ MODULE lib_freqtick(SYSMODULE)
 　
   !*****************************************************
   ! Module Name: lib_freqtick
-  ! Version:     0.001
+  ! Version:     0.002
   ! Description: Return true/false with a frequency (every nth time)
   ! Date:        2018
   ! Author:      Robert Andersson <rob@ernell.se>
@@ -50,25 +55,34 @@ MODULE lib_freqtick(SYSMODULE)
   
   !*****************************************************
   ! Counter
-  LOCAL PERS num nCounter:=7;
+  LOCAL PERS num nCounter:=0;
   ! Frequency (>=1)
-  LOCAL PERS num nTickFreq:=10;
+  LOCAL PERS num nTickFreq:=1;
   ! Invert
   LOCAL PERS bool bInvert:=FALSE;
+  ! Store latest value
+  LOCAL PERS bool bLatest:=FALSE;
 　
   !*****************************************************
   ! Return TRUE on a set frequency (or if inverted, FALSE)
   !*****************************************************
   FUNC bool FT_Tick()
-    FT_Count;
+    FT_Incr;
+    bLatest:=FALSE;
     IF(bInvert)THEN
-      IF(nCounter MOD nTickFreq = 0) RETURN FALSE;
-      RETURN TRUE;
+      IF(nCounter MOD nTickFreq = 0) RETURN bLatest;
+      bLatest:=TRUE;
     ELSE
-      IF(nCounter MOD nTickFreq = 0) RETURN TRUE;
-      RETURN FALSE;
+      IF(nCounter MOD nTickFreq = 0) bLatest:=TRUE;
     ENDIF
-    RETURN FALSE;
+    RETURN bLatest;
+  ENDFUNC
+　
+  !*****************************************************
+  ! Return TRUE on a set frequency (or if inverted, FALSE)
+  !*****************************************************
+  FUNC bool FT_Latest()
+    RETURN bLatest;
   ENDFUNC
   
   !*****************************************************
@@ -87,9 +101,9 @@ MODULE lib_freqtick(SYSMODULE)
   ENDPROC
   
   !*****************************************************
-  ! Tick the counter
+  ! Tick the counter (internal use only)
   !*****************************************************
-  LOCAL PROC FT_Count(\bool dummy)
+  LOCAL PROC FT_Incr(\bool dummy)
     Incr nCounter;
     IF(nCounter >= nTickFreq) nCounter:=0;
   ENDPROC
