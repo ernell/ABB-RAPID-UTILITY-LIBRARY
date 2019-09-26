@@ -1,4 +1,4 @@
-<h1>ABB RAPID UTILITY LIBRARY</h1>
+<h1>ABB Rapid utility library</h1>
 
 <h2>A collection of open source utility modules for ABB industrial robots.</h2>
 
