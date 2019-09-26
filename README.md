@@ -9,7 +9,10 @@ Procedures/functions should be useable as-is, with no or little modification.
 Added a new definitionfile for ABB Rapid IRC5 to use with UltraEdit & UEStudio. I could only find the S4 definition on the internet, and it was not a very good one, so I made this new version that covers IRC5. It also finds the functions & traps, and prints the arguments in the functionlist. Also the most common arguments, switches, speeds, zones and more are shown in a different color.
 
 <h3>Contribution</h3>
-If you like to contribute to this library, please send what you got to my email, and I will add it to the collection. Dont forget to write a module header like the one in LIB_TIMER.sys. Use the LICENSE-TEMPLATE.txt. The code should be readable, nice and tidy.
+If you like to contribute to this library, please send what you got to my email, and I will add it to the collection.
+Dont forget to add a module header. Use the LICENSE-TEMPLATE.txt on top of your module.
+The code should be readable, nice and tidy.
 
 <h3>No guarantees</h3>
-All code comes "AS IS", and its YOUR responsibility to check for errors before you use it in a production environment. If you find errors, please let me know.
+All code from this repo comes "AS IS", and its YOUR responsibility to check for errors before you use it in a production environment.
+If you find errors, please let me know.
