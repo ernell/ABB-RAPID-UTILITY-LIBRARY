@@ -1,0 +1,90 @@
+MODULE lib_timewait(SYSMODULE,NOSTEPIN,READONLY)
+  !*****************************************************
+  ! * Copyright (C) 2016 Robert Andersson <rob@ernell.se>
+  ! *
+  ! * Licensed under the Apache License, Version 2.0 (the "License");
+  ! * you may not use this file except in compliance with the License.
+  ! * You may obtain a copy of the License at
+  ! *
+  ! *      http://www.apache.org/licenses/LICENSE-2.0
+  ! *
+  ! * Unless required by applicable law or agreed to in writing, software
+  ! * distributed under the License is distributed on an "AS IS" BASIS,
+  ! * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ! * See the License for the specific language governing permissions and
+  ! * limitations under the License.
+  !*****************************************************
+
+  !*****************************************************
+  ! Module Name: lib_timewait
+  ! Description: Digital Input Utilities
+  ! Date:        2016-03-18
+  ! Author:      Robert Andersson <rob@ernell.se>
+  ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
+  !*****************************************************
+  
+  !*****************************************************
+  ! TimeWaitDI
+  !
+  ! Version: 2016-03-18
+  ! 
+  ! Description:
+  !   Wait for a DI to be 1 or 0 for a specified amount of time.
+  !
+  ! Arguments:
+  !   inputDI:     The digital input
+  !   timeToWait:  Time in seconds the DI must be active
+  ! Options:
+  !   \WaitFalse   Wait for DI to be 0 instead of 1
+  !
+  ! Examples:
+  !
+  !  Wait for a laserbeam DI to be =1 for at least 5 seconds without interrupt
+  !  TimeWaitDI diLaser,5;
+  !
+  !  Wait for a laserbeam DI to be =0 for at least 8 seconds without interrupt
+  !  TimeWaitDI diLaser,8\WaitFalse;
+  !*****************************************************
+  PROC TimeWaitDI(VAR signaldi inputDI,num timeToWait,\switch WaitFalse)
+    ! Loop until we get a DI for a certain time
+    WHILE (NOT TimeWaitDIHelper(inputDI,timeToWait, \WaitFalse?WaitFalse)) DO
+      WaitTime 0.1;
+    ENDWHILE
+  ENDPROC
+
+  !*****************************************************
+  ! TimedWaitDIHelper
+  ! Version: 2016-03-18
+  ! Description:
+  !   Wait for a DI to be NOT active for a certain time.
+  !   This is just a helper function and not to be used.
+  !
+  ! Arguments:
+  !   inputDI:     The digital input
+  !   timeToWait:  Time in seconds the DI must be active
+  ! Options:
+  !   \WaitFalse   Wait for DI to be 0 instead of 1
+  !
+  ! Return:
+  !  TRUE if DI is active for the specified time
+  !  FALSE if activated for a shorter time than specified
+  !*****************************************************
+  LOCAL FUNC bool TimeWaitDIHelper(VAR signaldi inputDI,num timeToWait,\switch WaitFalse)
+    VAR bool answer:=FALSE;
+
+    ! Wait for digital input to be NOT TRUE for the time specified
+    IF (Present(WaitFalse)) THEN
+      WaitDI inputDI,1\MaxTime:=timeToWait;
+    ELSE
+      WaitDI inputDI,0\MaxTime:=timeToWait;
+    ENDIF
+    RETURN answer;
+  ERROR
+    IF ERRNO=ERR_WAIT_MAXTIME THEN
+      ! If we get here, we have the DI for the amount of time specified
+      answer:=TRUE;
+      TRYNEXT;
+    ENDIF
+  ENDFUNC
+
+ENDMODULE
