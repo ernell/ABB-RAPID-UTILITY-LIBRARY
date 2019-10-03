@@ -2,6 +2,8 @@
   VERSION:1
   LANGUAGE:ENGLISH
 %%%
+
+MODULE SoftLimits_S4C
   !*****************************************************
   ! * Copyright (C) 2019 Lee Justice <Lemster68@gmail.com>
   ! *
@@ -27,7 +29,7 @@
   ! Author:      Lee Justice <Lemster68@gmail.com>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
-MODULE SoftLimits_S4C
+  
   VAR num nNewLimit:=0;
   PERS num nLimit:=-1.5708;
 
