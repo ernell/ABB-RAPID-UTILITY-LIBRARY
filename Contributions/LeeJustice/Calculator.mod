@@ -1,3 +1,4 @@
+MODULE Calculator_Mod
   !*****************************************************
   ! * Copyright (C) 2019 Lee Justice <Lemster68@gmail.com>
   ! *
@@ -16,14 +17,15 @@
 
   !*****************************************************
   ! Module Name: Calculator
-  ! Version:     1.0
+  ! Version:     1.1
   ! Description: Addition, subtraction, multiplication and division
+  !              Version 1.1 Fixed license was before module name, made it
+  !              unloadable.
   ! Date:        2019-10-01
   ! Author:      Lee Justice <Lemster68@gmail.com>
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !*****************************************************
   
-MODULE Calculator_Mod
   PROC TP_Calculator()
     VAR num nResult:=0;
     VAR num nInput1:=0;
@@ -36,7 +38,7 @@ MODULE Calculator_Mod
     ! multiplication or division.
 lblDoOver:
     TPErase;
-    TPReadNum nInput1,"Please enter the first number of your    calculation.";
+    TPReadNum nInput1,"Please enter the first number of your   calculation.";
     TPReadFK nDummy,"Please select the operator function key","+","-","*","/","Back";
     TEST nDummy
     CASE 1:
@@ -50,7 +52,7 @@ lblDoOver:
     CASE 5:
       GOTO lblDoOver;
     ENDTEST
-    TPReadNum nInput2,"Please enter the second number of your calculation.";
+    TPReadNum nInput2,"Please enter the second number of your  calculation.";
     TEST nDummy
     CASE 1:
       nResult:=nInput1+nInput2;
