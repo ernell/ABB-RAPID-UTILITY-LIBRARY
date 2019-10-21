@@ -11,7 +11,8 @@ Added a new definitionfile for ABB Rapid IRC5 to use with UltraEdit & UEStudio. 
 <h3>Contribution</h3>
 If you like to contribute to this library, please send what you got to my email, and I will add it to the collection.
 Dont forget to add a module header. Use the LICENSE-TEMPLATE.txt on top of your module.
-The code should be readable, nice and tidy.
+The code should be readable, nice and tidy, and of course written by you.
+Email your contribution to robot(at)ernell.se.
 
 <h3>No guarantees</h3>
 All code from this repo comes "AS IS", and its YOUR responsibility to check for errors before you use it in a production environment.
