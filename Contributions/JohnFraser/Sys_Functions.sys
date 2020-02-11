@@ -1,0 +1,144 @@
+MODULE Sys_Functions(SYSMODULE)
+  !*****************************************************
+  ! * Copyright (C) 2019 John Fraser <j.fraserjm@gmail.com>
+  ! *
+  ! * Licensed under the Apache License, Version 2.0 (the "License");
+  ! * you may not use this file except in compliance with the License.
+  ! * You may obtain a copy of the License at
+  ! *
+  ! *      http://www.apache.org/licenses/LICENSE-2.0
+  ! *
+  ! * Unless required by applicable law or agreed to in writing, software
+  ! * distributed under the License is distributed on an "AS IS" BASIS,
+  ! * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ! * See the License for the specific language governing permissions and
+  ! * limitations under the License.
+  !*****************************************************
+
+    LOCAL VAR jointtarget pRobHome:=[[0,0,0,0,35,0],[1000,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    TASK PERS tooldata YourTool:=[TRUE,[[45.2505,-2.89384,357.831],[0.870472,0.00718865,0.492121,-0.00657274]],[1.5,[1,0,0],[1,0,0,0],0,0,0]];
+    PERS wobjdata YourWobj:=[FALSE,TRUE,"",[[3698.83,-1550.43,702.404],[0.704855,-2.78995E-05,-0.00179115,-0.709349]],[[-2639.68,-450.586,-245.961],[0.00594843,-0.00147772,0.00170275,0.99998]]];
+    VAR jointtarget jtPos;
+    VAR robtarget rtpos;
+    VAR num nEax;
+
+    ! --------------------------------------
+    ! Place string in middle of TPU Screen
+    ! Dependant on string lenght
+    ! --------------------------------------
+    FUNC string Center(string stCenter)
+        VAR num nBlank;
+        nBlank:=(50-StrLen(stCenter)) DIV 2;
+        IF nBlank>0 THEN
+            FOR i FROM 1 TO nBlank DO
+                stCenter:=" "+stCenter;
+            ENDFOR
+        ENDIF
+        RETURN stCenter;
+    ENDFUNC
+
+    ! Sample:
+    !!! TPWrite Center(sToday_Time(sTextYear,sTextMonth,sTextDay));
+
+    ! -------------------------------------------------
+    ! String function to change numeric to string data 
+    ! -------------------------------------------------
+    FUNC string MakeString(num nNumber,num nSize)
+        VAR string result:="";
+        VAR num nCounterForZero;
+        nCounterForZero:=nSize-StrLen(NumToStr(nNumber,0));
+        WHILE nCounterForZero>0 DO
+            result:=result+"0";
+            Decr nCounterForZero;
+        ENDWHILE
+        result:=result+NumToStr(nNumber,0);
+        RETURN result;
+    ENDFUNC
+
+    ! Sample:
+    !!! Write fileHandler,""+MakeString(ncARC_ON,1)+" minutes";
+
+    ! ------------------------------
+    ! Returns Current Date and Time 
+    ! ------------------------------
+    FUNC string sToday_Time(string sTextMonth,string sTextDay,string sTextYear)
+        VAR string sToday;
+        VAR string sTime;
+        VAR string sYear;
+        TPErase;
+        sToday:=CDate();
+        sTime:=CTime();
+        sTextYear:=StrPart(sToday,1,4);
+        sTextMonth:=StrPart(sToday,6,2);
+        sTextDay:=StrPart(sToday,9,2);
+        IF sTextMonth=Month_Number{9} THEN
+            sTextMonth:=Month_Name{9};
+        ENDIF
+        IF sTextDay=Month_Days_Number{11} THEN
+            stextday:="11";
+        ENDIF
+        RETURN "Today is "+sTextDay+"/"+sTextMonth+"/"+sTextYear+" Time is "+sTime;
+    ENDFUNC
+
+    ! Sample:
+    !!! TPWrite sToday_Time(sTextYear,sTextMonth,sTextDay);
+
+    ! --------------------------------------------------------------------------------------------------
+    ! Read Current jointtarget and returns current jointtarget axis values with your preferred values. 
+    ! Useful for moving to safe position where ever your TCP is inside you work area.
+    ! --------------------------------------------------------------------------------------------------
+    FUNC jointtarget jtActual(jointtarget jtPos)
+        jtPos:=CJointT();
+        IF jtPos.robax<>pRobHome.robax THEN
+            jtPos.robax.rax_2:=0;
+            jtPos.robax.rax_3:=0;
+            jtPos.robax.rax_4:=0;
+            jtPos.robax.rax_5:=35;
+            jtPos.robax.rax_6:=0;
+        ENDIF
+        jtPos.extax.eax_a:=Eax_A(nEax);
+        RETURN jtPos;
+    ENDFUNC
+
+    ! Sample:
+    !!!MoveAbsJ jtActual(jtpos),v100,fine,YourTool;
+
+    ! --------------------------------------------------------------------------------------------------
+    ! Read Current RobTarget and returns current RobTarget axis values with your preferred values. 
+    ! Useful for moving to a safe position above where ever your TCP is inside you work area.
+    ! --------------------------------------------------------------------------------------------------
+    FUNC robtarget rtActual(robtarget rtPos)
+        VAR jointtarget jtCurr;
+        jtCurr:=CJointT();
+        IF jtCurr.robax.rax_3>pRobHome.robax.rax_3 THEN
+            rtPos:=CRobT(\Tool:=YourTool\WObj:=YourWobj);
+            rtPos:=Offs(rtPos,0,0,200);
+        ELSE
+            rtPos:=CRobT(\Tool:=YourTool\WObj:=YourWobj);
+            rtpos.extax.eax_a:=Eax_A(nEax);
+        ENDIF
+        RETURN rtpos;
+    ENDFUNC
+
+    ! Sample:
+    !!!MoveJ rtActual(rtpos),v100,z200,YourTool\WObj:=YourWobj;
+
+    ! ---------------------------------------------------
+    ! Returns current External Axis value and overwrites 
+    ! ---------------------------------------------------
+    FUNC num Eax_a(num nEax)
+        VAR robtarget current;
+        current:=crobt();
+        nEax:=current.extax.eax_a;
+        RETURN nEax;
+    ENDFUNC
+
+    ! Sample:
+    !!!VAR robtarget Hpos:=[[100,200,300],[1,0,0,0],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]];
+    !!!Hpos:=CRobT(\Tool:=YourTool\WObj:=YourWobj);
+    !!!pRh_a:=(Hpos.extax.eax_a);
+    !!!pRobHome.extax.eax_a:=pRh_a;
+    !!!VelSet_Slow;
+    !!!MoveAbsJ pRobHome,v1000,fine,YourTool\WObj:=YourWobj;
+
+ENDMODULE
