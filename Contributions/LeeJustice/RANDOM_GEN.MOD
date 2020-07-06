@@ -17,7 +17,7 @@ MODULE RANDOM_GEN
 
   !*****************************************************
   ! Module Name: <RANDOM_GEN.MOD>
-  ! Version:     1.0
+  ! Version:     1.1
   ! Description: Pseudo random number generator, picks a number based on 
   !              system minute and seconds when called.
   ! Date:        <2020-05-29>
@@ -25,13 +25,23 @@ MODULE RANDOM_GEN
   ! Internet:    http://github.com/ernell/ABB-RAPID-UTILITY-LIBRARY
   !***************************************************** 
 
+    ! REV 1, added bool array to track numbers already used, no duplicates.
+    ! Added counter for total of numbers used
+    ! Boolean array to keep track of which numbers have been used
+    PERS bool bUsedArray{10,10}:=[[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE],[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE]
+    ,[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE],[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE],[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE]
+    ,[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE],[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE],[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE]
+    ,[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE],[FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE]];
+    ! Counter for how many total numbers, number range.  In this case, 1-100
+    PERS num nNumbersUsed;
+    
     FUNC num fRandomGenerator()
       VAR num nRandom;
       VAR num nMinute;
       VAR num nSecond;
       VAR num nArrayPointer1;
       VAR num nArrayPointer2;
-      VAR num myNumArray10x10{10,10}:=[[51,22,83,14,5,86,77,8,29,70],[91,42,93,74,45,16,87,38,99,90],[21,2,23,24,35,26,37,28,89,30],[61,72,3,84,65,76,67,18,79,50]
+      CONST num myNumArray10x10{10,10}:=[[51,22,83,14,5,86,77,8,29,70],[91,42,93,74,45,16,87,38,99,90],[21,2,23,24,35,26,37,28,89,30],[61,72,3,84,65,76,67,18,79,50]
       ,[1,12,33,54,75,36,57,88,59,40],[41,92,43,34,95,46,17,78,49,80],[31,82,53,44,25,56,27,98,19,20],[71,62,13,94,55,66,7,48,69,10]
       ,[81,32,63,4,85,6,97,58,9,100],[11,52,73,64,15,96,47,68,39,60]];
       ! Random number generation based on minutes and seconds of system time
@@ -85,8 +95,34 @@ MODULE RANDOM_GEN
       ELSEIF nSecond >= 55 AND nSecond <= 60 THEN
         nArrayPointer2 := 10;
       ENDIF
-      nRandom:=myNumArray10x10{nArrayPointer1,nArrayPointer2};
-      TPWrite "Random number generated is: "\Num:=nRandom;
+      WHILE nRandom = 0 DO
+      IF NOT bUsedArray{nArrayPointer1,nArrayPointer2} THEN
+        nRandom:=myNumArray10x10{nArrayPointer1,nArrayPointer2};
+        bUsedArray{nArrayPointer1,nArrayPointer2}:=TRUE;
+      ELSE
+        FOR i FROM 1 TO 10 DO
+          FOR j FROM 1 TO 10 DO
+            IF bUsedArray{i,j} = FALSE THEN
+              bUsedArray{i,j}:= TRUE;
+              nRandom:=myNumArray10x10{i,j};
+              IF (i <= 10) AND (j <= 10) THEN
+                IF nRandom = 0 STOP;
+                Incr nNumbersUsed;
+                ! all of the array positions have been used, this is the
+                ! last one, time to reset all to FALSE
+                IF nNumbersUsed = 100 ResetBool;
+                RETURN nRandom;      
+              ENDIF
+            ENDIF
+          ENDFOR
+        ENDFOR
+      ENDIF
+      ENDWHILE
+      IF nRandom = 0 STOP;
+      Incr nNumbersUsed;
+      ! all of the array positions have been used, this is the
+      ! last one, time to reset all to FALSE
+      IF nNumbersUsed = 100 ResetBool;
       RETURN nRandom;      
     ENDFUNC
     
@@ -94,7 +130,16 @@ MODULE RANDOM_GEN
       VAR num nTest;
       
       nTest:=fRandomGenerator();
-      WaitTime 5;
       TPWrite "Random number generated is: "\Num:=nTest;
+      WaitTime 5;
+    ENDPROC
+  
+    PROC ResetBool()
+      FOR i FROM 1 TO 10 DO
+        FOR j FROM 1 TO 10 DO
+          bUsedArray{i,j}:=FALSE;
+        ENDFOR
+      ENDFOR
+      nNumbersUsed:=0;
     ENDPROC
 ENDMODULE
