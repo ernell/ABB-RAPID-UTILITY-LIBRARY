@@ -124,7 +124,7 @@ MODULE lib_rob(SYSMODULE)
     RETURN Frame;
   ENDFUNC
 
-    !*****************************************************
+  !*****************************************************
   ! RobTarget offset + rotation
   !*****************************************************
   FUNC robtarget RTOffs(robtarget Point,num Ox,num Oy,num Oz\num Rx\num Ry\num Rz)
